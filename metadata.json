@@ -1,0 +1,6 @@
+{
+  "name": "VisitingLink",
+  "description": "A modern, premium digital technology studio offering VisitingLink, Web Development, and Graphics services.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
