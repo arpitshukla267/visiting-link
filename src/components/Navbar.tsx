@@ -203,6 +203,21 @@ export const Navbar: React.FC<NavbarProps> = ({
             </button>
 
             <button
+              onClick={() => handlePageNav("magic")}
+              className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
+                currentPage === "magic"
+                  ? navThemeDark
+                    ? "text-white"
+                    : "text-[#111111]"
+                  : navThemeDark
+                    ? "text-white/80 hover:text-white"
+                    : "text-[#666666] hover:text-black"
+              }`}
+            >
+              Magic
+            </button>
+
+            <button
               onClick={() => handlePageNav("about")}
               className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
                 currentPage === "about"
@@ -327,6 +342,13 @@ export const Navbar: React.FC<NavbarProps> = ({
                 className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
               >
                 Work
+              </button>
+
+              <button
+                onClick={() => handlePageNav("magic")}
+                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
+              >
+                Magic
               </button>
 
               <button

@@ -19,6 +19,7 @@ import { GraphicsPage } from './pages/GraphicsPage';
 import { AboutPage } from './pages/AboutPage';
 import { ContactPage } from './pages/ContactPage';
 import { WorkPage } from './pages/WorkPage';
+import { MagicPage } from './pages/MagicPage';
 import { ServiceItem } from './types';
 import { ROUTES, getCurrentPage } from './routes';
 
@@ -102,19 +103,23 @@ export default function App() {
     transition: { duration: 0.35, ease: [0.16, 1, 0.3, 1] as const },
   };
 
+  const isMagicPage = location.pathname === ROUTES.magic;
+
   return (
     <div className="min-h-screen bg-white text-[#111111] flex flex-col selection:bg-black selection:text-white relative">
       <ScrollToTop />
       <CustomCursor />
-      <ScrollProgress />
+      {!isMagicPage && <ScrollProgress />}
 
-      <Navbar
-        currentPage={currentPage}
-        onNavigateHome={navigateToHome}
-        onNavigateService={navigateToService}
-        onNavigatePage={navigateToPage}
-        onNavigateContact={navigateToContact}
-      />
+      {!isMagicPage && (
+        <Navbar
+          currentPage={currentPage}
+          onNavigateHome={navigateToHome}
+          onNavigateService={navigateToService}
+          onNavigatePage={navigateToPage}
+          onNavigateContact={navigateToContact}
+        />
+      )}
 
       <main className="flex-1">
         <AnimatePresence mode="wait">
@@ -135,6 +140,14 @@ export default function App() {
                     onNavigateContact={navigateToContact}
                     onExploreServices={handleExploreServices}
                   />
+                </motion.div>
+              }
+            />
+            <Route
+              path={ROUTES.magic}
+              element={
+                <motion.div key="magic" {...pageTransition}>
+                  <MagicPage />
                 </motion.div>
               }
             />
@@ -211,11 +224,13 @@ export default function App() {
         </AnimatePresence>
       </main>
 
-      <Footer
-        onNavigateContact={navigateToContact}
-        onNavigateService={navigateToService}
-        onNavigatePage={navigateToPage}
-      />
+      {!isMagicPage && (
+        <Footer
+          onNavigateContact={navigateToContact}
+          onNavigateService={navigateToService}
+          onNavigatePage={navigateToPage}
+        />
+      )}
 
       <ServiceDetailModal
         service={selectedServiceDetail}
