@@ -1,33 +1,34 @@
 import React, { useEffect, useRef, useCallback, useState } from 'react';
 
-const TOTAL_FRAMES = 200;
-const PRELOAD_COUNT = 100;
+const TOTAL_FRAMES = 500;
+const INITIAL_PRELOAD_COUNT = 80;
 
 export const MagicPage: React.FC = () => {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const ctxRef = useRef<CanvasRenderingContext2D | null>(null);
 
-  // All images stored as a flat array in memory (index 0 = frame 1)
+  // In-memory array of loaded Image objects (index 0 = frame 1)
   const images = useRef<(HTMLImageElement | null)[]>(new Array(TOTAL_FRAMES).fill(null));
 
   // Loading state
   const [isLoading, setIsLoading] = useState(true);
   const [loadProgress, setLoadProgress] = useState(0);
 
-  // Frame tracking refs for cinematic interpolation
+  // Frame tracking refs for smooth scroll interpolation
   const displayedFrame = useRef<number>(1);
   const targetFrame = useRef<number>(1);
   const rafId = useRef<number>(0);
-  const preloadedUpTo = useRef(0);
+  const preloadedUpTo = useRef<number>(0);
 
-  // ─── Frame URL helper ───
+  // Helper for frame image URLs (tries /frames2/ then /frames/)
   const getFrameUrl = useCallback((index: number) => {
-    return `/frames/frame_${String(index).padStart(4, '0')}.webp`;
+    const pad = String(index).padStart(4, '0');
+    return `/frames2/frame_${pad}.webp`;
   }, []);
 
-  // ─── Load a single frame as a Promise ───
-  const loadImage = useCallback((index: number): Promise<HTMLImageElement> => {
-    return new Promise((resolve, reject) => {
+  // Load single image with error safety to prevent uncaught rejections
+  const loadImage = useCallback((index: number): Promise<HTMLImageElement | null> => {
+    return new Promise((resolve) => {
       if (images.current[index - 1]) {
         resolve(images.current[index - 1]!);
         return;
@@ -39,19 +40,45 @@ export const MagicPage: React.FC = () => {
         images.current[index - 1] = img;
         resolve(img);
       };
-      img.onerror = reject;
+      img.onerror = () => {
+        // Fallback try /frames/ if /frames2/ fails
+        const fallbackImg = new Image();
+        fallbackImg.decoding = 'async';
+        fallbackImg.src = `/frames/frame_${String(index).padStart(4, '0')}.webp`;
+        fallbackImg.onload = () => {
+          images.current[index - 1] = fallbackImg;
+          resolve(fallbackImg);
+        };
+        fallbackImg.onerror = () => {
+          resolve(null);
+        };
+      };
     });
   }, [getFrameUrl]);
 
-  // ─── Draw a frame onto the canvas (cover mode) ───
+  // Find exact frame or closest loaded frame so canvas NEVER shows black screen
+  const getClosestImage = useCallback((targetIdx: number): HTMLImageElement | null => {
+    const exact = images.current[targetIdx - 1];
+    if (exact) return exact;
+
+    // Search outward for closest loaded image
+    for (let offset = 1; offset < TOTAL_FRAMES; offset++) {
+      const prev = images.current[targetIdx - 1 - offset];
+      if (prev) return prev;
+      const next = images.current[targetIdx - 1 + offset];
+      if (next) return next;
+    }
+    return null;
+  }, []);
+
+  // Draw frame on canvas with aspect ratio cover
   const drawFrame = useCallback((frameIndex: number) => {
     const canvas = canvasRef.current;
     const ctx = ctxRef.current;
     if (!canvas || !ctx) return;
 
-    // Clamp frame index to valid range
     const clampedIndex = Math.min(TOTAL_FRAMES, Math.max(1, frameIndex));
-    const img = images.current[clampedIndex - 1];
+    const img = getClosestImage(clampedIndex);
     if (!img) return;
 
     const cw = canvas.width;
@@ -76,9 +103,9 @@ export const MagicPage: React.FC = () => {
 
     ctx.clearRect(0, 0, cw, ch);
     ctx.drawImage(img, dx, dy, dw, dh);
-  }, []);
+  }, [getClosestImage]);
 
-  // ─── Resize canvas for High DPI ───
+  // Resize canvas for high DPI
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -102,28 +129,28 @@ export const MagicPage: React.FC = () => {
     drawFrame(Math.round(displayedFrame.current));
   }, [drawFrame]);
 
-  // ─── PHASE 1: Initial preload of first 100 frames with loader screen ───
+  // ─── PHASE 1: Initial preload of first 80 frames with loader ───
   useEffect(() => {
     let cancelled = false;
 
-    const preload = async () => {
-      const batchSize = 8;
+    const preloadInitial = async () => {
+      const batchSize = 10;
       let loaded = 0;
 
-      for (let start = 1; start <= PRELOAD_COUNT; start += batchSize) {
+      for (let start = 1; start <= INITIAL_PRELOAD_COUNT; start += batchSize) {
         if (cancelled) return;
-        const end = Math.min(start + batchSize - 1, PRELOAD_COUNT);
-        const batch: Promise<HTMLImageElement>[] = [];
+        const end = Math.min(start + batchSize - 1, INITIAL_PRELOAD_COUNT);
+        const batch: Promise<HTMLImageElement | null>[] = [];
         for (let i = start; i <= end; i++) {
           batch.push(loadImage(i));
         }
 
-        const results = await Promise.allSettled(batch);
-        loaded += results.filter(r => r.status === 'fulfilled').length;
+        const results = await Promise.all(batch);
+        loaded += results.filter(Boolean).length;
         preloadedUpTo.current = Math.max(preloadedUpTo.current, end);
 
         if (!cancelled) {
-          setLoadProgress(Math.round((loaded / PRELOAD_COUNT) * 100));
+          setLoadProgress(Math.round((loaded / INITIAL_PRELOAD_COUNT) * 100));
         }
       }
 
@@ -132,27 +159,26 @@ export const MagicPage: React.FC = () => {
       }
     };
 
-    preload();
-
+    preloadInitial();
     return () => { cancelled = true; };
   }, [loadImage]);
 
-  // ─── PHASE 2: Background preload remaining frames (101-200) ───
+  // ─── PHASE 2: Background preload remaining frames (81 to 500) ───
   useEffect(() => {
     if (isLoading) return;
 
     let cancelled = false;
 
     const preloadRemaining = async () => {
-      const batchSize = 6;
-      for (let start = PRELOAD_COUNT + 1; start <= TOTAL_FRAMES; start += batchSize) {
+      const batchSize = 8;
+      for (let start = INITIAL_PRELOAD_COUNT + 1; start <= TOTAL_FRAMES; start += batchSize) {
         if (cancelled) return;
         const end = Math.min(start + batchSize - 1, TOTAL_FRAMES);
-        const batch: Promise<HTMLImageElement>[] = [];
+        const batch: Promise<HTMLImageElement | null>[] = [];
         for (let i = start; i <= end; i++) {
           batch.push(loadImage(i));
         }
-        await Promise.allSettled(batch);
+        await Promise.all(batch);
         preloadedUpTo.current = Math.max(preloadedUpTo.current, end);
       }
     };
@@ -170,7 +196,6 @@ export const MagicPage: React.FC = () => {
 
     window.addEventListener('resize', resizeCanvas);
 
-    // Update target frame directly based on scroll position
     const handleScroll = () => {
       const scrollTop = window.scrollY || document.documentElement.scrollTop;
       const maxScroll = document.documentElement.scrollHeight - window.innerHeight;
@@ -183,7 +208,6 @@ export const MagicPage: React.FC = () => {
     window.addEventListener('scroll', handleScroll, { passive: true });
     handleScroll();
 
-    // ── Cinematic Inertia Animation Loop (60 FPS) ──
     let lastDrawnFrame = -1;
 
     const renderLoop = () => {
@@ -191,7 +215,6 @@ export const MagicPage: React.FC = () => {
       const current = displayedFrame.current;
       const diff = target - current;
 
-      // Smooth liquid inertia (0.09 easing factor)
       if (Math.abs(diff) > 0.001) {
         displayedFrame.current += diff * 0.09;
       } else {
@@ -249,7 +272,7 @@ export const MagicPage: React.FC = () => {
 
   // ─── Main Canvas ───
   return (
-    <div className="relative w-full h-[500vh] bg-black">
+    <div className="relative w-full h-[600vh] bg-black">
       <div className="sticky top-0 left-0 w-full h-screen overflow-hidden">
         <canvas ref={canvasRef} className="block w-full h-full" />
       </div>
