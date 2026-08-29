@@ -1,6 +1,8 @@
+"use client";
+
 import React, { useRef } from 'react';
 import { motion, useInView } from 'motion/react';
-import { useLocation } from 'react-router-dom';
+import { usePathname } from 'next/navigation';
 import { ArrowUpRight } from 'lucide-react';
 
 interface FooterProps {
@@ -31,7 +33,7 @@ export const Footer: React.FC<FooterProps> = ({
   onNavigateService,
   onNavigatePage,
 }) => {
-  const { pathname } = useLocation();
+  const pathname = usePathname();
   const footerRef = useRef<HTMLElement>(null);
   const isFooterFullyInView = useInView(footerRef, { amount: 1, once: false });
 
@@ -40,7 +42,7 @@ export const Footer: React.FC<FooterProps> = ({
   };
 
   return (
-    <footer ref={footerRef} id="main-footer" className="w-full bg-[#111111] text-white border-t border-[#222222] overflow-hidden">
+    <footer ref={footerRef} id="main-footer" className="relative z-20 w-full bg-[#111111] text-white border-t border-[#222222] overflow-hidden">
       <div className="max-w-7xl mx-auto px-6 md:px-12 pt-10 pb-0">
         {/* Top row */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 pb-8 border-b border-[#222222]">
