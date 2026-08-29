@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useEffect, useState } from "react";
 import { motion, useSpring, useMotionValue } from "motion/react";
 
@@ -31,28 +33,25 @@ export const CustomCursor: React.FC = () => {
       mouseX.set(e.clientX);
       mouseY.set(e.clientY);
       if (!isVisible) setIsVisible(true);
+
+      const target = e.target as HTMLElement | null;
+      if (target) {
+        const interactive = target.closest(
+          'a, button, [role="button"], input, textarea, select, label, [data-cursor="hover"], .cursor-pointer',
+        );
+        setIsHovered(!!interactive);
+      }
     };
 
     const handleMouseLeave = () => setIsVisible(false);
     const handleMouseEnter = () => setIsVisible(true);
 
-    const handleElementHover = (e: MouseEvent) => {
-      const target = e.target as HTMLElement | null;
-      if (!target) return;
-      const interactive = target.closest(
-        'a, button, [role="button"], input, textarea, select, label, [data-cursor="hover"], .cursor-pointer',
-      );
-      setIsHovered(!!interactive);
-    };
-
     window.addEventListener("mousemove", handleMouseMove, { passive: true });
-    window.addEventListener("mousemove", handleElementHover, { passive: true });
     document.addEventListener("mouseleave", handleMouseLeave);
     document.addEventListener("mouseenter", handleMouseEnter);
 
     return () => {
       window.removeEventListener("mousemove", handleMouseMove);
-      window.removeEventListener("mousemove", handleElementHover);
       document.removeEventListener("mouseleave", handleMouseLeave);
       document.removeEventListener("mouseenter", handleMouseEnter);
     };

@@ -1,3 +1,5 @@
+"use client";
+
 import React from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { X, Check, ArrowRight } from 'lucide-react';

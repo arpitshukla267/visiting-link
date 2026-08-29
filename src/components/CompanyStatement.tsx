@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useRef } from "react";
 import { motion, useScroll, useTransform, useSpring } from "motion/react";
 import { SquareCrossMark } from "./ui/TechnicalDoodles";
@@ -122,12 +124,7 @@ export const CompanyStatement: React.FC = () => {
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="space-y-10">
-          {/* Top Line Accent and Technical Mark */}
-          <div className="flex items-center justify-between">
-            <div className="w-16 h-[1px] bg-[#111111]" />
-            {/* Dashed Square-and-Cross Technical Line-Art Doodle */}
-            <SquareCrossMark />
-          </div>
+          
 
           {/* Main Editorial Statement with Word-by-Word Scroll Illumination (Apple/Stripe Style) */}
           <h2

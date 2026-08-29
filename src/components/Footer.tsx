@@ -12,18 +12,18 @@ interface FooterProps {
 }
 
 const FooterWordmark: React.FC<{ play: boolean; routeKey: string }> = ({ play, routeKey }) => (
-  <div className="overflow-hidden w-full flex justify-center items-end mt-4 md:mt-5">
+  <div className="mt-2 flex w-full items-end justify-center overflow-hidden py-2 md:mt-3">
     <motion.p
-        key={routeKey}
-        initial={{ y: '100%', opacity: 0 }}
-        animate={play ? { y: 0, opacity: 1 } : { y: '100%', opacity: 0 }}
-        transition={{
-          y: { duration: 2.4, ease: [0.22, 1, 0.36, 1] },
-          opacity: { duration: 2, ease: [0.22, 1, 0.36, 1] },
-        }}
-        className="text-[clamp(3.5rem,16vw,12rem)] font-semibold tracking-tighter leading-[0.85] text-center bg-gradient-to-r from-white/20 via-white/8 to-transparent bg-clip-text text-transparent select-none pointer-events-none whitespace-nowrap block [text-box-trim:trim-end] [text-box-edge:text-bottom]"
-      >
-        VisitingLink
+      key={routeKey}
+      initial={{ y: '100%', opacity: 0 }}
+      animate={play ? { y: 0, opacity: 1 } : { y: '100%', opacity: 0 }}
+      transition={{
+        y: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
+        opacity: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
+      }}
+      className="pointer-events-none w-[90vw] select-none whitespace-nowrap text-center text-[clamp(2.75rem,13.5vw,8.5rem)] font-semibold leading-[0.85] tracking-tighter text-[#3a3a3a]"
+    >
+      VisitingLink
     </motion.p>
   </div>
 );
@@ -35,32 +35,26 @@ export const Footer: React.FC<FooterProps> = ({
 }) => {
   const pathname = usePathname();
   const footerRef = useRef<HTMLElement>(null);
-  const isFooterFullyInView = useInView(footerRef, { amount: 1, once: false });
-
-  const scrollToTop = () => {
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-  };
+  const isFooterInView = useInView(footerRef, { amount: 1, once: true });
 
   return (
-    <footer ref={footerRef} id="main-footer" className="relative z-20 w-full bg-[#111111] text-white border-t border-[#222222] overflow-hidden">
-      <div className="max-w-7xl mx-auto px-6 md:px-12 pt-10 pb-0">
-        {/* Top row */}
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-5 pb-8 border-b border-[#222222]">
-          <p className="text-[#888888] text-xs max-w-xs leading-relaxed">
+    <footer ref={footerRef} id="main-footer" className="relative z-20 w-full overflow-hidden border-t border-[#222222] bg-[#111111] text-white">
+      <div className="mx-auto max-w-7xl px-6 pb-2 pt-6 md:px-12 md:pt-10">
+        <div className="flex flex-col items-start justify-between gap-4 border-b border-[#222222] pb-5 sm:flex-row sm:items-center">
+          <p className="max-w-xs text-xs leading-relaxed text-[#888888]">
             Creative technology studio — digital solutions, web platforms, and graphic systems.
           </p>
           <button
             onClick={() => onNavigateContact()}
-            className="shrink-0 bg-white text-[#111111] px-6 py-2.5 text-[11px] font-semibold uppercase tracking-widest hover:bg-[#F0F0F0] transition-colors cursor-pointer"
+            className="shrink-0 cursor-pointer bg-white px-6 py-2.5 text-[11px] font-semibold uppercase tracking-widest text-[#111111] transition-colors hover:bg-[#F0F0F0]"
           >
             Start a Project
           </button>
         </div>
 
-        {/* Nav grid */}
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6 py-7 border-b border-[#222222]">
-          <div className="space-y-2.5">
-            <h4 className="text-[11px] font-medium text-[#555555] uppercase tracking-wider">Pages</h4>
+        <div className="grid grid-cols-2 gap-4 border-b border-[#222222] py-5 md:grid-cols-4 md:gap-6 md:py-7">
+          <div className="space-y-2">
+            <h4 className="text-[11px] font-medium uppercase tracking-wider text-[#555555]">Pages</h4>
             <ul className="space-y-1.5">
               {[
                 { label: 'About', page: 'about' },
@@ -70,7 +64,7 @@ export const Footer: React.FC<FooterProps> = ({
                 <li key={item.page}>
                   <button
                     onClick={() => onNavigatePage(item.page)}
-                    className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer"
+                    className="cursor-pointer text-xs text-neutral-400 transition-colors hover:text-white"
                   >
                     {item.label}
                   </button>
@@ -79,8 +73,8 @@ export const Footer: React.FC<FooterProps> = ({
             </ul>
           </div>
 
-          <div className="space-y-2.5">
-            <h4 className="text-[11px] font-medium text-[#555555] uppercase tracking-wider">Services</h4>
+          <div className="space-y-2">
+            <h4 className="text-[11px] font-medium uppercase tracking-wider text-[#555555]">Services</h4>
             <ul className="space-y-1.5">
               {[
                 { label: 'VisitingLink', id: 'visitinglink' },
@@ -93,36 +87,36 @@ export const Footer: React.FC<FooterProps> = ({
                       onNavigateService(item.id);
                       window.scrollTo({ top: 0, behavior: 'smooth' });
                     }}
-                    className="text-xs text-neutral-400 hover:text-white transition-colors cursor-pointer inline-flex items-center gap-1"
+                    className="inline-flex cursor-pointer items-center gap-1 text-xs text-neutral-400 transition-colors hover:text-white"
                   >
                     <span>{item.label}</span>
-                    <ArrowUpRight className="w-2.5 h-2.5 text-[#555555]" />
+                    <ArrowUpRight className="h-2.5 w-2.5 text-[#555555]" />
                   </button>
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="space-y-2.5">
-            <h4 className="text-[11px] font-medium text-[#555555] uppercase tracking-wider">Studio</h4>
-            <p className="text-xs text-neutral-400 leading-relaxed">
+          <div className="space-y-2">
+            <h4 className="text-[11px] font-medium uppercase tracking-wider text-[#555555]">Studio</h4>
+            <p className="text-xs leading-relaxed text-neutral-400">
               San Francisco, CA
               <br />
               Global delivery
             </p>
           </div>
 
-          <div className="space-y-2.5">
-            <h4 className="text-[11px] font-medium text-[#555555] uppercase tracking-wider">Connect</h4>
+          <div className="space-y-2">
+            <h4 className="text-[11px] font-medium uppercase tracking-wider text-[#555555]">Connect</h4>
             <a
               href="mailto:hello@visitinglink.studio"
-              className="text-xs text-neutral-400 hover:text-white transition-colors underline decoration-neutral-700 underline-offset-2 block"
+              className="block text-xs text-neutral-400 underline decoration-neutral-700 underline-offset-2 transition-colors hover:text-white"
             >
               hello@visitinglink.studio
             </a>
             <div className="flex items-center gap-3 text-xs text-[#666666]">
               {['X', 'LinkedIn', 'GitHub'].map((s) => (
-                <a key={s} href="#" className="hover:text-white transition-colors">
+                <a key={s} href="#" className="transition-colors hover:text-white">
                   {s}
                 </a>
               ))}
@@ -130,8 +124,7 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
         </div>
 
-        <FooterWordmark play={isFooterFullyInView} routeKey={pathname} />
-
+        <FooterWordmark play={isFooterInView} routeKey={pathname} />
       </div>
     </footer>
   );

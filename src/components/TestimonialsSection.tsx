@@ -1,24 +1,24 @@
-import React, { useState, useEffect } from 'react';
+"use client";
+
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
-import { ArrowLeft, ArrowRight, Quote } from 'lucide-react';
+import { ArrowLeft, ArrowRight } from 'lucide-react';
 import { TESTIMONIALS_DATA } from '../data/content';
 
 export const TestimonialsSection: React.FC = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const [direction, setDirection] = useState<1 | -1>(1);
+  const [isPaused, setIsPaused] = useState(false);
 
-  const nextTestimonial = () => {
+  const nextTestimonial = useCallback(() => {
     setDirection(1);
     setCurrentIndex((prev) => (prev + 1) % TESTIMONIALS_DATA.length);
-  };
+  }, []);
 
-  const prevTestimonial = () => {
+  const prevTestimonial = useCallback(() => {
     setDirection(-1);
     setCurrentIndex((prev) => (prev - 1 + TESTIMONIALS_DATA.length) % TESTIMONIALS_DATA.length);
-  };
-
-  // Subtle auto-advance every 9 seconds, paused on hover
-  const [isPaused, setIsPaused] = useState(false);
+  }, []);
 
   useEffect(() => {
     if (isPaused) return;
@@ -26,13 +26,13 @@ export const TestimonialsSection: React.FC = () => {
       nextTestimonial();
     }, 9000);
     return () => clearInterval(interval);
-  }, [currentIndex, isPaused]);
+  }, [currentIndex, isPaused, nextTestimonial]);
 
   const current = TESTIMONIALS_DATA[currentIndex];
 
   const variants = {
     enter: (dir: number) => ({
-      x: dir > 0 ? 24 : -24,
+      x: dir > 0 ? 20 : -20,
       opacity: 0,
     }),
     center: {
@@ -40,7 +40,7 @@ export const TestimonialsSection: React.FC = () => {
       opacity: 1,
     },
     exit: (dir: number) => ({
-      x: dir > 0 ? -24 : 24,
+      x: dir > 0 ? -20 : 20,
       opacity: 0,
     }),
   };
@@ -48,21 +48,20 @@ export const TestimonialsSection: React.FC = () => {
   return (
     <section
       id="testimonials"
-      className="w-full bg-white py-24 md:py-32 border-b border-[#F0F0F0] overflow-hidden"
+      className="w-full overflow-hidden border-b border-[#F0F0F0] bg-white py-16 sm:py-20 md:py-32"
       onMouseEnter={() => setIsPaused(true)}
       onMouseLeave={() => setIsPaused(false)}
     >
-      <div className="max-w-5xl mx-auto px-6 md:px-12">
-        {/* Section Heading */}
-        <div className="flex flex-col sm:flex-row sm:items-end justify-between mb-16 md:mb-20 gap-6">
-          <div>
+      <div className="mx-auto max-w-5xl px-5 sm:px-6 md:px-12">
+        <div className="mb-10 flex flex-col gap-6 sm:mb-14 md:mb-20 md:flex-row md:items-end md:justify-between">
+          <div className="max-w-xl">
             <motion.h2
               id="testimonials-section-heading"
               initial={{ opacity: 0, y: 20 }}
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, ease: [0.16, 1, 0.3, 1] }}
-              className="text-3xl sm:text-4xl md:text-[40px] font-medium text-[#111111] tracking-tight leading-tight"
+              className="text-2xl font-medium leading-tight tracking-tight text-[#111111] sm:text-3xl md:text-[40px]"
             >
               Client perspectives.
             </motion.h2>
@@ -71,36 +70,34 @@ export const TestimonialsSection: React.FC = () => {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true, margin: '-60px' }}
               transition={{ duration: 0.7, delay: 0.1, ease: [0.16, 1, 0.3, 1] }}
-              className="mt-4 text-base text-[#666666] font-normal leading-relaxed"
+              className="mt-3 text-sm font-normal leading-relaxed text-[#666666] sm:mt-4 sm:text-base"
             >
               Direct accounts from founders, product leaders, and managing directors.
             </motion.p>
           </div>
 
-          {/* Minimalist Slider Controls */}
-          <div className="flex items-center gap-2 self-start sm:self-auto">
+          <div className="flex items-center gap-2 self-start md:self-auto">
             <button
               id="prev-testimonial-btn"
               onClick={prevTestimonial}
               aria-label="Previous Perspective"
-              className="w-10 h-10 border border-[#E5E7EB] flex items-center justify-center text-[#111111] hover:border-[#111111] hover:bg-[#111111] hover:text-white transition-all duration-200 cursor-pointer"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center border border-[#E5E7EB] text-[#111111] transition-all duration-200 hover:border-[#111111] hover:bg-[#111111] hover:text-white"
             >
-              <ArrowLeft className="w-4 h-4" />
+              <ArrowLeft className="h-4 w-4" />
             </button>
             <button
               id="next-testimonial-btn"
               onClick={nextTestimonial}
               aria-label="Next Perspective"
-              className="w-10 h-10 border border-[#E5E7EB] flex items-center justify-center text-[#111111] hover:border-[#111111] hover:bg-[#111111] hover:text-white transition-all duration-200 cursor-pointer"
+              className="flex h-10 w-10 cursor-pointer items-center justify-center border border-[#E5E7EB] text-[#111111] transition-all duration-200 hover:border-[#111111] hover:bg-[#111111] hover:text-white"
             >
-              <ArrowRight className="w-4 h-4" />
+              <ArrowRight className="h-4 w-4" />
             </button>
           </div>
         </div>
 
-        {/* Editorial Testimonial Display */}
-        <div className="relative min-h-[300px] md:min-h-[240px] flex flex-col justify-between">
-          <div className="w-6 h-6 border-l-2 border-t-2 border-[#111111] mb-6 opacity-40" />
+        <div className="relative flex min-h-[280px] flex-col justify-between sm:min-h-[300px] md:min-h-[240px]">
+          <div className="mb-4 h-5 w-5 border-l-2 border-t-2 border-[#111111] opacity-40 sm:mb-6 sm:h-6 sm:w-6" />
 
           <AnimatePresence mode="wait" custom={direction}>
             <motion.div
@@ -111,33 +108,30 @@ export const TestimonialsSection: React.FC = () => {
               animate="center"
               exit="exit"
               transition={{ duration: 0.4, ease: [0.16, 1, 0.3, 1] }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
-              {/* Quote Text */}
-              <p className="text-xl sm:text-2xl md:text-[26px] text-[#111111] font-normal leading-relaxed tracking-tight max-w-4xl">
-                "{current.quote}"
+              <p className="max-w-4xl text-lg font-normal leading-relaxed tracking-tight text-[#111111] sm:text-xl md:text-2xl lg:text-[26px]">
+                &ldquo;{current.quote}&rdquo;
               </p>
 
-              {/* Client Info */}
-              <div className="pt-6 border-t border-[#F0F0F0] flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+              <div className="flex flex-col gap-4 border-t border-[#F0F0F0] pt-5 sm:flex-row sm:items-center sm:justify-between sm:pt-6">
                 <div>
-                  <h4 className="text-base font-medium text-[#111111]">
+                  <h4 className="text-sm font-medium text-[#111111] sm:text-base">
                     {current.clientName}
                   </h4>
-                  <p className="text-xs text-[#777777] mt-0.5">
+                  <p className="mt-0.5 text-xs text-[#777777]">
                     {current.clientPosition}, {current.company}
                   </p>
                 </div>
 
-                <span className="text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888] bg-[#FAFAFA] border border-[#EEEEEE] px-3 py-1 self-start sm:self-auto">
+                <span className="self-start rounded-none border border-[#EEEEEE] bg-[#FAFAFA] px-3 py-1 text-[10px] font-mono uppercase tracking-[0.2em] text-[#888888] sm:self-auto">
                   {current.serviceCategory}
                 </span>
               </div>
             </motion.div>
           </AnimatePresence>
 
-          {/* Progress Indicator */}
-          <div className="flex items-center gap-2 mt-8">
+          <div className="mt-6 flex flex-wrap items-center gap-2 sm:mt-8">
             {TESTIMONIALS_DATA.map((item, idx) => (
               <button
                 key={item.id}
@@ -146,7 +140,7 @@ export const TestimonialsSection: React.FC = () => {
                   setCurrentIndex(idx);
                 }}
                 aria-label={`Go to perspective ${idx + 1}`}
-                className={`h-[2px] transition-all duration-300 cursor-pointer ${
+                className={`h-[2px] cursor-pointer transition-all duration-300 ${
                   idx === currentIndex ? 'w-8 bg-[#111111]' : 'w-3 bg-[#E5E7EB] hover:bg-[#999999]'
                 }`}
               />

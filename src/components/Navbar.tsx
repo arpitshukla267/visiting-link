@@ -1,3 +1,5 @@
+"use client";
+
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
@@ -10,6 +12,12 @@ interface NavbarProps {
   onNavigateContact: (preselectedService?: string) => void;
 }
 
+const MOBILE_SERVICES = [
+  { id: 'visitinglink', label: 'VisitingLink' },
+  { id: 'web-development', label: 'Web Development' },
+  { id: 'graphics', label: 'Graphics & Identity' },
+] as const;
+
 export const Navbar: React.FC<NavbarProps> = ({
   currentPage,
   onNavigateHome,
@@ -20,6 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
+  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   const isHomePage = currentPage === 'home';
 
@@ -32,36 +41,68 @@ export const Navbar: React.FC<NavbarProps> = ({
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
 
-  const handlePageNav = (page: string) => {
+  useEffect(() => {
+    if (!mobileMenuOpen) return;
+
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, [mobileMenuOpen]);
+
+  const closeMobileMenu = () => {
     setMobileMenuOpen(false);
+    setMobileServicesOpen(false);
+  };
+
+  const handlePageNav = (page: string) => {
+    closeMobileMenu();
     setServicesDropdownOpen(false);
     onNavigatePage(page);
   };
 
+  const handleServiceNav = (serviceId: string) => {
+    closeMobileMenu();
+    setServicesDropdownOpen(false);
+    onNavigateService(serviceId);
+  };
+
   const navThemeDark = isHomePage && !isScrolled;
+
+  const navLinkClass = (active: boolean) =>
+    `text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
+      active
+        ? navThemeDark
+          ? 'text-white'
+          : 'text-[#111111]'
+        : navThemeDark
+          ? 'text-white/80 hover:text-white'
+          : 'text-[#666666] hover:text-black'
+    }`;
 
   return (
     <>
       <header
         id="main-navbar"
-        className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
-          isScrolled || !isHomePage
-            ? "bg-white/95 backdrop-blur-md border-b border-[#F0F0F0] py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)]"
-            : "bg-transparent py-5 md:py-6"
+        className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
+          isScrolled || !isHomePage || mobileMenuOpen
+            ? 'border-b border-[#F0F0F0] bg-white/95 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-md'
+            : 'bg-transparent py-5 md:py-6'
         }`}
       >
-        <div className="max-w-7xl mx-auto px-6 md:px-12 flex items-center justify-between h-12">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6 md:px-12">
           <button
             onClick={() => {
               onNavigateHome();
-              window.scrollTo({ top: 0, behavior: "smooth" });
+              window.scrollTo({ top: 0, behavior: 'smooth' });
             }}
             id="brand-logo-link"
-            className="group flex items-center gap-3 focus:outline-none cursor-pointer text-left"
+            className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none"
           >
             <span
               className={`text-lg font-semibold tracking-tight transition-colors duration-300 ${
-                navThemeDark ? "text-white" : "text-[#111111]"
+                navThemeDark && !mobileMenuOpen ? 'text-white' : 'text-[#111111]'
               }`}
             >
               VisitingLink
@@ -70,49 +111,41 @@ export const Navbar: React.FC<NavbarProps> = ({
 
           <nav
             id="desktop-nav-menu"
-            className="hidden md:flex items-center space-x-8"
+            className="hidden items-center space-x-8 md:flex"
           >
-              <button
-                onClick={() => handlePageNav("/")}
-                className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
-                  currentPage === "work"
-                    ? navThemeDark
-                      ? "text-white"
-                      : "text-[#111111]"
-                    : navThemeDark
-                      ? "text-white/80 hover:text-white"
-                      : "text-[#666666] hover:text-black"
-                }`}
-              >
-                Home
-              </button>
+            <button
+              onClick={() => handlePageNav('/')}
+              className={navLinkClass(currentPage === 'home')}
+            >
+              Home
+            </button>
+
             <div
               className="relative"
               onMouseEnter={() => setServicesDropdownOpen(true)}
               onMouseLeave={() => setServicesDropdownOpen(false)}
             >
-
               <button
                 onClick={() => {
                   if (isHomePage) {
-                    const target = document.getElementById("services");
-                    if (target) target.scrollIntoView({ behavior: "smooth" });
+                    const target = document.getElementById('services');
+                    if (target) target.scrollIntoView({ behavior: 'smooth' });
                   } else {
                     onNavigateHome();
                     setTimeout(() => {
-                      const target = document.getElementById("services");
-                      if (target) target.scrollIntoView({ behavior: "smooth" });
+                      const target = document.getElementById('services');
+                      if (target) target.scrollIntoView({ behavior: 'smooth' });
                     }, 100);
                   }
                 }}
-                className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 inline-flex items-center gap-1.5 cursor-pointer ${
+                className={`inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 ${
                   navThemeDark
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#666666] hover:text-black"
+                    ? 'text-white/80 hover:text-white'
+                    : 'text-[#666666] hover:text-black'
                 }`}
               >
                 <span>Services</span>
-                <ChevronDown className="w-3 h-3 opacity-60" />
+                <ChevronDown className="h-3 w-3 opacity-60" />
               </button>
 
               <AnimatePresence>
@@ -122,65 +155,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 8 }}
                     transition={{ duration: 0.15 }}
-                    className="absolute top-full -left-4 w-64 pt-2 z-50"
+                    className="absolute top-full -left-4 z-50 w-64 pt-2"
                   >
-                    <div className="bg-white border border-[#E5E7EB] p-3 shadow-xl space-y-1">
-                      <button
-                        onClick={() => {
-                          setServicesDropdownOpen(false);
-                          onNavigateService("visitinglink");
-                        }}
-                        className={`w-full text-left p-2.5 transition-colors cursor-pointer ${
-                          currentPage === "visitinglink"
-                            ? "bg-[#FAFAFA]"
-                            : "hover:bg-[#FAFAFA]"
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-[#111111]">
-                          01 — VisitingLink
-                        </div>
-                        <div className="text-[11px] text-[#777777]">
-                          Digital Identity Gateway
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setServicesDropdownOpen(false);
-                          onNavigateService("web-development");
-                        }}
-                        className={`w-full text-left p-2.5 transition-colors cursor-pointer ${
-                          currentPage === "web-development"
-                            ? "bg-[#FAFAFA]"
-                            : "hover:bg-[#FAFAFA]"
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-[#111111]">
-                          02 — Web Development
-                        </div>
-                        <div className="text-[11px] text-[#777777]">
-                          High-Performance Platforms
-                        </div>
-                      </button>
-
-                      <button
-                        onClick={() => {
-                          setServicesDropdownOpen(false);
-                          onNavigateService("graphics");
-                        }}
-                        className={`w-full text-left p-2.5 transition-colors cursor-pointer ${
-                          currentPage === "graphics"
-                            ? "bg-[#FAFAFA]"
-                            : "hover:bg-[#FAFAFA]"
-                        }`}
-                      >
-                        <div className="text-xs font-semibold text-[#111111]">
-                          03 — Graphics & Identity
-                        </div>
-                        <div className="text-[11px] text-[#777777]">
-                          Refined Visual Systems
-                        </div>
-                      </button>
+                    <div className="space-y-1 border border-[#E5E7EB] bg-white p-3 shadow-xl">
+                      {MOBILE_SERVICES.map((service, i) => (
+                        <button
+                          key={service.id}
+                          onClick={() => {
+                            setServicesDropdownOpen(false);
+                            onNavigateService(service.id);
+                          }}
+                          className={`w-full cursor-pointer p-2.5 text-left transition-colors ${
+                            currentPage === service.id
+                              ? 'bg-[#FAFAFA]'
+                              : 'hover:bg-[#FAFAFA]'
+                          }`}
+                        >
+                          <div className="text-xs font-semibold text-[#111111]">
+                            0{i + 1} — {service.label}
+                          </div>
+                        </button>
+                      ))}
                     </div>
                   </motion.div>
                 )}
@@ -188,93 +183,55 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
 
             <button
-              onClick={() => handlePageNav("work")}
-              className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
-                currentPage === "work"
-                  ? navThemeDark
-                    ? "text-white"
-                    : "text-[#111111]"
-                  : navThemeDark
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#666666] hover:text-black"
-              }`}
+              onClick={() => handlePageNav('work')}
+              className={navLinkClass(currentPage === 'work')}
             >
               Work
             </button>
 
             <button
-              onClick={() => handlePageNav("magic")}
-              className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
-                currentPage === "magic"
-                  ? navThemeDark
-                    ? "text-white"
-                    : "text-[#111111]"
-                  : navThemeDark
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#666666] hover:text-black"
-              }`}
-            >
-              Magic
-            </button>
-
-            <button
-              onClick={() => handlePageNav("about")}
-              className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
-                currentPage === "about"
-                  ? navThemeDark
-                    ? "text-white"
-                    : "text-[#111111]"
-                  : navThemeDark
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#666666] hover:text-black"
-              }`}
+              onClick={() => handlePageNav('about')}
+              className={navLinkClass(currentPage === 'about')}
             >
               About
             </button>
 
             <button
               onClick={() => onNavigateContact()}
-              className={`text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
-                currentPage === "contact"
-                  ? navThemeDark
-                    ? "text-white"
-                    : "text-[#111111]"
-                  : navThemeDark
-                    ? "text-white/80 hover:text-white"
-                    : "text-[#666666] hover:text-black"
-              }`}
+              className={navLinkClass(currentPage === 'contact')}
             >
               Contact
             </button>
           </nav>
 
-          <div className="hidden md:flex items-center">
+          <div className="hidden items-center md:flex">
             <button
               id="navbar-cta-button"
               onClick={() => onNavigateContact()}
-              className={`group flex items-center gap-2 px-6 py-2.5 text-xs font-semibold tracking-wider uppercase transition-all duration-200 cursor-pointer ${
+              className={`group flex cursor-pointer items-center gap-2 px-6 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
                 navThemeDark
-                  ? "bg-white text-[#111111] hover:bg-[#F0F0F0]"
-                  : "bg-[#111111] text-white hover:bg-[#333333]"
+                  ? 'bg-white text-[#111111] hover:bg-[#F0F0F0]'
+                  : 'bg-[#111111] text-white hover:bg-[#333333]'
               }`}
             >
               <span>Start a Project</span>
-              <ArrowUpRight className="w-3.5 h-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
             </button>
           </div>
 
           <button
             id="mobile-menu-toggle-button"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+            onClick={() => setMobileMenuOpen((open) => !open)}
             aria-label="Toggle Navigation Menu"
-            className={`md:hidden p-2 transition-colors duration-200 cursor-pointer ${
-              navThemeDark ? "text-white" : "text-[#111111]"
+            aria-expanded={mobileMenuOpen}
+            className={`cursor-pointer p-2 transition-colors duration-200 md:hidden ${
+              navThemeDark && !mobileMenuOpen ? 'text-white' : 'text-[#111111]'
             }`}
           >
             {mobileMenuOpen ? (
-              <X className="w-6 h-6" />
+              <X className="h-6 w-6" />
             ) : (
-              <Menu className="w-6 h-6" />
+              <Menu className="h-6 w-6" />
             )}
           </button>
         </div>
@@ -282,112 +239,141 @@ export const Navbar: React.FC<NavbarProps> = ({
 
       <AnimatePresence>
         {mobileMenuOpen && (
-          <motion.div
-            id="mobile-menu-drawer"
-            initial={{ opacity: 0, y: -20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -20 }}
-            transition={{ duration: 0.25, ease: "easeOut" }}
-            className="fixed inset-0 z-40 bg-white pt-24 px-6 pb-12 flex flex-col justify-between md:hidden"
-          >
-            <div className="flex flex-col gap-4">
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onNavigateHome();
-                  window.scrollTo({ top: 0, behavior: "smooth" });
-                }}
-                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
-              >
-                Home
-              </button>
+          <>
+            <motion.button
+              type="button"
+              aria-label="Close menu"
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              transition={{ duration: 0.3 }}
+              onClick={closeMobileMenu}
+              className="fixed inset-0 z-40 bg-black/30 md:hidden"
+            />
 
-              <div className="py-2 border-b border-[#F0F0F0] space-y-2">
-                <span className="text-sm text-[#888888] block mb-2">
-                  Services
+            <motion.aside
+              id="mobile-menu-drawer"
+              initial={{ y: '-100%' }}
+              animate={{ y: 0 }}
+              exit={{ y: '-100%' }}
+              transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+              className="fixed inset-x-0 top-0 z-[55] flex max-h-[100dvh] flex-col bg-[#FAFAFA] pt-[4.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:hidden"
+            >
+              <div className="flex items-center justify-between border-b border-[#E8E8E8] px-6 py-5">
+                <span className="text-lg font-semibold tracking-tight text-[#111111]">
+                  VisitingLink
                 </span>
-                <div className="pl-2 space-y-2">
+                <button
+                  type="button"
+                  onClick={closeMobileMenu}
+                  aria-label="Close menu"
+                  className="cursor-pointer p-1 text-[#111111] transition-colors hover:text-[#666666]"
+                >
+                  <X className="h-6 w-6" />
+                </button>
+              </div>
+
+              <nav className="flex-1 overflow-y-auto px-6">
+                <button
+                  type="button"
+                  onClick={() => {
+                    closeMobileMenu();
+                    onNavigateHome();
+                    window.scrollTo({ top: 0, behavior: 'smooth' });
+                  }}
+                  className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base font-semibold transition-colors ${
+                    currentPage === 'home'
+                      ? 'text-[#111111]'
+                      : 'font-medium text-[#444444] hover:text-[#111111]'
+                  }`}
+                >
+                  Home
+                </button>
+
+                <div className="border-b border-[#E8E8E8]">
                   <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onNavigateService("visitinglink");
-                    }}
-                    className="block text-lg font-medium text-[#111111] hover:text-[#666666] text-left cursor-pointer"
+                    type="button"
+                    onClick={() => setMobileServicesOpen((open) => !open)}
+                    className="flex w-full cursor-pointer items-center justify-between py-4 text-left text-base font-medium text-[#444444] transition-colors hover:text-[#111111]"
                   >
-                    VisitingLink
+                    <span>Services</span>
+                    <ChevronDown
+                      className={`h-4 w-4 text-[#888888] transition-transform duration-200 ${
+                        mobileServicesOpen ? 'rotate-180' : ''
+                      }`}
+                    />
                   </button>
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onNavigateService("web-development");
-                    }}
-                    className="block text-lg font-medium text-[#111111] hover:text-[#666666] text-left cursor-pointer"
-                  >
-                    Web Development
-                  </button>
-                  <button
-                    onClick={() => {
-                      setMobileMenuOpen(false);
-                      onNavigateService("graphics");
-                    }}
-                    className="block text-lg font-medium text-[#111111] hover:text-[#666666] text-left cursor-pointer"
-                  >
-                    Graphics & Identity
-                  </button>
+
+                  <AnimatePresence initial={false}>
+                    {mobileServicesOpen && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
+                        className="overflow-hidden"
+                      >
+                        <div className="space-y-1 pb-4 pl-1">
+                          {MOBILE_SERVICES.map((service) => (
+                            <button
+                              key={service.id}
+                              type="button"
+                              onClick={() => handleServiceNav(service.id)}
+                              className={`block w-full cursor-pointer py-2.5 text-left text-sm transition-colors ${
+                                currentPage === service.id
+                                  ? 'font-semibold text-[#111111]'
+                                  : 'text-[#666666] hover:text-[#111111]'
+                              }`}
+                            >
+                              {service.label}
+                            </button>
+                          ))}
+                        </div>
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
                 </div>
+
+                {[
+                  { label: 'Work', page: 'work' },
+                  { label: 'About', page: 'about' },
+                  { label: 'Contact', page: 'contact' },
+                ].map((item) => (
+                  <button
+                    key={item.page}
+                    type="button"
+                    onClick={() =>
+                      item.page === 'contact'
+                        ? (closeMobileMenu(), onNavigateContact())
+                        : handlePageNav(item.page)
+                    }
+                    className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base transition-colors ${
+                      currentPage === item.page
+                        ? 'font-semibold text-[#111111]'
+                        : 'font-medium text-[#444444] hover:text-[#111111]'
+                    }`}
+                  >
+                    {item.label}
+                  </button>
+                ))}
+              </nav>
+
+              <div className="border-t border-[#E8E8E8] p-6">
+                <button
+                  id="mobile-menu-cta-button"
+                  type="button"
+                  onClick={() => {
+                    closeMobileMenu();
+                    onNavigateContact();
+                  }}
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#111111] py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#333333]"
+                >
+                  <span>Start a Project</span>
+                  <ArrowUpRight className="h-4 w-4" />
+                </button>
               </div>
-
-              <button
-                onClick={() => handlePageNav("work")}
-                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
-              >
-                Work
-              </button>
-
-              <button
-                onClick={() => handlePageNav("magic")}
-                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
-              >
-                Magic
-              </button>
-
-              <button
-                onClick={() => handlePageNav("about")}
-                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
-              >
-                About
-              </button>
-
-              <button
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onNavigateContact();
-                }}
-                className="text-2xl font-medium text-[#111111] hover:text-[#666666] transition-colors py-2 border-b border-[#F0F0F0] text-left cursor-pointer"
-              >
-                Contact
-              </button>
-            </div>
-
-            <div className="space-y-6 pt-6">
-              <button
-                id="mobile-menu-cta-button"
-                onClick={() => {
-                  setMobileMenuOpen(false);
-                  onNavigateContact();
-                }}
-                className="w-full flex items-center justify-center gap-2 py-4 bg-[#111111] text-white font-medium text-sm tracking-wider uppercase hover:bg-[#333333] transition-colors cursor-pointer"
-              >
-                <span>Start a Project</span>
-                <ArrowUpRight className="w-4 h-4" />
-              </button>
-
-              <div className="text-xs text-[#888888] space-y-1">
-                <p>VisitingLink — Digital Services Studio</p>
-                <p>hello@visitinglink.studio</p>
-              </div>
-            </div>
-          </motion.div>
+            </motion.aside>
+          </>
         )}
       </AnimatePresence>
     </>
