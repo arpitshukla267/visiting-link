@@ -71,7 +71,7 @@ const RevealParagraph: React.FC<{
   );
 };
 
-export const CompanyStatement: React.FC = () => {
+export const CompanyStatement: React.FC = React.memo(() => {
   const containerRef = useRef<HTMLDivElement>(null);
 
   // Locomotive Scroll Progress for Word Reveal
@@ -173,4 +173,4 @@ export const CompanyStatement: React.FC = () => {
       </div>
     </section>
   );
-};
+});

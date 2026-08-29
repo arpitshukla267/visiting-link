@@ -79,7 +79,7 @@ export const WORK_PROJECTS: WorkProject[] = [
 ];
 
 export const ABOUT_HERO_IMAGE =
-  'https://i.pinimg.com/736x/cb/37/b7/cb37b7d7664f1cefbb2340c4c406137a.jpg';
+  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80';
 
 export const ABOUT_HERO_STATS = [
   { value: '900+', label: 'clients' },

@@ -12,14 +12,14 @@ interface FooterProps {
 }
 
 const FooterWordmark: React.FC<{ play: boolean; routeKey: string }> = ({ play, routeKey }) => (
-  <div className="mt-2 flex w-full items-end justify-center overflow-hidden py-2 md:mt-3">
+  <div className="flex w-full justify-center overflow-hidden py-3 md:py-4">
     <motion.p
       key={routeKey}
       initial={{ y: '100%', opacity: 0 }}
       animate={play ? { y: 0, opacity: 1 } : { y: '100%', opacity: 0 }}
       transition={{
-        y: { duration: 1.4, ease: [0.22, 1, 0.36, 1] },
-        opacity: { duration: 1.1, ease: [0.22, 1, 0.36, 1] },
+        y: { duration: 1.5, ease: [0.22, 1, 0.36, 1] },
+        opacity: { duration: 1.2, ease: [0.22, 1, 0.36, 1] },
       }}
       className="pointer-events-none w-[90vw] select-none whitespace-nowrap text-center text-[clamp(2.75rem,13.5vw,8.5rem)] font-semibold leading-[0.85] tracking-tighter text-[#3a3a3a]"
     >
@@ -39,7 +39,7 @@ export const Footer: React.FC<FooterProps> = ({
 
   return (
     <footer ref={footerRef} id="main-footer" className="relative z-20 w-full overflow-hidden border-t border-[#222222] bg-[#111111] text-white">
-      <div className="mx-auto max-w-7xl px-6 pb-2 pt-6 md:px-12 md:pt-10">
+      <div className="mx-auto max-w-7xl px-6 pb-0 pt-6 md:px-12 md:pt-10">
         <div className="flex flex-col items-start justify-between gap-4 border-b border-[#222222] pb-5 sm:flex-row sm:items-center">
           <p className="max-w-xs text-xs leading-relaxed text-[#888888]">
             Creative technology studio — digital solutions, web platforms, and graphic systems.
@@ -123,9 +123,9 @@ export const Footer: React.FC<FooterProps> = ({
             </div>
           </div>
         </div>
-
-        <FooterWordmark play={isFooterInView} routeKey={pathname} />
       </div>
+
+      <FooterWordmark play={isFooterInView} routeKey={pathname} />
     </footer>
   );
 };

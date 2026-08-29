@@ -2,7 +2,7 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import { Check, ArrowUpRight, Code2, PenTool, IdCard } from "lucide-react";
+import { Check, ArrowUpRight, Code2, PenTool, Building2 } from "lucide-react";
 import { SERVICES_DATA } from "../data/content";
 import { ServiceItem } from "../types";
 import { FilmstripScroller } from "@/components/ui/featuredfilmstrip";
@@ -11,6 +11,7 @@ interface ServicesSectionProps {
   onSelectService: (service: ServiceItem) => void;
   onNavigateService: (serviceId: string) => void;
   onNavigateContact: (serviceName?: string) => void;
+  onNavigatePage: (page: string) => void;
 }
 
 /* -------------------------------------------------------------------------
@@ -20,7 +21,7 @@ interface ServicesSectionProps {
  * existing "Explore" -> onNavigateService(id) wiring keeps working. If no
  * match is found the card still renders but falls back to a slugified id.
  * ------------------------------------------------------------------------- */
-type AccentKey = "web" | "graphics" | "visitinglink";
+type AccentKey = "web" | "graphics" | "companyProfile";
 
 interface ServiceCardCopy {
   title: string;
@@ -29,6 +30,7 @@ interface ServiceCardCopy {
   matchKeyword: string;
   accent: AccentKey;
   Icon: React.FC<{ className?: string; strokeWidth?: number }>;
+  pageRoute?: string;
 }
 
 const CARD_COPY: ServiceCardCopy[] = [
@@ -61,18 +63,19 @@ const CARD_COPY: ServiceCardCopy[] = [
     Icon: PenTool,
   },
   {
-    title: "VisitingLink",
-    description: "A smarter digital identity for your business.",
+    title: "Company Profile",
+    description: "A polished overview of who you are and what you deliver.",
     checklist: [
-      "Digital visiting card",
-      "Smart profile",
-      "QR code",
-      "Contact sharing",
-      "Social links",
+      "Company overview",
+      "Leadership & team",
+      "Capabilities",
+      "Case highlights",
+      "Credentials",
     ],
-    matchKeyword: "visitinglink",
-    accent: "visitinglink",
-    Icon: IdCard,
+    matchKeyword: "company profile",
+    accent: "companyProfile",
+    Icon: Building2,
+    pageRoute: "about",
   },
 ];
 
@@ -96,7 +99,7 @@ const ACCENTS: Record<
     tick: "#2FA36B",
     ring: "#DFF3E8",
   },
-  visitinglink: {
+  companyProfile: {
     bg: "#FCFBF7",
     iconBg: "#FBF2DC",
     icon: "#B8860B",
@@ -204,40 +207,41 @@ const GraphicsVisual: React.FC<{ accent: (typeof ACCENTS)["graphics"] }> = ({ ac
   </div>
 );
 
-const VisitingLinkVisual: React.FC<{ accent: (typeof ACCENTS)["visitinglink"] }> = ({ accent }) => (
+const CompanyProfileVisual: React.FC<{ accent: (typeof ACCENTS)["companyProfile"] }> = ({ accent }) => (
   <div className="relative flex h-full w-full items-center justify-center overflow-hidden p-3">
     <DotGrid />
     <div
-      className="relative z-10 w-[42%] rotate-[-2deg] rounded-xl border bg-white p-2 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
+      className="relative z-10 w-[52%] rotate-[-2deg] rounded-md border bg-white p-2.5 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
       style={{ borderColor: accent.ring }}
     >
-      <div className="mx-auto mb-1 h-0.5 w-4 rounded-full bg-[#E5E5E5]" />
-      <div className="mx-auto mb-1 h-5 w-5 rounded-full" style={{ background: accent.iconBg }} />
-      <div className="mx-auto mb-1 h-1 w-3/4 rounded-full bg-[#111111]" />
-      <div className="mx-auto h-1 w-1/2 rounded-full bg-[#E5E5E5]" />
+      <div className="mb-2 h-1.5 w-1/2 rounded-full bg-[#111111]" />
+      <div className="space-y-1">
+        <div className="h-1 w-full rounded-full bg-[#E5E5E5]" />
+        <div className="h-1 w-4/5 rounded-full bg-[#E5E5E5]" />
+        <div className="h-1 w-3/5 rounded-full bg-[#E5E5E5]" />
+      </div>
+      <div className="mt-2 grid grid-cols-3 gap-1">
+        <div className="h-4 rounded-sm" style={{ background: accent.iconBg }} />
+        <div className="h-4 rounded-sm bg-[#F5F5F5]" />
+        <div className="h-4 rounded-sm bg-[#111111]" />
+      </div>
     </div>
     <div
-      className="absolute bottom-2 right-2 z-20 grid w-[34%] rotate-[3deg] grid-cols-4 gap-[2px] rounded-md border bg-white p-2 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
+      className="absolute bottom-2 right-2 z-20 w-[38%] rotate-[3deg] rounded-md border bg-white p-2 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
       style={{ borderColor: accent.ring }}
     >
-      {Array.from({ length: 16 }).map((_, i) => (
-        <span
-          key={i}
-          className="aspect-square rounded-[1px]"
-          style={{
-            background: [0, 1, 2, 4, 6, 9, 11, 13, 14, 15].includes(i)
-              ? "#111111"
-              : "#F0F0F0",
-          }}
-        />
-      ))}
+      <div className="mb-1 flex items-center gap-1">
+        <span className="h-3 w-3 rounded-full" style={{ background: accent.iconBg }} />
+        <span className="h-1 w-8 rounded-full bg-[#E5E5E5]" />
+      </div>
+      <div className="h-1 w-full rounded-full bg-[#111111]" />
+      <div className="mt-1 h-1 w-2/3 rounded-full bg-[#E5E5E5]" />
     </div>
     <div
-      className="absolute left-2 top-2 z-20 flex items-center gap-1 rounded-full border bg-white px-2 py-1 font-mono text-[8px] text-[#888888] shadow-sm"
+      className="absolute left-2 top-2 z-20 rounded-md border bg-white px-1.5 py-1 font-mono text-[8px] text-[#888888] shadow-sm"
       style={{ borderColor: accent.ring }}
     >
-      <span className="h-1 w-1 rounded-full" style={{ background: accent.icon }} />
-      Share
+      PDF
     </div>
   </div>
 );
@@ -245,7 +249,7 @@ const VisitingLinkVisual: React.FC<{ accent: (typeof ACCENTS)["visitinglink"] }>
 const VISUALS: Record<AccentKey, React.FC<{ accent: (typeof ACCENTS)[AccentKey] }>> = {
   web: WebDevVisual,
   graphics: GraphicsVisual,
-  visitinglink: VisitingLinkVisual,
+  companyProfile: CompanyProfileVisual,
 };
 
 interface ServiceCardProps {
@@ -253,6 +257,7 @@ interface ServiceCardProps {
   idx: number;
   onSelectService: (service: ServiceItem) => void;
   onNavigateService: (serviceId: string) => void;
+  onNavigatePage: (page: string) => void;
   animate?: boolean;
   className?: string;
   uniformMobileHeight?: boolean;
@@ -263,6 +268,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   idx,
   onSelectService,
   onNavigateService,
+  onNavigatePage,
   animate = true,
   className = "",
   uniformMobileHeight = false,
@@ -272,6 +278,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const Icon = card.Icon;
   const serviceId = resolveServiceId(card.matchKeyword, card.title);
   const fullServiceRecord = SERVICES_DATA.find((s) => s.id === serviceId);
+  const cardId = card.pageRoute ?? serviceId;
+
+  const handleNavigate = () => {
+    if (card.pageRoute) {
+      onNavigatePage(card.pageRoute);
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+    onNavigateService(serviceId);
+    if (fullServiceRecord) onSelectService(fullServiceRecord);
+  };
 
   const cardContent = (
     <>
@@ -341,7 +358,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         }`}
         onClick={(e) => {
           e.stopPropagation();
-          onNavigateService(serviceId);
+          handleNavigate();
         }}
       >
         Explore
@@ -357,11 +374,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   if (!animate) {
     return (
       <div
-        id={`service-card-${serviceId}`}
-        onClick={() => {
-          onNavigateService(serviceId);
-          if (fullServiceRecord) onSelectService(fullServiceRecord);
-        }}
+        id={`service-card-${cardId}`}
+        onClick={handleNavigate}
         className={sharedClassName}
         style={{ background: accent.bg }}
       >
@@ -372,7 +386,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   return (
     <motion.div
-      id={`service-card-${serviceId}`}
+      id={`service-card-${cardId}`}
       initial={{ opacity: 0, y: 28 }}
       whileInView={{ opacity: 1, y: 0 }}
       viewport={{ once: true, margin: "-60px" }}
@@ -381,10 +395,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         delay: 0.12 * idx,
         ease: [0.16, 1, 0.3, 1],
       }}
-      onClick={() => {
-        onNavigateService(serviceId);
-        if (fullServiceRecord) onSelectService(fullServiceRecord);
-      }}
+      onClick={handleNavigate}
       className={sharedClassName}
       style={{ background: accent.bg }}
     >
@@ -397,6 +408,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectService,
   onNavigateService,
   onNavigateContact,
+  onNavigatePage,
 }) => {
   const sectionHeader = (
     <>
@@ -436,6 +448,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               idx={idx}
               onSelectService={onSelectService}
               onNavigateService={onNavigateService}
+              onNavigatePage={onNavigatePage}
             />
           ))}
         </div>
@@ -457,6 +470,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   idx={idx}
                   onSelectService={onSelectService}
                   onNavigateService={onNavigateService}
+                  onNavigatePage={onNavigatePage}
                   animate={false}
                   uniformMobileHeight
                   className="h-full w-full"

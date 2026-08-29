@@ -9,12 +9,14 @@ import {
 } from "react";
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
-import { preloadAllHeroFrames, TOTAL_FRAMES } from "@/lib/heroFrames";
+import {
+  preloadAllHeroFrames,
+  preloadRemainingHeroFrames,
+  TOTAL_FRAMES,
+} from "@/lib/heroFrames";
 
 interface LoadingContextValue {
-  /** All hero frames are decoded in memory */
   framesReady: boolean;
-  /** Startup loader dismissed — site is interactive */
   isReady: boolean;
   loadProgress: number;
 }
@@ -29,7 +31,7 @@ export function useStartupReady() {
   return useContext(LoadingContext);
 }
 
-const MIN_LOADER_MS = 600;
+const MAX_LOADER_MS = 3000;
 
 export function StartupLoaderProvider({
   children,
@@ -45,15 +47,21 @@ export function StartupLoaderProvider({
 
   useEffect(() => {
     let cancelled = false;
-    const startedAt = performance.now();
 
     const run = async () => {
       if (isHome) {
-        await preloadAllHeroFrames((loaded, total) => {
-          if (!cancelled) {
-            setLoadProgress(Math.round((loaded / total) * 92));
-          }
-        });
+        await preloadAllHeroFrames(
+          (loaded, total) => {
+            if (!cancelled) {
+              setLoadProgress(Math.round((loaded / total) * 92));
+            }
+          },
+          { maxDurationMs: MAX_LOADER_MS },
+        );
+
+        if (!cancelled) {
+          preloadRemainingHeroFrames();
+        }
       } else {
         setLoadProgress(60);
         await (document.fonts?.ready ?? Promise.resolve());
@@ -64,12 +72,6 @@ export function StartupLoaderProvider({
       setLoadProgress(96);
 
       await (document.fonts?.ready ?? Promise.resolve());
-
-      if (cancelled) return;
-
-      const elapsed = performance.now() - startedAt;
-      const remaining = Math.max(0, MIN_LOADER_MS - elapsed);
-      await new Promise((r) => setTimeout(r, remaining));
 
       if (cancelled) return;
       setLoadProgress(100);
@@ -107,7 +109,7 @@ export function StartupLoaderProvider({
             className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0A0A0C]"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
             <p className="mb-2 text-lg font-semibold tracking-tight text-white">
               VisitingLink

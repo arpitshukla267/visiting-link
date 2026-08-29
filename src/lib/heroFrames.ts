@@ -1,11 +1,40 @@
-const TOTAL_FRAMES = 240;
-const FRAME_FOLDER = "/frames3/hero-bg_frames";
+const FRAME_FOLDER = "/webp";
+const SKIPPED_FRAME_NUMBERS = new Set([601]);
+
+/** File numbers present in /public/webp (xs-0001 … xs-0632, excluding gaps). */
+const FRAME_SEQUENCE: number[] = [];
+for (let n = 1; n <= 632; n++) {
+  if (!SKIPPED_FRAME_NUMBERS.has(n)) {
+    FRAME_SEQUENCE.push(n);
+  }
+}
+
+const TOTAL_FRAMES = FRAME_SEQUENCE.length;
+
+/** Hero overlay timing — file numbers (xs-####). */
+export const HERO_INTRO_EXIT_FILE = 70;
+export const HERO_MID_START_FILE = 388;
+export const HERO_MID_END_FILE = 560;
+export const HERO_STATEMENT_ENTER_FILE = 570;
+export const HERO_STATEMENT_END_FILE = 630;
 
 const frameCache = new Map<number, HTMLImageElement>();
 
+export function getFileNumberForIndex(index: number): number {
+  const clamped = Math.min(TOTAL_FRAMES, Math.max(1, index));
+  return FRAME_SEQUENCE[clamped - 1];
+}
+
+export function getIndexForFileNumber(fileNum: number): number {
+  const idx = FRAME_SEQUENCE.indexOf(fileNum);
+  return idx === -1 ? 1 : idx + 1;
+}
+
+/** Scroll frame index (1…631) → /webp/xs-####.webp */
 export const frameUrl = (index: number) => {
-  const pad = String(index).padStart(3, "0");
-  return `${FRAME_FOLDER}/frame_${pad}.jpg`;
+  const fileNum = getFileNumberForIndex(index);
+  const pad = String(fileNum).padStart(4, "0");
+  return `${FRAME_FOLDER}/xs-${pad}.webp`;
 };
 
 export function getCachedFrame(index: number): HTMLImageElement | null {
@@ -19,20 +48,35 @@ export function areAllFramesCached(): boolean {
 
 export function preloadAllHeroFrames(
   onProgress?: (loaded: number, total: number) => void,
+  options?: { maxDurationMs?: number },
 ): Promise<void> {
   if (areAllFramesCached()) {
     onProgress?.(TOTAL_FRAMES, TOTAL_FRAMES);
     return Promise.resolve();
   }
 
-  const batchSize = 16;
+  const batchSize = 48;
+  const maxDurationMs = options?.maxDurationMs;
 
   return new Promise((resolve) => {
     let loadedCount = 0;
+    let loaderResolved = false;
+
+    const finish = () => {
+      if (loaderResolved) return;
+      loaderResolved = true;
+      resolve();
+    };
+
+    const timeoutId =
+      maxDurationMs != null
+        ? window.setTimeout(finish, maxDurationMs)
+        : undefined;
 
     const loadBatch = (start: number) => {
       if (start > TOTAL_FRAMES) {
-        resolve();
+        if (timeoutId) window.clearTimeout(timeoutId);
+        finish();
         return;
       }
 
@@ -76,6 +120,23 @@ export function preloadAllHeroFrames(
 
     loadBatch(1);
   });
+}
+
+/** Keep loading remaining frames after the loader dismisses. */
+export function preloadRemainingHeroFrames(): void {
+  if (areAllFramesCached()) return;
+
+  const missing: number[] = [];
+  for (let i = 1; i <= TOTAL_FRAMES; i++) {
+    if (!frameCache.has(i)) missing.push(i);
+  }
+
+  for (const i of missing) {
+    const img = new window.Image();
+    img.decoding = "async";
+    img.onload = () => frameCache.set(i, img);
+    img.src = frameUrl(i);
+  }
 }
 
 export { TOTAL_FRAMES };

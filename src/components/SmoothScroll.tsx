@@ -13,6 +13,9 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
 
     if (prefersReducedMotion) return;
 
+    const root = document.documentElement;
+    root.classList.add("lenis", "lenis-smooth");
+
     const lenis = new Lenis({
       duration: 1.1,
       easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
@@ -34,6 +37,7 @@ export function SmoothScroll({ children }: { children: React.ReactNode }) {
       cancelAnimationFrame(frame);
       lenis.destroy();
       lenisRef.current = null;
+      root.classList.remove("lenis", "lenis-smooth");
       delete (window as Window & { __lenis?: Lenis }).__lenis;
     };
   }, []);
