@@ -5,6 +5,7 @@ import {
   useContext,
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 import { usePathname } from "next/navigation";
@@ -14,6 +15,9 @@ import {
   preloadRemainingHeroFrames,
   TOTAL_FRAMES,
 } from "@/lib/heroFrames";
+
+const SPLASH_VIDEO = "/visitinglink-splash-screen.mp4";
+const MAX_SPLASH_MS = 8000;
 
 interface LoadingContextValue {
   framesReady: boolean;
@@ -31,8 +35,6 @@ export function useStartupReady() {
   return useContext(LoadingContext);
 }
 
-const MAX_LOADER_MS = 3000;
-
 export function StartupLoaderProvider({
   children,
 }: {
@@ -40,8 +42,10 @@ export function StartupLoaderProvider({
 }) {
   const pathname = usePathname();
   const isHome = pathname === "/";
+  const videoRef = useRef<HTMLVideoElement>(null);
 
   const [framesReady, setFramesReady] = useState(false);
+  const [videoEnded, setVideoEnded] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
@@ -53,10 +57,10 @@ export function StartupLoaderProvider({
         await preloadAllHeroFrames(
           (loaded, total) => {
             if (!cancelled) {
-              setLoadProgress(Math.round((loaded / total) * 92));
+              setLoadProgress(Math.round((loaded / total) * 90));
             }
           },
-          { maxDurationMs: MAX_LOADER_MS },
+          { maxDurationMs: MAX_SPLASH_MS },
         );
 
         if (!cancelled) {
@@ -68,17 +72,12 @@ export function StartupLoaderProvider({
       }
 
       if (cancelled) return;
-      setFramesReady(true);
-      setLoadProgress(96);
 
       await (document.fonts?.ready ?? Promise.resolve());
-
       if (cancelled) return;
-      setLoadProgress(100);
 
-      requestAnimationFrame(() => {
-        if (!cancelled) setIsReady(true);
-      });
+      setFramesReady(true);
+      setLoadProgress((p) => Math.max(p, 92));
     };
 
     run();
@@ -87,6 +86,45 @@ export function StartupLoaderProvider({
       cancelled = true;
     };
   }, [isHome]);
+
+  useEffect(() => {
+    const video = videoRef.current;
+    if (!video) return;
+
+    const markVideoDone = () => {
+      setVideoEnded(true);
+      setLoadProgress((p) => Math.max(p, 96));
+    };
+
+    const playVideo = async () => {
+      try {
+        video.currentTime = 0;
+        await video.play();
+      } catch {
+        markVideoDone();
+      }
+    };
+
+    playVideo();
+
+    video.addEventListener("ended", markVideoDone);
+    video.addEventListener("error", markVideoDone);
+
+    const fallbackTimer = window.setTimeout(markVideoDone, MAX_SPLASH_MS);
+
+    return () => {
+      video.removeEventListener("ended", markVideoDone);
+      video.removeEventListener("error", markVideoDone);
+      window.clearTimeout(fallbackTimer);
+    };
+  }, []);
+
+  useEffect(() => {
+    if (!framesReady || !videoEnded || isReady) return;
+
+    setLoadProgress(100);
+    requestAnimationFrame(() => setIsReady(true));
+  }, [framesReady, videoEnded, isReady]);
 
   useEffect(() => {
     document.body.style.overflow = isReady ? "" : "hidden";
@@ -105,33 +143,21 @@ export function StartupLoaderProvider({
       <AnimatePresence mode="wait">
         {!isReady && (
           <motion.div
-            key="startup-loader"
-            className="fixed inset-0 z-[200] flex flex-col items-center justify-center bg-[#0A0A0C]"
+            key="startup-splash"
+            className="fixed inset-0 z-[200] overflow-hidden bg-black"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <p className="mb-2 text-lg font-semibold tracking-tight text-white">
-              VisitingLink
-            </p>
-            {isHome && (
-              <p className="mb-6 text-[11px] uppercase tracking-[0.2em] text-white/40">
-                Loading experience
-              </p>
-            )}
-            <div className="h-[2px] w-52 overflow-hidden rounded-full bg-white/10">
-              <motion.div
-                className="h-full origin-left bg-white"
-                initial={{ scaleX: 0 }}
-                animate={{ scaleX: loadProgress / 100 }}
-                transition={{ duration: 0.2, ease: "easeOut" }}
-              />
-            </div>
-            {isHome && (
-              <p className="mt-3 font-mono text-[10px] text-white/35">
-                {loadProgress}%
-              </p>
-            )}
+            <video
+              ref={videoRef}
+              className="h-full w-full object-cover"
+              src={SPLASH_VIDEO}
+              muted
+              playsInline
+              preload="auto"
+              aria-label="VisitingLink splash screen"
+            />
           </motion.div>
         )}
       </AnimatePresence>
