@@ -17,7 +17,7 @@ import {
 } from "@/lib/heroFrames";
 
 const SPLASH_VIDEO = "/visitinglink-splash-screen.mp4";
-const MAX_SPLASH_MS = 8000;
+const MAX_SPLASH_MS = 4000;
 
 interface LoadingContextValue {
   framesReady: boolean;
@@ -41,19 +41,24 @@ export function StartupLoaderProvider({
   children: React.ReactNode;
 }) {
   const pathname = usePathname();
-  const isHome = pathname === "/";
+  const initialPathname = useRef(pathname);
+  const previousPathname = useRef(pathname);
+  const bootStarted = useRef(false);
   const videoRef = useRef<HTMLVideoElement>(null);
 
   const [framesReady, setFramesReady] = useState(false);
   const [videoEnded, setVideoEnded] = useState(false);
   const [isReady, setIsReady] = useState(false);
+  const [routeLoading, setRouteLoading] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
+    if (bootStarted.current) return;
+    bootStarted.current = true;
     let cancelled = false;
 
     const run = async () => {
-      if (isHome) {
+      if (initialPathname.current === "/") {
         await preloadAllHeroFrames(
           (loaded, total) => {
             if (!cancelled) {
@@ -85,7 +90,56 @@ export function StartupLoaderProvider({
     return () => {
       cancelled = true;
     };
-  }, [isHome]);
+  }, []);
+
+  // If the app was opened on another route, prepare Home frames in the
+  // background when it is visited without replaying the startup loader.
+  useEffect(() => {
+    if (pathname === "/" && initialPathname.current !== "/") {
+      preloadRemainingHeroFrames();
+    }
+  }, [pathname]);
+
+  // Reuse the startup splash as a transition loader for every route change.
+  useEffect(() => {
+    if (previousPathname.current === pathname || !isReady) return;
+
+    previousPathname.current = pathname;
+    setRouteLoading(true);
+    setLoadProgress(0);
+
+    const fallbackTimer = window.setTimeout(() => {
+      setLoadProgress(100);
+      setRouteLoading(false);
+    }, MAX_SPLASH_MS);
+
+    return () => {
+      window.clearTimeout(fallbackTimer);
+    };
+  }, [isReady, pathname]);
+
+  useEffect(() => {
+    if (!routeLoading) return;
+
+    const video = videoRef.current;
+    if (!video) return;
+
+    let finished = false;
+    const finishTransition = () => {
+      if (finished) return;
+      finished = true;
+      setLoadProgress(100);
+      setRouteLoading(false);
+    };
+
+    video.currentTime = 0;
+    video.addEventListener("ended", finishTransition);
+    void video.play().catch(finishTransition);
+
+    return () => {
+      video.removeEventListener("ended", finishTransition);
+    };
+  }, [routeLoading]);
 
   useEffect(() => {
     const video = videoRef.current;
@@ -141,7 +195,7 @@ export function StartupLoaderProvider({
   return (
     <LoadingContext.Provider value={value}>
       <AnimatePresence mode="wait">
-        {!isReady && (
+        {(!isReady || routeLoading) && (
           <motion.div
             key="startup-splash"
             className="fixed inset-0 z-[200] overflow-hidden bg-black"

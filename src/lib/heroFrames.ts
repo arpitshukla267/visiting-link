@@ -1,22 +1,23 @@
-const FRAME_FOLDER = "/webp";
-const SKIPPED_FRAME_NUMBERS = new Set([601]);
+const FRAME_FOLDER = "/optimized";
+const FRAME_PREFIX = "gh";
+const FRAME_COUNT = 424;
 
-/** File numbers present in /public/webp (xs-0001 … xs-0632, excluding gaps). */
+/** File numbers present in /public/optimized (gh-0001 … gh-0424). */
 const FRAME_SEQUENCE: number[] = [];
-for (let n = 1; n <= 632; n++) {
-  if (!SKIPPED_FRAME_NUMBERS.has(n)) {
-    FRAME_SEQUENCE.push(n);
-  }
+for (let n = 1; n <= FRAME_COUNT; n++) {
+  FRAME_SEQUENCE.push(n);
 }
 
 const TOTAL_FRAMES = FRAME_SEQUENCE.length;
 
-/** Hero overlay timing — file numbers (xs-####). */
-export const HERO_INTRO_EXIT_FILE = 70;
-export const HERO_MID_START_FILE = 388;
-export const HERO_MID_END_FILE = 560;
-export const HERO_STATEMENT_ENTER_FILE = 570;
-export const HERO_STATEMENT_END_FILE = 630;
+/** Hero overlay timing — file numbers (gh-####). */
+export const HERO_INTRO_EXIT_FILE = 47;
+export const HERO_MID_START_FILE = 260;
+export const HERO_MID_END_FILE = 376;
+/** CompanyStatement reveals progressively across the final 40 frames. */
+export const HERO_STATEMENT_REVEAL_START_FILE = TOTAL_FRAMES - 40;
+export const HERO_STATEMENT_ENTER_FILE = TOTAL_FRAMES;
+export const HERO_STATEMENT_END_FILE = TOTAL_FRAMES;
 
 const frameCache = new Map<number, HTMLImageElement>();
 
@@ -30,11 +31,11 @@ export function getIndexForFileNumber(fileNum: number): number {
   return idx === -1 ? 1 : idx + 1;
 }
 
-/** Scroll frame index (1…631) → /webp/xs-####.webp */
+/** Scroll frame index (1…424) → /optimized/gh-####.webp */
 export const frameUrl = (index: number) => {
   const fileNum = getFileNumberForIndex(index);
   const pad = String(fileNum).padStart(4, "0");
-  return `${FRAME_FOLDER}/xs-${pad}.webp`;
+  return `${FRAME_FOLDER}/${FRAME_PREFIX}-${pad}.webp`;
 };
 
 export function getCachedFrame(index: number): HTMLImageElement | null {

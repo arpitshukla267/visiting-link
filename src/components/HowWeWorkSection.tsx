@@ -199,7 +199,7 @@ export default function HowWeWorkSection() {
       id="approach"
       className="relative w-full overflow-hidden bg-white py-16 md:min-h-screen md:py-32 [content-visibility:auto]"
     >
-      <div className="mx-auto max-w-[90vw] px-6 md:px-12">
+      <div className="mx-auto max-w-[95vw] md:max-w-[90vw] px-4 md:px-12">
         {/* Mobile — simple step cards */}
         <div className="md:hidden">
           <p

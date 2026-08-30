@@ -1,103 +1,75 @@
 "use client";
 
-import React from "react";
-import { motion } from "motion/react";
-import { ScrollAssembleTypography } from "./ui/ScrollAssembleTypography";
+import React, { useRef } from "react";
+import { motion, useInView } from "motion/react";
+
+const revealEase = [0.16, 1, 0.3, 1] as const;
+
+const lineVariants = {
+  hidden: { y: 28, opacity: 0 },
+  visible: (delay: number) => ({
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.8, delay, ease: revealEase },
+  }),
+};
 
 export const VisualBreak: React.FC = () => {
+  const sectionRef = useRef<HTMLElement>(null);
+  const isInView = useInView(sectionRef, { once: true, amount: 0.35 });
+
   return (
     <section
+      ref={sectionRef}
       id="visual-break-section"
-      className="w-full bg-[#111111] text-white overflow-hidden border-b border-[#222222]"
+      className="w-full overflow-hidden border-b border-[#222222] bg-[#111111] text-white"
     >
-      {/* Full-width Banner — no max-w/px wrapper, so the image runs edge-to-edge */}
-      <motion.div
-        initial={{ opacity: 0, y: 30 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "-80px" }}
-        transition={{
-          duration: 0.8,
-          ease: [0.16, 1, 0.3, 1],
-        }}
-        className="relative w-full overflow-hidden"
-      >
-        {/* Banner Image — shorter than before (2.6:1 instead of 2.15:1) */}
+      <div className="relative w-full overflow-hidden">
         <div
-          className="relative aspect-16/12 md:aspect-[2.6/1] w-full bg-cover bg-center"
+          className="relative aspect-[16/12] w-full bg-cover bg-center md:aspect-[2.6/1]"
           style={{
             backgroundImage: "url('/images/future-banner.webp')",
           }}
         >
-          {/* Subtle dark overlay on left for typography */}
-          <div className="absolute inset-0 bg-gradient-to-r from-black/30 via-transparent to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
 
-          {/* Text block */}
-          <div className="absolute left-4 md:left-[6%] top-1/2 -translate-y-1/2 w-[46%] md:w-[42%] lg:w-[40%]">
+          <div className="absolute top-1/2 left-4 z-10 w-[88%] -translate-y-1/2 sm:w-[70%] md:left-[6%] md:w-[50%] lg:w-[42%]">
+            <div className="overflow-hidden">
+              <motion.h2
+                custom={0.05}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={lineVariants}
+                className="text-2xl font-semibold leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[58px]"
+              >
+                Ideas are just the beginning.
+              </motion.h2>
+            </div>
 
-            {/*
-              Both lines now go through ScrollAssembleTypography — that's
-              what fixes the "don't match" complaint: same font rendering,
-              same tracking/leading, same assemble motion for both, so
-              they read as one cohesive heading instead of two different
-              techniques stitched together.
+            <div className="mt-1 overflow-hidden">
+              <motion.h2
+                custom={0.2}
+                initial="hidden"
+                animate={isInView ? "visible" : "hidden"}
+                variants={lineVariants}
+                className="text-2xl font-semibold leading-[1.1] tracking-tight text-[#22d3ee] sm:text-4xl md:text-5xl lg:text-[58px]"
+              >
+                We build what comes next.
+              </motion.h2>
+            </div>
 
-              Note on the gradient: a true multi-stop CSS gradient
-              (bg-clip-text) needs the actual text color to be transparent
-              so the background can show through — but this component sets
-              each character's `color` itself via startColor/endColor, and
-              forcing that transparent from outside is fragile without
-              seeing its internals (it could silently break in a way
-              that's hard to debug). Instead, line 2 uses the same
-              scroll-color-reveal mechanic as line 1, just animating into
-              a solid neon cyan instead of white — same technique, same
-              motion, distinct color. That's what actually gives a
-              guaranteed, cohesive result rather than a gradient that
-              might not render at all.
-            */}
-            <ScrollAssembleTypography
-              phrase="Ideas are just the beginning."
-              className="
-                text-lg
-                sm:text-4xl
-                md:text-5xl
-                lg:text-[58px]
-                font-semibold
-                tracking-tight
-                leading-[1.1]
-              "
-              startColor="rgba(255,255,255,0.18)"
-              endColor="rgba(255,255,255,1)"
-              startAt="start 110%"
-              endAt="end 75%"
-              tracking="0.0em"
-            />
-
-            <ScrollAssembleTypography
-              phrase="We build what comes next."
-              className="
-                mt-1
-                text-lg
-                sm:text-4xl
-                md:text-5xl
-                lg:text-[58px]
-                font-semibold
-                tracking-tight
-                leading-[1.1]
-              "
-              startColor="rgba(34,211,238,0.2)"
-              endColor="#22d3ee"
-              startAt="start 110%"
-              endAt="end 75%"
-              tracking="0.0em"
-            />
-
-            <p className="mt-6 max-w-md text-xs md:text-base text-white/55 leading-relaxed">
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
+              transition={{ duration: 0.7, delay: 0.38, ease: revealEase }}
+              className="mt-5 max-w-md text-sm leading-relaxed text-white/70 md:mt-6 md:text-base"
+            >
               From concept to launch, we turn ambitious ideas into products
               people actually use — thoughtfully designed, carefully built.
-            </p>
+            </motion.p>
           </div>
         </div>
-      </motion.div>
+      </div>
     </section>
   );
 };

@@ -100,7 +100,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             id="brand-logo-link"
             className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none"
           >
-            <div className="flex items-center justify-center  overflow-hidden transition-all duration-300 group-hover:bg-neutral-900">
+            <div className="flex items-center justify-center  overflow-hidden transition-all duration-300 ">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src="/visitinglink-logo-black.png"
@@ -121,7 +121,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               Home
             </button>
 
-            <div
+            {/* <div
               className="relative"
               onMouseEnter={() => setServicesDropdownOpen(true)}
               onMouseLeave={() => setServicesDropdownOpen(false)}
@@ -181,7 +181,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   </motion.div>
                 )}
               </AnimatePresence>
-            </div>
+            </div> */}
 
             <button
               onClick={() => handlePageNav('work')}
@@ -259,25 +259,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               exit={{ y: '-100%' }}
               transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               className="fixed inset-x-0 top-0 z-[55] flex max-h-[100dvh] flex-col bg-[#FAFAFA] pt-[4.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:hidden"
-            >
-              <div className="flex items-center justify-between border-b border-[#E8E8E8] px-6 py-5">
-                <div className="flex items-center justify-center px-3.5 py-1.5 rounded-lg border border-black shadow-md overflow-hidden">
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src="/visitinglink-logo-black.png"
-                    alt="VisitingLink"
-                    className="h-9 w-auto object-contain"
-                  />
-                </div>
-                <button
-                  type="button"
-                  onClick={closeMobileMenu}
-                  aria-label="Close menu"
-                  className="cursor-pointer p-1 text-[#111111] transition-colors hover:text-[#666666]"
-                >
-                  <X className="h-6 w-6" />
-                </button>
-              </div>
+            >       
 
               <nav className="flex-1 overflow-y-auto px-6">
                 <button
@@ -296,7 +278,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Home
                 </button>
 
-                <div className="border-b border-[#E8E8E8]">
+                {/* <div className="border-b border-[#E8E8E8]">
                   <button
                     type="button"
                     onClick={() => setMobileServicesOpen((open) => !open)}
@@ -338,7 +320,7 @@ export const Navbar: React.FC<NavbarProps> = ({
                       </motion.div>
                     )}
                   </AnimatePresence>
-                </div>
+                </div> */}
 
                 {[
                   { label: 'Work', page: 'work' },

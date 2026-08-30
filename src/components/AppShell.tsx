@@ -5,7 +5,7 @@ import { usePathname } from "next/navigation";
 import { Navbar } from "@/components/Navbar";
 import { Footer } from "@/components/Footer";
 import { ScrollProgress } from "@/components/ScrollProgress";
-import { CustomCursor } from "@/components/ui/CustomCursor";
+// import { CustomCursor } from "@/components/ui/CustomCursor";
 import { ServiceDetailModal } from "@/components/ServiceDetailModal";
 import { ServiceItem } from "@/types";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
@@ -44,7 +44,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
           value={{ openServiceDetail: setSelectedServiceDetail }}
         >
           <div className="relative flex min-h-screen flex-col bg-white text-[#111111] selection:bg-black selection:text-white">
-            <CustomCursor />
+            {/* <CustomCursor /> */}
             <ScrollProgress />
             <Navbar
               currentPage={nav.currentPage}

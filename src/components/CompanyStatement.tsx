@@ -120,7 +120,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
     <section
       ref={containerRef}
       id="company-statement-section"
-      className="w-full bg-white py-24 md:py-32 border-b border-[#F0F0F0] overflow-hidden"
+      className="w-full bg-white pb-10 pt-24 md:py-32 border-b border-[#F0F0F0] overflow-hidden"
     >
       <div className="max-w-7xl mx-auto px-6 md:px-12">
         <div className="space-y-10">

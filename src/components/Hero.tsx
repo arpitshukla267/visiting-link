@@ -14,7 +14,7 @@ import { getScrollY } from "@/components/SmoothScroll";
 import { useStartupReady } from "@/components/StartupLoader";
 import { useHeroFileFrame } from "@/components/HeroFrameContext";
 
-const SCROLL_TRACK_VH = 400;
+const SCROLL_TRACK_VH = 300;
 
 const TAGLINE_1 = {
   line: "Turn imagination into something people can experience.",

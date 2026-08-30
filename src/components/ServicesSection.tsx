@@ -420,18 +420,18 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
         design and technology together under one roof.
       </p>
     </>
-  );
+    );
 
   return (
     <section
       id="services"
-      className="w-full border-b border-[#F0F0F0] bg-white py-12 md:py-32"
+      className="w-full border-b border-[#F0F0F0] bg-white  pb-12 md:py-32"
     >
       <div className="mx-auto max-w-[90vw] px-0 md:px-12">
         {/* Desktop header */}
-        <motion.div
-          initial={{ opacity: 0, y: 24 }}
-          whileInView={{ opacity: 1, y: 0 }}
+            <motion.div
+              initial={{ opacity: 0, y: 24 }}
+              whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-80px" }}
           transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
           className="mb-14 hidden max-w-3xl md:block"
@@ -450,8 +450,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               onNavigateService={onNavigateService}
               onNavigatePage={onNavigatePage}
             />
-          ))}
-        </div>
+                  ))}
+                </div>
 
         {/* Mobile: sticky heading + filmstrip cards */}
         <div className="-mx-6 md:hidden">
@@ -476,7 +476,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   className="h-full w-full"
                 />
               </div>
-            ))}
+          ))}
           />
         </div>
 
