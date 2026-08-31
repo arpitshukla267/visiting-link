@@ -480,34 +480,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
           />
         </div>
 
-        {/* Combined Scope Inquire Strip — unchanged from prior implementation */}
-        <motion.div
-          initial={{ opacity: 0, y: 16 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true }}
-          transition={{ duration: 0.6, delay: 0.3 }}
-          className="mt-10 p-6 md:p-8 bg-[#FAFAFA] border border-[#F0F0F0] rounded-xl flex flex-col sm:flex-row items-center justify-between gap-6 text-center sm:text-left"
-        >
-          <div>
-            <div className="flex items-center gap-2 justify-center sm:justify-start mb-1">
-              <span className="w-1.5 h-1.5 bg-[#111111]" />
-              <p className="text-sm font-medium text-[#111111]">
-                Need an integrated multi-discipline engagement?
-              </p>
-            </div>
-            <p className="text-xs text-[#666666]">
-              We architect unified packages combining VisitingLink identity,
-              custom web engineering, and brand graphics.
-            </p>
-          </div>
-          <button
-            id="combined-services-inquiry-btn"
-            onClick={() => onNavigateContact("Combined Digital Suite")}
-            className="whitespace-nowrap px-6 py-3 bg-[#111111] text-white text-xs font-medium tracking-widest uppercase rounded-full hover:bg-[#333333] transition-colors cursor-pointer"
-          >
-            Inquire Combined Scope
-          </button>
-        </motion.div>
+      
       </div>
     </section>
   );

@@ -37,6 +37,7 @@ export const Navbar: React.FC<NavbarProps> = ({
       setIsScrolled(window.scrollY > 30);
     };
 
+    handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
     return () => window.removeEventListener('scroll', handleScroll);
   }, []);
@@ -68,7 +69,8 @@ export const Navbar: React.FC<NavbarProps> = ({
     onNavigateService(serviceId);
   };
 
-  const navThemeDark = isHomePage && !isScrolled;
+  const isTransparentPage = isHomePage || currentPage === 'about';
+  const navThemeDark = isTransparentPage && !isScrolled && !mobileMenuOpen;
 
   const navLinkClass = (active: boolean) =>
     `text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 cursor-pointer ${
@@ -86,12 +88,12 @@ export const Navbar: React.FC<NavbarProps> = ({
       <header
         id="main-navbar"
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
-          isScrolled || !isHomePage || mobileMenuOpen
+          isScrolled || !isTransparentPage || mobileMenuOpen
             ? 'border-b border-[#F0F0F0] bg-white/95 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-md'
             : 'bg-transparent py-5 md:py-6'
         }`}
       >
-        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-6 md:px-12">
+        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 md:px-12">
           <button
             onClick={() => {
               onNavigateHome();
@@ -103,9 +105,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center justify-center  overflow-hidden transition-all duration-300 ">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src="/visitinglink-logo-black.png"
+                src={navThemeDark ? "/logo.png" : "/visitinglink-logo-black.png"}
                 alt="VisitingLink"
-                className="h-9 md:h-11 w-auto object-contain"
+                className={`${navThemeDark ? "h-12" : "h-9"} w-auto object-contain transition-all duration-300`}
               />
             </div>
           </button>

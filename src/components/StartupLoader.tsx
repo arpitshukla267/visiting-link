@@ -11,13 +11,17 @@ import {
 import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import {
+  DotLottieReact,
+  type DotLottie,
+} from "@lottiefiles/dotlottie-react";
+import {
   preloadAllHeroFrames,
   preloadRemainingHeroFrames,
   TOTAL_FRAMES,
 } from "@/lib/heroFrames";
 
-const SPLASH_VIDEO = "/visitinglink-splash-screen.mp4";
-const MAX_SPLASH_MS = 4000;
+const LOTTIE_SOURCE = "/lottiefile/Horse%20Run.lottie";
+const LOTTIE_FAILSAFE_MS = 10000;
 
 interface LoadingContextValue {
   framesReady: boolean;
@@ -42,14 +46,12 @@ export function StartupLoaderProvider({
 }) {
   const pathname = usePathname();
   const initialPathname = useRef(pathname);
-  const previousPathname = useRef(pathname);
   const bootStarted = useRef(false);
-  const videoRef = useRef<HTMLVideoElement>(null);
+  const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
 
   const [framesReady, setFramesReady] = useState(false);
-  const [videoEnded, setVideoEnded] = useState(false);
+  const [lottieEnded, setLottieEnded] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [routeLoading, setRouteLoading] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
   useEffect(() => {
@@ -65,7 +67,7 @@ export function StartupLoaderProvider({
               setLoadProgress(Math.round((loaded / total) * 90));
             }
           },
-          { maxDurationMs: MAX_SPLASH_MS },
+          { maxDurationMs: 4000 },
         );
 
         if (!cancelled) {
@@ -92,93 +94,44 @@ export function StartupLoaderProvider({
     };
   }, []);
 
-  // If the app was opened on another route, prepare Home frames in the
-  // background when it is visited without replaying the startup loader.
+  // Prepare the hero frames in the background if Home is visited later.
   useEffect(() => {
     if (pathname === "/" && initialPathname.current !== "/") {
       preloadRemainingHeroFrames();
     }
   }, [pathname]);
 
-  // Reuse the startup splash as a transition loader for every route change.
+  // Start the Lottie only once and let its own content determine the
+  // animation duration. The failsafe only handles a broken animation file.
   useEffect(() => {
-    if (previousPathname.current === pathname || !isReady) return;
-
-    previousPathname.current = pathname;
-    setRouteLoading(true);
-    setLoadProgress(0);
-
-    const fallbackTimer = window.setTimeout(() => {
-      setLoadProgress(100);
-      setRouteLoading(false);
-    }, MAX_SPLASH_MS);
-
-    return () => {
-      window.clearTimeout(fallbackTimer);
-    };
-  }, [isReady, pathname]);
-
-  useEffect(() => {
-    if (!routeLoading) return;
-
-    const video = videoRef.current;
-    if (!video) return;
-
+    if (!dotLottie) return;
     let finished = false;
-    const finishTransition = () => {
+    const finishLottie = () => {
       if (finished) return;
       finished = true;
+      setLottieEnded(true);
       setLoadProgress(100);
-      setRouteLoading(false);
     };
 
-    video.currentTime = 0;
-    video.addEventListener("ended", finishTransition);
-    void video.play().catch(finishTransition);
+    dotLottie.addEventListener("complete", finishLottie);
+    dotLottie.addEventListener("loadError", finishLottie);
+    dotLottie.play();
+
+    const failsafeTimer = window.setTimeout(finishLottie, LOTTIE_FAILSAFE_MS);
 
     return () => {
-      video.removeEventListener("ended", finishTransition);
+      dotLottie.removeEventListener("complete", finishLottie);
+      dotLottie.removeEventListener("loadError", finishLottie);
+      window.clearTimeout(failsafeTimer);
     };
-  }, [routeLoading]);
+  }, [dotLottie]);
 
   useEffect(() => {
-    const video = videoRef.current;
-    if (!video) return;
-
-    const markVideoDone = () => {
-      setVideoEnded(true);
-      setLoadProgress((p) => Math.max(p, 96));
-    };
-
-    const playVideo = async () => {
-      try {
-        video.currentTime = 0;
-        await video.play();
-      } catch {
-        markVideoDone();
-      }
-    };
-
-    playVideo();
-
-    video.addEventListener("ended", markVideoDone);
-    video.addEventListener("error", markVideoDone);
-
-    const fallbackTimer = window.setTimeout(markVideoDone, MAX_SPLASH_MS);
-
-    return () => {
-      video.removeEventListener("ended", markVideoDone);
-      video.removeEventListener("error", markVideoDone);
-      window.clearTimeout(fallbackTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    if (!framesReady || !videoEnded || isReady) return;
+    if (!framesReady || !lottieEnded || isReady) return;
 
     setLoadProgress(100);
     requestAnimationFrame(() => setIsReady(true));
-  }, [framesReady, videoEnded, isReady]);
+  }, [framesReady, lottieEnded, isReady]);
 
   useEffect(() => {
     document.body.style.overflow = isReady ? "" : "hidden";
@@ -195,22 +148,21 @@ export function StartupLoaderProvider({
   return (
     <LoadingContext.Provider value={value}>
       <AnimatePresence mode="wait">
-        {(!isReady || routeLoading) && (
+        {!isReady && (
           <motion.div
             key="startup-splash"
-            className="fixed inset-0 z-[200] overflow-hidden bg-black"
+            className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-white"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
           >
-            <video
-              ref={videoRef}
-              className="h-full w-full object-cover"
-              src={SPLASH_VIDEO}
-              muted
-              playsInline
-              preload="auto"
-              aria-label="VisitingLink splash screen"
+            <DotLottieReact
+              src={LOTTIE_SOURCE}
+              autoplay
+              loop={false}
+              dotLottieRefCallback={setDotLottie}
+              className="h-48 w-48 md:h-64 md:w-64"
+              aria-label="Loading VisitingLink"
             />
           </motion.div>
         )}

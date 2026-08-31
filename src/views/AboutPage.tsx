@@ -4,8 +4,9 @@ import React, { useRef, useState, useEffect } from "react";
 import { motion, useInView } from "motion/react";
 import { Users, Code, Palette, Globe, Terminal } from "lucide-react";
 import Image from "next/image";
-import { JourneySection, type Milestone } from "@/components/JourneySection";
-import { FounderSection } from "@/components/FounderSection";
+import { JourneySection, type Milestone } from "@/components/about/JourneySection";
+import AboutTeamSection from "@/components/about/FounderSection";
+import { VisionMissionSection } from "@/components/about/VisionMissionSection";
 
 interface AboutPageProps {
   onNavigateHome: () => void;
@@ -21,13 +22,13 @@ const AnimatedCounter: React.FC<{
   label: string;
   sublabel?: string;
 }> = ({ value, suffix = "+", label, sublabel }) => {
+  const COUNT_STEP = 40;
   const ref = useRef<HTMLDivElement>(null);
   const isInView = useInView(ref, { once: true, margin: "-60px" });
   const [displayValue, setDisplayValue] = useState(0);
 
   useEffect(() => {
     if (!isInView) return;
-    let start = 0;
     const end = value;
     const duration = 1400; // ms
     const startTime = performance.now();
@@ -37,16 +38,21 @@ const AnimatedCounter: React.FC<{
       const progress = Math.min(elapsed / duration, 1);
       // Cubic ease-out
       const eased = 1 - Math.pow(1 - progress, 3);
-      setDisplayValue(Math.floor(eased * end));
+      const steppedValue =
+        progress >= 1
+          ? end
+          : Math.min(end, Math.floor((eased * end) / COUNT_STEP) * COUNT_STEP);
+      setDisplayValue(steppedValue);
 
       if (progress < 1) {
-        requestAnimationFrame(tick);
+        frameId = requestAnimationFrame(tick);
       } else {
         setDisplayValue(end);
       }
     };
 
-    requestAnimationFrame(tick);
+    let frameId = requestAnimationFrame(tick);
+    return () => cancelAnimationFrame(frameId);
   }, [isInView, value]);
 
   return (
@@ -87,6 +93,33 @@ const FadeIn: React.FC<{
     >
       {children}
     </motion.div>
+  );
+};
+
+const StoryTextReveal: React.FC<{
+  text: string;
+  delay?: number;
+  className?: string;
+}> = ({ text, delay = 0, className = "" }) => {
+  return (
+    <span className={className}>
+      {text.split(" ").map((word, index) => (
+        <motion.span
+          key={`${word}-${index}`}
+          initial={{ opacity: 0, y: 12 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, amount: 0.25 }}
+          transition={{
+            duration: 0.45,
+            delay: delay + index * 0.025,
+            ease: [0.16, 1, 0.3, 1],
+          }}
+          className="mr-[0.28em] inline-block"
+        >
+          {word}
+        </motion.span>
+      ))}
+    </span>
   );
 };
 
@@ -143,48 +176,207 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       {/* ─────────────────────────────────────────────────────────
           SECTION 01 — HERO / OUR EXPERIENCE
       ───────────────────────────────────────────────────────── */}
-      <section className="relative bg-white max-w-[95vw] md:max-w-[90vw] mx-auto pt-28 pb-10 md:pt-36 md:pb-28 border-b border-[#F0F0F0]">
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-4 lg:gap-16 items-center">
-          {/* Left Column: Heading, Paragraph, Statistics */}
-          <div className="lg:col-span-7 max-w-[90vw] mx-auto px-2 md:px-12 lg:pl-12 lg:pr-0 w-full">
-            <FadeIn>
-              <h1 className="text-3xl font-semibold leading-tight text-[#111111] sm:text-5xl lg:text-6xl">
-                8 Years of Experience.
-                <span className="mt-1 md:mt-2 block text-xl font-normal text-[#888888] sm:text-3xl lg:text-4xl">
-                  A Legacy in Digital &amp; Technology.
-                </span>
-              </h1>
-            </FadeIn>
-      
-            <FadeIn delay={0.15}>
-              <p className="mt-4 md:mt-6 text-base md:text-lg sm:text-xl text-[#555555] font-normal leading-relaxed max-w-2xl">
-                For the last 8 years, we have been building in the digital
-                world — creating brands, designing digital experiences,
-                building technology and helping ambitious ideas become reality.
+{/* ================= DESKTOP HERO ================= */}
+<section className="relative hidden min-h-screen overflow-hidden bg-[#050506] text-white md:block">
+  {/* Background artwork */}
+  <Image
+    src="/images/about.webp"
+    alt=""
+    fill
+    priority
+    sizes="100vw"
+    className="object-cover object-center"
+  />
+
+  {/* Content */}
+  <div className="relative z-10 mx-auto flex min-h-screen max-w-[95vw] items-center px-6">
+    <div className="w-full max-w-[50vw]">
+      <FadeIn delay={0.1}>
+        <h1 className="text-6xl font-semibold tracking-[0.03em]">
+          We build
+          <br />
+          <span className="text-white/65">digital</span>
+          <br />
+          experiences.
+        </h1>
+      </FadeIn>
+
+      <FadeIn delay={0.2}>
+        <p className="mt-8 max-w-[510px] text-sm font-normal leading-7 text-white/65 md:text-base">
+          For over 8 years, we’ve been designing brands, building digital
+          experiences and engineering technology that helps ambitious
+          ideas move forward.
+        </p>
+      </FadeIn>
+
+      {/* Stats */}
+      <FadeIn delay={0.3} className="mt-10">
+        <div className="w-[80%] border-t border-white/20 pt-6">
+          <div className="grid w-full grid-cols-2 gap-x-12 gap-y-7 md:grid-cols-4 md:gap-x-10">
+            <div>
+              <div className="text-2xl font-medium tracking-tight md:text-3xl">
+                08<span className="text-white/40">+</span>
+              </div>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+                Years
               </p>
-            </FadeIn>
-      
-            {/* Statistics Grid (4 Large Stats) */}
-            <FadeIn delay={0.25} className="mt-4 md:mt-12 pt-6 md:pt-10 border-t border-[#F0F0F0]">
-              <div className="grid grid-cols-4 sm:grid-cols-4 gap-4 md:gap-8">
-                <AnimatedCounter value={8} suffix="+" label="Years" sublabel="of Experience" />
-                <AnimatedCounter value={900} suffix="+" label="Clients" sublabel="Worldwide" />
-                <AnimatedCounter value={100} suffix="+" label="Designers" sublabel="In Network" />
-                <AnimatedCounter value={120} suffix="+" label="Brands" sublabel="Built &amp;  Scaled" />
+            </div>
+
+            <div>
+              <div className="text-2xl font-medium tracking-tight md:text-3xl">
+                900<span className="text-white/40">+</span>
+              </div>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+                Clients
+              </p>
+            </div>
+
+            <div>
+              <div className="text-2xl font-medium tracking-tight md:text-3xl">
+                100<span className="text-white/40">+</span>
+              </div>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+                Creators
+              </p>
+            </div>
+
+            <div>
+              <div className="text-2xl font-medium tracking-tight md:text-3xl">
+                120<span className="text-white/40">+</span>
+              </div>
+              <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+                Brands
+              </p>
+            </div>
+          </div>
+        </div>
+      </FadeIn>
+    </div>
+  </div>
+</section>
+
+
+{/* ================= MOBILE HERO ================= */}
+<section className="relative min-h-[100svh] overflow-hidden bg-[#050506] text-white md:hidden">
+  {/* Background */}
+  <Image
+    src="/images/about-mobile.webp"
+    alt=""
+    fill
+    priority
+    sizes="100vw"
+    className="object-cover object-center"
+  />
+
+  {/* readability gradient */}
+  <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
+
+  {/* subtle bottom fade */}
+  <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
+
+  {/* Content */}
+  <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-10">
+
+    <FadeIn delay={0.15}>
+      <div className="flex items-start gap-3">
+        {/* small accent line */}
+        <div className="mt-1 h-12 w-px bg-white/40" />
+
+        <div>
+          <p className="text-[10px] uppercase tracking-[0.2em] text-white/45">
+            About VisitingLink
+          </p>
+
+          <p className="mt-3 max-w-[310px] text-[15px] leading-6 text-white/75">
+            For over 8 years, we’ve been designing brands, building digital
+            experiences and engineering technology that helps ambitious ideas
+            move forward.
+          </p>
+        </div>
+      </div>
+    </FadeIn>
+
+    {/* bottom meta */}
+    <FadeIn delay={0.3} className="mt-8">
+      <div className="flex items-center justify-between border-t border-white/15 pt-4">
+        <span className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+          Since 2018
+        </span>
+
+        <span className="text-[10px] uppercase tracking-[0.16em] text-white/40">
+          Digital · Technology
+        </span>
+      </div>
+    </FadeIn>
+
+  </div>
+</section>
+
+      {/* ─────────────────────────────────────────────────────────
+         SECTION 02 — OUR STORY
+      ───────────────────────────────────────────────────────── */}
+      <section className="relative overflow-hidden bg-[#f8f8f7] text-[#111111]">
+        {/* Subtle black / white gradient atmosphere */}
+        <div className="pointer-events-none absolute inset-0">
+          <div className="absolute -left-[15%] top-[5%] h-[500px] w-[500px] rounded-full bg-black/[0.035] blur-[120px]" />
+
+          <div className="absolute right-[-10%] top-[20%] h-[600px] w-[600px] rounded-full bg-black/[0.06] blur-[150px]" />
+
+          <div className="absolute bottom-[-25%] left-[25%] h-[500px] w-[700px] rounded-full bg-white blur-[130px]" />
+
+          <div className="absolute inset-0 bg-gradient-to-br from-white/70 via-transparent to-black/[0.025]" />
+        </div>
+
+        <div className="relative z-10 mx-auto max-w-[95vw] px-4 py-12 md:px-12 md:py-20">
+          <div className="grid grid-cols-1 items-center gap-8 md:grid-cols-2 md:gap-6 lg:gap-12">
+            {/* LEFT — CONTENT */}
+            <FadeIn>
+              <div className="max-w-full">
+                <h2 className="text-4xl font-medium leading-[1.08] tracking-[-0.035em] md:text-5xl lg:text-4xl">
+                  <StoryTextReveal text="Eight years of building" />
+                  <br />
+                  <StoryTextReveal
+                    text="what comes"
+                    delay={0.08}
+                  />
+                  <span className="text">
+                    <StoryTextReveal text="next." delay={0.16} />
+                  </span>
+                </h2>
+
+                <div className="mt-6 max-w-[540px] space-y-3">
+                  <p className="text-base leading-7 text-black/60 md:text-lg">
+                    <StoryTextReveal text="We started with a simple idea — help businesses build a stronger presence in the digital world." />
+                  </p>
+
+                  <p className="text-base leading-7 text-black/60 md:text-lg">
+                    <StoryTextReveal
+                      text="What began with branding and design gradually grew into websites, technology, digital products and a wider network of people who share the same obsession with making things better."
+                      delay={0.08}
+                    />
+                  </p>
+
+                  <p className="text-base leading-7 text-black/60 md:text-lg">
+                    <StoryTextReveal
+                      text="Today, we bring all of that experience together to help ambitious ideas take shape, scale and move forward."
+                      delay={0.16}
+                    />
+                  </p>
+                </div>
               </div>
             </FadeIn>
-          </div>
-      
-          {/* Right Column: Full-bleed image, edge to edge, no padding */}
-          <div className="lg:col-span-5 relative h-[400px] sm:h-[500px] lg:h-full lg:min-h-[600px] w-full overflow-hidden">
-            <FadeIn delay={0.2} direction="up" className="absolute inset-0 w-full h-full">
-              <Image
-                src="/about.png"
-                alt="Digital and technology illustration"
-                fill
-                className="object-cover"
-                priority
-              />
+
+            {/* RIGHT — IMAGE */}
+            <FadeIn delay={0.15}>
+              <div className="relative mx-auto md:h-[55vh] max-h-[600px] min-h-[300px] md:min-h-[420px] w-full overflow-hidden rounded-[2px]">
+                <Image
+                  src="/images/story.webp"
+                  alt="Visitinglink"
+                  fill
+                  sizes="(max-width: 768px) 100vw, 50vw"
+                  className="object-cover"
+                />
+              </div>
             </FadeIn>
           </div>
         </div>
@@ -205,7 +397,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       {/* ─────────────────────────────────────────────────────────
           SECTION 03 — VISION + MISSION
       ───────────────────────────────────────────────────────── */}
-      <section className="border-b border-[#F0F0F0] bg-[#FAFAFA] py-20 md:py-28">
+
+<VisionMissionSection />
+      {/* <section className="border-b border-[#F0F0F0] bg-[#FAFAFA] py-20 md:py-28">
         <div className="mx-auto max-w-[95vw] md:max-w-[90vw] px-4 md:px-12">
           <div className="grid grid-cols-1 gap-16 lg:grid-cols-2 lg:gap-20">
             <FadeIn>
@@ -252,19 +446,22 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             </FadeIn>
           </div>
         </div>
-      </section>
+      </section> */}
 
       {/* ─────────────────────────────────────────────────────────
           SECTION 04 — PEOPLE / FOUNDER
       ───────────────────────────────────────────────────────── */}
-      <FounderSection
-        eyebrow="Built by People"
-        headline="Driven by Experience."
-        founderName="Built on Craft & Vision"
-        founderTitle="VisitingLink Leadership"
-        yearsLabel="8 Years of Digital Innovation"
-        story="VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity."
-        onNavigateContact={() => onNavigateContact()}
+      <AboutTeamSection
+        founder={{
+          eyebrow: "Built by People",
+          headline: "Driven by Experience.",
+          founderName: "Built on Craft & Vision",
+          founderTitle: "VisitingLink Leadership",
+          yearsLabel: "8 Years of Digital Innovation",
+          words:
+            "VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity.",
+          onNavigateContact: () => onNavigateContact(),
+        }}
       />
     </div>
   );
