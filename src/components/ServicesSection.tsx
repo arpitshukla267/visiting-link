@@ -1,7 +1,7 @@
 "use client";
 
-import React from "react";
-import { motion } from "motion/react";
+import React, { useRef } from "react";
+import { motion, useInView } from "motion/react";
 import { Check, ArrowUpRight, Code2, PenTool, Building2 } from "lucide-react";
 import { SERVICES_DATA } from "../data/content";
 import { ServiceItem } from "../types";
@@ -116,6 +116,93 @@ const resolveServiceId = (keyword: string, fallbackTitle: string) => {
   );
   return match?.id ?? slugify(fallbackTitle);
 };
+
+const viewportEase = [0.16, 1, 0.3, 1] as const;
+
+const HEADING_TEXT =
+  "Everything you need to build your digital presence.";
+const SUBHEADING_TEXT =
+  "From visual identity to websites and smart digital products, we bring design and technology together under one roof.";
+
+const revealUp = {
+  hidden: { y: 28, opacity: 0 },
+  visible: {
+    y: 0,
+    opacity: 1,
+    transition: { duration: 0.6, ease: viewportEase },
+  },
+};
+
+const headerContainer = {
+  hidden: {},
+  visible: {
+    transition: { staggerChildren: 0.04, delayChildren: 0.05 },
+  },
+};
+
+function SectionHeader({ className = "" }: { className?: string }) {
+  const ref = useRef<HTMLDivElement>(null);
+  const isInView = useInView(ref, { once: true, margin: "-80px" });
+  const headingWords = HEADING_TEXT.split(" ");
+
+  return (
+    <motion.div
+      ref={ref}
+      className={className}
+      variants={headerContainer}
+      initial="hidden"
+      animate={isInView ? "visible" : "hidden"}
+    >
+      <h2 className="text-3xl font-medium leading-[1.08] tracking-tight text-[#111111] md:text-5xl lg:text-[56px]">
+        {headingWords.map((word, index) => (
+          <span
+            key={`${word}-${index}`}
+            className="mr-[0.28em] leading-[1.18] inline-block overflow-hidden align-bottom last:mr-0"
+          >
+            <motion.span
+              variants={revealUp}
+              className="inline-block text-[#111111]"
+            >
+              {word}
+            </motion.span>
+          </span>
+        ))}
+      </h2>
+      <p className="mt-4 max-w-xl overflow-hidden text-sm font-normal leading-relaxed text-[#666666] md:mt-5 md:text-lg">
+        <motion.span variants={revealUp} className="block text-[#666666]">
+          {SUBHEADING_TEXT}
+        </motion.span>
+      </p>
+    </motion.div>
+  );
+}
+
+function RevealBlock({
+  children,
+  delay = 0,
+  className = "",
+}: {
+  children: React.ReactNode;
+  delay?: number;
+  className?: string;
+}) {
+  return (
+    <div className={`overflow-hidden ${className}`}>
+      <motion.div
+        initial={{ y: 32, opacity: 0 }}
+        whileInView={{ y: 0, opacity: 1 }}
+        viewport={{ once: true, margin: "-40px" }}
+        transition={{
+          duration: 0.55,
+          delay,
+          ease: viewportEase,
+        }}
+      >
+        {children}
+      </motion.div>
+    </div>
+  );
+}
 
 /* ---------------------------------------------------------------------------
  * Visual collages — grayscale/neutral with a single accent thread, CSS/SVG
@@ -292,78 +379,82 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   const cardContent = (
     <>
-      <div>
-        <div
-          className="flex h-10 w-10 items-center justify-center rounded-lg"
-          style={{ background: accent.iconBg }}
-        >
-          <span style={{ color: accent.icon }}>
-            <Icon className="h-5 w-5" strokeWidth={1.8} />
-          </span>
+      <RevealBlock delay={0.08}>
+        <div>
+          <div
+            className="flex h-10 w-10 items-center justify-center rounded-lg"
+            style={{ background: accent.iconBg }}
+          >
+            <span style={{ color: accent.icon }}>
+              <Icon className="h-5 w-5" strokeWidth={1.8} />
+            </span>
+          </div>
+
+          <h3
+            className={`mt-5 text-2xl font-semibold tracking-tight text-[#111111] md:text-[26px] ${
+              uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""
+            }`}
+          >
+            {card.title}
+          </h3>
+
+          <p
+            className={`mt-2 text-sm leading-relaxed text-[#666666] md:text-[15px] ${
+              uniformMobileHeight ? "min-h-[2.75rem]" : ""
+            }`}
+          >
+            {card.description}
+          </p>
         </div>
+      </RevealBlock>
 
-        <h3
-          className={`mt-5 text-2xl font-semibold tracking-tight text-[#111111] md:text-[26px] ${
-            uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""
-          }`}
-        >
-          {card.title}
-        </h3>
-
-        <p
-          className={`mt-2 text-sm leading-relaxed text-[#666666] md:text-[15px] ${
-            uniformMobileHeight ? "min-h-[2.75rem]" : ""
-          }`}
-        >
-          {card.description}
-        </p>
-      </div>
-
-      <div
-        className={`mt-7 flex gap-4 ${
-          uniformMobileHeight
-            ? "min-h-0 flex-1 items-stretch"
-            : "flex-1 items-stretch"
-        }`}
-      >
-        <ul className="flex w-[46%] flex-shrink-0 flex-col justify-center gap-2.5">
-          {card.checklist.map((item) => (
-            <li
-              key={item}
-              className="flex items-start gap-2 text-[13px] leading-snug text-[#444444]"
-            >
-              <Check
-                className="mt-[1px] h-3.5 w-3.5 flex-shrink-0"
-                style={{ color: accent.tick }}
-                strokeWidth={2.5}
-              />
-              {item}
-            </li>
-          ))}
-        </ul>
-
+      <RevealBlock delay={0.16} className="mt-7">
         <div
-          className={`relative w-[54%] flex-shrink-0 overflow-hidden rounded-xl border transition-transform duration-300 group-hover:scale-[1.03] ${
-            uniformMobileHeight ? "h-full min-h-[9.5rem]" : "aspect-square"
+          className={`flex gap-4 ${
+            uniformMobileHeight
+              ? "min-h-0 flex-1 items-stretch"
+              : "flex-1 items-stretch"
           }`}
-          style={{ borderColor: accent.ring, background: "#FFFFFF" }}
         >
-          <Visual accent={accent} />
-        </div>
-      </div>
+          <ul className="flex w-[46%] flex-shrink-0 flex-col justify-center gap-2.5">
+            {card.checklist.map((item) => (
+              <li
+                key={item}
+                className="flex items-start gap-2 text-[13px] leading-snug text-[#444444]"
+              >
+                <Check
+                  className="mt-[1px] h-3.5 w-3.5 flex-shrink-0"
+                  style={{ color: accent.tick }}
+                  strokeWidth={2.5}
+                />
+                {item}
+              </li>
+            ))}
+          </ul>
 
-      <button
-        className={`inline-flex items-center gap-1.5 self-start text-sm font-medium text-[#111111] ${
-          uniformMobileHeight ? "mt-auto shrink-0 pt-5" : "mt-7"
-        }`}
-        onClick={(e) => {
-          e.stopPropagation();
-          handleNavigate();
-        }}
-      >
-        Explore
-        <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-      </button>
+          <div
+            className={`relative w-[54%] flex-shrink-0 overflow-hidden rounded-xl border transition-transform duration-300 group-hover:scale-[1.03] ${
+              uniformMobileHeight ? "h-full min-h-[9.5rem]" : "aspect-square"
+            }`}
+            style={{ borderColor: accent.ring, background: "#FFFFFF" }}
+          >
+            <Visual accent={accent} />
+          </div>
+        </div>
+      </RevealBlock>
+
+      <RevealBlock delay={0.24} className={uniformMobileHeight ? "mt-auto shrink-0 pt-5" : "mt-7"}>
+        <button
+          className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-[#111111]"
+          onClick={(e) => {
+            e.stopPropagation();
+            handleNavigate();
+          }}
+        >
+          Explore
+          <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+        </button>
+      </RevealBlock>
     </>
   );
 
@@ -387,13 +478,13 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   return (
     <motion.div
       id={`service-card-${cardId}`}
-      initial={{ opacity: 0, y: 28 }}
+      initial={{ opacity: 0, y: 56 }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, margin: "-60px" }}
+      viewport={{ once: true, margin: "-50px" }}
       transition={{
         duration: 0.65,
-        delay: 0.12 * idx,
-        ease: [0.16, 1, 0.3, 1],
+        delay: 0.1 * idx,
+        ease: viewportEase,
       }}
       onClick={handleNavigate}
       className={sharedClassName}
@@ -410,18 +501,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onNavigateContact,
   onNavigatePage,
 }) => {
-  const sectionHeader = (
-    <>
-      <h2 className="text-3xl font-medium leading-[1.08] tracking-tight text-[#111111] md:text-5xl lg:text-[56px]">
-        Everything you need to build your digital presence.
-      </h2>
-      <p className="mt-4 max-w-xl text-sm font-normal leading-relaxed text-[#666666] md:mt-5 md:text-lg">
-        From visual identity to websites and smart digital products, we bring
-        design and technology together under one roof.
-      </p>
-    </>
-    );
-
   return (
     <section
       id="services"
@@ -429,15 +508,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
     >
       <div className="mx-auto max-w-[90vw] px-0 md:px-12">
         {/* Desktop header */}
-            <motion.div
-              initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: "-80px" }}
-          transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
-          className="mb-14 hidden max-w-3xl md:block"
-        >
-          {sectionHeader}
-        </motion.div>
+        <SectionHeader className="mb-14 hidden max-w-3xl md:block" />
 
         {/* Desktop cards */}
         <div className="hidden gap-5 md:grid md:grid-cols-3 md:gap-6">
@@ -459,7 +530,7 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             vhPerCard={50}
             stickyClassName="bg-white px-6 pb-6 pt-24"
             titleClassName="max-w-3xl"
-            title={sectionHeader}
+            title={<SectionHeader />}
             trackGutterClassName="-mx-6"
             slideClassName="flex w-screen shrink-0 items-center justify-center px-4"
             slideKeys={CARD_COPY.map((card) => card.title)}
@@ -471,7 +542,6 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   onSelectService={onSelectService}
                   onNavigateService={onNavigateService}
                   onNavigatePage={onNavigatePage}
-                  animate={false}
                   uniformMobileHeight
                   className="h-full w-full"
                 />

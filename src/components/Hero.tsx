@@ -5,6 +5,8 @@ import { useReducedMotion } from "motion/react";
 import {
   TOTAL_FRAMES,
   HERO_INTRO_EXIT_FILE,
+  HERO_MID_START_FILE,
+  HERO_MID_END_FILE,
   getCachedFrame,
   getFileNumberForIndex,
 } from "@/lib/heroFrames";
@@ -19,8 +21,17 @@ const TAGLINE_1 = {
   desc: "We translate bold ideas into interfaces, products, and moments your audience can feel — not just see.",
 };
 
+const TAGLINE_2 = {
+  line: "Where ideas take shape, and experiences come alive.",
+  desc: "From first sketch to final launch, we shape digital worlds that move with clarity, craft, and purpose.",
+};
+
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
+}
+
+function easeInCubic(t: number) {
+  return t * t * t;
 }
 
 function introProgress(fileFrame: number) {
@@ -39,6 +50,41 @@ function introMotion(fileFrame: number) {
     blur: eased * 6,
     scale: 1 - eased * 0.04,
   };
+}
+
+function midMotion(fileFrame: number) {
+  if (fileFrame < HERO_MID_START_FILE || fileFrame > HERO_MID_END_FILE) {
+    return { opacity: 0, translateY: 40, overlay: 0, blur: 8, scale: 0.96 };
+  }
+
+  const span = HERO_MID_END_FILE - HERO_MID_START_FILE;
+  const t = (fileFrame - HERO_MID_START_FILE) / span;
+  const enterEnd = 0.22;
+  const exitStart = 0.78;
+
+  if (t < enterEnd) {
+    const p = easeOutCubic(t / enterEnd);
+    return {
+      opacity: p,
+      translateY: (1 - p) * 40,
+      overlay: 0.72 * p,
+      blur: (1 - p) * 8,
+      scale: 0.96 + p * 0.04,
+    };
+  }
+
+  if (t > exitStart) {
+    const p = easeInCubic((t - exitStart) / (1 - exitStart));
+    return {
+      opacity: 1 - p,
+      translateY: -p * 38,
+      overlay: 0.72 * (1 - p),
+      blur: p * 6,
+      scale: 1 - p * 0.04,
+    };
+  }
+
+  return { opacity: 1, translateY: 0, overlay: 0.72, blur: 0, scale: 1 };
 }
 
 function HeroTagline({
@@ -81,6 +127,7 @@ export function Hero() {
   const { framesReady } = useStartupReady();
 
   const intro = introMotion(fileFrame);
+  const mid = midMotion(fileFrame);
 
   const drawFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
@@ -250,6 +297,23 @@ export function Hero() {
               opacity: intro.opacity,
               transform: `translateY(${intro.translateY}vh) scale(${intro.scale})`,
               filter: `blur(${intro.blur}px)`,
+            }}
+          />
+
+          {/* Mid — tagline 2 enters from bottom at 388, exits at 560 */}
+          <div
+            className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 transition-none"
+            style={{ opacity: mid.overlay }}
+          />
+
+          <HeroTagline
+            eyebrow="Creative process"
+            line={TAGLINE_2.line}
+            desc={TAGLINE_2.desc}
+            style={{
+              opacity: mid.opacity,
+              transform: `translateY(${mid.translateY}vh) scale(${mid.scale})`,
+              filter: `blur(${mid.blur}px)`,
             }}
           />
 

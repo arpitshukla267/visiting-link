@@ -22,6 +22,7 @@ import {
 
 const LOTTIE_SOURCE = "/lottiefile/Horse%20Run.lottie";
 const LOTTIE_FAILSAFE_MS = 10000;
+const FADE_OUT_MS = 700;
 
 interface LoadingContextValue {
   framesReady: boolean;
@@ -50,7 +51,7 @@ export function StartupLoaderProvider({
   const [dotLottie, setDotLottie] = useState<DotLottie | null>(null);
 
   const [framesReady, setFramesReady] = useState(false);
-  const [lottieEnded, setLottieEnded] = useState(false);
+  const [isFadingOut, setIsFadingOut] = useState(false);
   const [isReady, setIsReady] = useState(false);
   const [loadProgress, setLoadProgress] = useState(0);
 
@@ -101,37 +102,28 @@ export function StartupLoaderProvider({
     }
   }, [pathname]);
 
-  // Start the Lottie only once and let its own content determine the
-  // animation duration. The failsafe only handles a broken animation file.
+  // Keep the Lottie running; only the failsafe handles a broken file.
   useEffect(() => {
     if (!dotLottie) return;
-    let finished = false;
-    const finishLottie = () => {
-      if (finished) return;
-      finished = true;
-      setLottieEnded(true);
-      setLoadProgress(100);
-    };
 
-    dotLottie.addEventListener("complete", finishLottie);
-    dotLottie.addEventListener("loadError", finishLottie);
     dotLottie.play();
 
-    const failsafeTimer = window.setTimeout(finishLottie, LOTTIE_FAILSAFE_MS);
+    const failsafeTimer = window.setTimeout(() => {
+      setLoadProgress(100);
+    }, LOTTIE_FAILSAFE_MS);
 
     return () => {
-      dotLottie.removeEventListener("complete", finishLottie);
-      dotLottie.removeEventListener("loadError", finishLottie);
       window.clearTimeout(failsafeTimer);
     };
   }, [dotLottie]);
 
+  // Start fading once content is ready — don't wait for the Lottie to finish first.
   useEffect(() => {
-    if (!framesReady || !lottieEnded || isReady) return;
+    if (!framesReady || isReady || isFadingOut) return;
 
     setLoadProgress(100);
-    requestAnimationFrame(() => setIsReady(true));
-  }, [framesReady, lottieEnded, isReady]);
+    setIsFadingOut(true);
+  }, [framesReady, isReady, isFadingOut]);
 
   useEffect(() => {
     document.body.style.overflow = isReady ? "" : "hidden";
@@ -154,16 +146,25 @@ export function StartupLoaderProvider({
             className="fixed inset-0 z-[200] flex items-center justify-center overflow-hidden bg-white"
             initial={{ opacity: 1 }}
             exit={{ opacity: 0 }}
-            transition={{ duration: 0.5, ease: [0.16, 1, 0.3, 1] }}
+            transition={{ duration: 0.45, ease: [0.16, 1, 0.3, 1] }}
           >
-            <DotLottieReact
-              src={LOTTIE_SOURCE}
-              autoplay
-              loop={false}
-              dotLottieRefCallback={setDotLottie}
-              className="h-48 w-48 md:h-64 md:w-64"
-              aria-label="Loading VisitingLink"
-            />
+            <motion.div
+              initial={{ opacity: 1 }}
+              animate={{ opacity: isFadingOut ? 0 : 1 }}
+              transition={{ duration: FADE_OUT_MS / 1000, ease: [0.16, 1, 0.3, 1] }}
+              onAnimationComplete={() => {
+                if (isFadingOut) setIsReady(true);
+              }}
+            >
+              <DotLottieReact
+                src={LOTTIE_SOURCE}
+                autoplay
+                loop={!isReady}
+                dotLottieRefCallback={setDotLottie}
+                className="h-48 w-48 md:h-64 md:w-64"
+                aria-label="Loading VisitingLink"
+              />
+            </motion.div>
           </motion.div>
         )}
       </AnimatePresence>

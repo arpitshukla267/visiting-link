@@ -3,7 +3,6 @@
 import dynamic from "next/dynamic";
 import { Hero } from "@/components/Hero";
 import { HeroFrameProvider } from "@/components/HeroFrameContext";
-import { HeroStatementReveal } from "@/components/HeroStatementReveal";
 import { CompanyStatement } from "@/components/CompanyStatement";
 import { ServicesSection } from "@/components/ServicesSection";
 import { VisualBreak } from "@/components/Future-banner";
@@ -36,6 +35,7 @@ export default function HomePage() {
       onNavigatePage={nav.navigateToPage}
     />,
     <HowWeWorkSection key="how" />,
+    <CompanyStatement key="promises" />,
     <SelectedWorkSection key="work" />,
     <VisualBreak key="break" />,
     <TestimonialsSection key="testimonials" />,
@@ -48,9 +48,6 @@ export default function HomePage() {
   return (
     <HeroFrameProvider>
       <Hero />
-      <HeroStatementReveal>
-        <CompanyStatement />
-      </HeroStatementReveal>
       <div className="relative z-10">
         <div className="overflow-visible bg-white">
           <StaggeredSections sections={sections} />
