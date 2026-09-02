@@ -7,9 +7,11 @@ type FrameListener = () => void;
 let currentFileFrame = 1;
 const listeners = new Set<FrameListener>();
 
-export function subscribeHeroFrame(listener: FrameListener) {
+export function subscribeHeroFrame(listener: FrameListener): () => void {
   listeners.add(listener);
-  return () => listeners.delete(listener);
+  return () => {
+    listeners.delete(listener);
+  };
 }
 
 export function getHeroFileFrame() {
