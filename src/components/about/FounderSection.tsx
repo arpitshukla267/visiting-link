@@ -89,7 +89,7 @@ export function FounderSection({
   founderName = "Jitesh Singh",
   founderTitle = "Founder, VisitingLink",
   yearsLabel,
-  photoUrl = "/images/founder.png",
+  photoUrl = "/images/founder.PNG",
   words = "I started this doing logo work out of a spare room, mostly for people I already knew. Eight years on, the team's bigger and the work has changed shape a few times, but the reason hasn't — I still want the things we build to keep working long after anyone's paying attention to them.",
   ctaLabel = "Get in touch",
   onNavigateContact = () => {},
