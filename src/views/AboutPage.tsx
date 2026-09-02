@@ -346,9 +346,9 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       <AboutTeamSection
         founder={{
           eyebrow: "Built by People",
-          headline: "Driven by Experience.",
-          founderName: "Built on Craft & Vision",
-          founderTitle: "VisitingLink Leadership",
+          headline: "Meet Our Founder",
+          founderName: "Mr. Jitesh Singh",
+          founderTitle: "CEO & Founder",
           yearsLabel: "8 Years of Digital Innovation",
           words:
             "VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity.",
