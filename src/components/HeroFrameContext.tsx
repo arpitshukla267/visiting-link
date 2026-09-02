@@ -7,12 +7,12 @@ type FrameListener = () => void;
 let currentFileFrame = 1;
 const listeners = new Set<FrameListener>();
 
-function subscribe(listener: FrameListener) {
+export function subscribeHeroFrame(listener: FrameListener) {
   listeners.add(listener);
   return () => listeners.delete(listener);
 }
 
-function getFileFrame() {
+export function getHeroFileFrame() {
   return currentFileFrame;
 }
 
@@ -28,9 +28,9 @@ export function HeroFrameProvider({ children }: { children: ReactNode }) {
 
 export function useHeroFileFrame() {
   const fileFrame = useSyncExternalStore(
-    subscribe,
-    getFileFrame,
-    getFileFrame,
+    subscribeHeroFrame,
+    getHeroFileFrame,
+    getHeroFileFrame,
   );
 
   return { fileFrame, setFileFrame };

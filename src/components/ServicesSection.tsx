@@ -80,7 +80,7 @@ const CARD_COPY: ServiceCardCopy[] = [
 ];
 
 /* Accent tokens — soft, restrained, one per service. Used only for the icon
- * chip, checklist ticks and tiny visual details; cards stay light neutral. */
+ * chip and checklist ticks; cards stay light neutral. */
 const ACCENTS: Record<
   AccentKey,
   { bg: string; iconBg: string; icon: string; tick: string; ring: string }
@@ -205,139 +205,73 @@ function RevealBlock({
 }
 
 /* ---------------------------------------------------------------------------
- * Visual collages — grayscale/neutral with a single accent thread, CSS/SVG
- * only, no stock imagery. Sized to sit in the RIGHT column of the lower
- * card area, next to the checklist rather than beneath it.
+ * Real service imagery — masked with a radial gradient so each photo
+ * dissolves softly into the card instead of sitting in a hard rectangle.
+ * The mask values are tuned so the fade reaches all four edges of the
+ * (mostly square / near-square) container rather than reading as a circle.
  * ------------------------------------------------------------------------- */
+const IMAGE_SRC: Record<AccentKey, string> = {
+  web: "/images/web-dev.webp",
+  graphics: "/images/graphics.webp",
+  companyProfile: "/images/company-prof.webp",
+};
 
-const DotGrid: React.FC = () => (
-  <svg aria-hidden="true" className="absolute inset-0 h-full w-full opacity-[0.4]">
+/* ---------------------------------------------------------------------------
+ * One shared SVG mask definition — an irregular, blurred cluster of circles
+ * that reads as an organic "cloud" blob rather than a circle/square. Uses
+ * objectBoundingBox + primitiveUnits so it scales correctly to any card size.
+ * Rendered once (hidden, 0x0) and referenced by all three images via
+ * mask: url(#service-cloud-mask).
+ * ------------------------------------------------------------------------- */
+const CloudMaskDefs: React.FC = () => (
+  <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
     <defs>
-      <pattern id="services-dot-grid" width="12" height="12" patternUnits="userSpaceOnUse">
-        <circle cx="1" cy="1" r="1" fill="#D9D9D9" />
-      </pattern>
+      <filter
+        id="service-cloud-blur"
+        primitiveUnits="objectBoundingBox"
+        x="-0.3"
+        y="-0.3"
+        width="1.6"
+        height="1.6"
+      >
+        <feGaussianBlur stdDeviation="0.055" />
+      </filter>
+      <mask
+        id="service-cloud-mask"
+        maskUnits="objectBoundingBox"
+        maskContentUnits="objectBoundingBox"
+      >
+        <g filter="url(#service-cloud-blur)" fill="white">
+          {/* irregular cluster of overlapping puffs — asymmetric on purpose */}
+          <circle cx="0.50" cy="0.52" r="0.30" />
+          <circle cx="0.28" cy="0.40" r="0.20" />
+          <circle cx="0.68" cy="0.36" r="0.22" />
+          <circle cx="0.72" cy="0.60" r="0.19" />
+          <circle cx="0.30" cy="0.66" r="0.21" />
+          <circle cx="0.48" cy="0.28" r="0.16" />
+          <circle cx="0.52" cy="0.74" r="0.18" />
+        </g>
+      </mask>
     </defs>
-    <rect width="100%" height="100%" fill="url(#services-dot-grid)" />
   </svg>
 );
 
-const WebDevVisual: React.FC<{ accent: (typeof ACCENTS)["web"] }> = ({ accent }) => (
-  <div className="relative flex h-full w-full items-center justify-center overflow-hidden p-3">
-    <DotGrid />
-    {/* Browser frame, slightly rotated */}
-    <div
-      className="relative z-10 w-[86%] rotate-[-2deg] rounded-md border bg-white shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <div className="flex items-center gap-1 border-b px-2 py-1.5" style={{ borderColor: "#F0F0F0" }}>
-        <span className="h-1 w-1 rounded-full" style={{ background: accent.icon }} />
-        <span className="h-1 w-1 rounded-full bg-[#E2E2E2]" />
-        <span className="h-1 w-1 rounded-full bg-[#E2E2E2]" />
-        <span className="ml-1.5 h-1.5 w-14 rounded-full bg-[#F0F0F0]" />
-      </div>
-      <div className="space-y-1 p-2.5">
-        <div className="h-2 w-3/5 rounded-full bg-[#111111]" />
-        <div className="h-1.5 w-4/5 rounded-full bg-[#E5E5E5]" />
-        <div className="mt-1.5 grid grid-cols-3 gap-1">
-          <div className="h-5 rounded-sm" style={{ background: accent.iconBg }} />
-          <div className="h-5 rounded-sm bg-[#F5F5F5]" />
-          <div className="h-5 rounded-sm bg-[#111111]" />
-        </div>
-      </div>
-    </div>
-    {/* Phone, layered in front */}
-    <div
-      className="absolute bottom-2 right-3 z-20 w-[26%] rotate-[3deg] rounded-lg border bg-white p-1 shadow-[0_6px_20px_rgba(17,17,17,0.08)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <div className="mx-auto mb-1 h-0.5 w-3 rounded-full bg-[#E5E5E5]" />
-      <div className="h-9 rounded-sm" style={{ background: accent.iconBg }} />
-      <div className="mt-1 h-1 w-4/5 rounded-full bg-[#E5E5E5]" />
-    </div>
-    {/* Code chip */}
-    <div className="absolute left-2 top-2 z-20 rounded-md border border-[#E2E2E2] bg-white px-1.5 py-1 font-mono text-[8px] text-[#888888] shadow-sm">
-      <span style={{ color: accent.icon }}>&lt;/&gt;</span>
-    </div>
+const ServiceImage: React.FC<{ src: string; alt: string }> = ({ src, alt }) => (
+  <div className="relative h-full w-full">
+    <img
+      src={src}
+      alt={alt}
+      className="h-full w-full object-cover"
+      style={{
+        mask: "url(#service-cloud-mask)",
+        WebkitMask: "url(#service-cloud-mask)",
+        maskMode: "alpha",
+        WebkitMaskRepeat: "no-repeat",
+        maskRepeat: "no-repeat",
+      }}
+    />
   </div>
 );
-
-const GraphicsVisual: React.FC<{ accent: (typeof ACCENTS)["graphics"] }> = ({ accent }) => (
-  <div className="relative flex h-full w-full items-center justify-center overflow-hidden p-3">
-    <DotGrid />
-    <div
-      className="relative z-10 flex w-[48%] rotate-[-3deg] flex-col justify-between rounded-md border bg-white p-2.5 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <span className="font-mono text-[8px] uppercase tracking-widest text-[#AAAAAA]">Aa</span>
-      <span className="text-2xl font-semibold leading-none text-[#111111]">Aa</span>
-      <div className="mt-1.5 flex gap-1">
-        <span className="h-3 w-3 rounded-full bg-[#111111]" />
-        <span className="h-3 w-3 rounded-full" style={{ background: accent.icon }} />
-        <span className="h-3 w-3 rounded-full border border-[#D9D9D9] bg-white" />
-      </div>
-    </div>
-    <div
-      className="absolute bottom-3 right-2 z-20 flex w-[44%] rotate-[2deg] flex-col justify-between rounded-md border bg-[#111111] p-2.5 shadow-[0_6px_20px_rgba(17,17,17,0.1)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <div className="h-1.5 w-1/2 rounded-full bg-white/70" />
-      <div className="my-1.5 flex items-end gap-1">
-        <span className="h-6 w-1 bg-white/80" />
-        <span className="h-3.5 w-1" style={{ background: accent.icon }} />
-        <span className="h-8 w-1 bg-white/90" />
-      </div>
-    </div>
-    <div className="absolute left-2 top-2 z-20 flex items-center gap-1 rounded-md border border-[#E2E2E2] bg-white px-1.5 py-1 shadow-sm">
-      <span className="h-2 w-2 rounded-sm bg-[#111111]" />
-      <span className="h-2 w-2 rounded-sm" style={{ background: accent.icon }} />
-    </div>
-  </div>
-);
-
-const CompanyProfileVisual: React.FC<{ accent: (typeof ACCENTS)["companyProfile"] }> = ({ accent }) => (
-  <div className="relative flex h-full w-full items-center justify-center overflow-hidden p-3">
-    <DotGrid />
-    <div
-      className="relative z-10 w-[52%] rotate-[-2deg] rounded-md border bg-white p-2.5 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <div className="mb-2 h-1.5 w-1/2 rounded-full bg-[#111111]" />
-      <div className="space-y-1">
-        <div className="h-1 w-full rounded-full bg-[#E5E5E5]" />
-        <div className="h-1 w-4/5 rounded-full bg-[#E5E5E5]" />
-        <div className="h-1 w-3/5 rounded-full bg-[#E5E5E5]" />
-      </div>
-      <div className="mt-2 grid grid-cols-3 gap-1">
-        <div className="h-4 rounded-sm" style={{ background: accent.iconBg }} />
-        <div className="h-4 rounded-sm bg-[#F5F5F5]" />
-        <div className="h-4 rounded-sm bg-[#111111]" />
-      </div>
-    </div>
-    <div
-      className="absolute bottom-2 right-2 z-20 w-[38%] rotate-[3deg] rounded-md border bg-white p-2 shadow-[0_6px_20px_rgba(17,17,17,0.06)]"
-      style={{ borderColor: accent.ring }}
-    >
-      <div className="mb-1 flex items-center gap-1">
-        <span className="h-3 w-3 rounded-full" style={{ background: accent.iconBg }} />
-        <span className="h-1 w-8 rounded-full bg-[#E5E5E5]" />
-      </div>
-      <div className="h-1 w-full rounded-full bg-[#111111]" />
-      <div className="mt-1 h-1 w-2/3 rounded-full bg-[#E5E5E5]" />
-    </div>
-    <div
-      className="absolute left-2 top-2 z-20 rounded-md border bg-white px-1.5 py-1 font-mono text-[8px] text-[#888888] shadow-sm"
-      style={{ borderColor: accent.ring }}
-    >
-      PDF
-    </div>
-  </div>
-);
-
-const VISUALS: Record<AccentKey, React.FC<{ accent: (typeof ACCENTS)[AccentKey] }>> = {
-  web: WebDevVisual,
-  graphics: GraphicsVisual,
-  companyProfile: CompanyProfileVisual,
-};
 
 interface ServiceCardProps {
   card: ServiceCardCopy;
@@ -361,8 +295,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   uniformMobileHeight = false,
 }) => {
   const accent = ACCENTS[card.accent];
-  const Visual = VISUALS[card.accent];
   const Icon = card.Icon;
+  const imageSrc = IMAGE_SRC[card.accent];
   const serviceId = resolveServiceId(card.matchKeyword, card.title);
   const fullServiceRecord = SERVICES_DATA.find((s) => s.id === serviceId);
   const cardId = card.pageRoute ?? serviceId;
@@ -433,12 +367,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           </ul>
 
           <div
-            className={`relative w-[54%] flex-shrink-0 overflow-hidden rounded-xl border transition-transform duration-300 group-hover:scale-[1.03] ${
+            className={`relative w-[54%] flex-shrink-0 transition-transform duration-300 group-hover:scale-[1.03] ${
               uniformMobileHeight ? "h-full min-h-[9.5rem]" : "aspect-square"
             }`}
-            style={{ borderColor: accent.ring, background: "#FFFFFF" }}
           >
-            <Visual accent={accent} />
+            <ServiceImage src={imageSrc} alt={`${card.title} preview`} />
           </div>
         </div>
       </RevealBlock>
@@ -506,6 +439,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
       id="services"
       className="w-full border-b border-[#F0F0F0] bg-white  pb-12 md:py-32"
     >
+      <CloudMaskDefs />
+
       <div className="mx-auto max-w-[90vw] px-0 md:px-12">
         {/* Desktop header */}
         <SectionHeader className="mb-14 hidden max-w-3xl md:block" />
@@ -521,8 +456,8 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
               onNavigateService={onNavigateService}
               onNavigatePage={onNavigatePage}
             />
-                  ))}
-                </div>
+          ))}
+        </div>
 
         {/* Mobile: sticky heading + filmstrip cards */}
         <div className="-mx-6 md:hidden">
@@ -535,7 +470,10 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
             slideClassName="flex w-screen shrink-0 items-center justify-center px-4"
             slideKeys={CARD_COPY.map((card) => card.title)}
             slides={CARD_COPY.map((card, idx) => (
-              <div key={card.title} className="mx-auto h-[500px] w-full max-w-sm">
+              <div
+                key={card.title}
+                className="mx-auto h-[500px] w-full max-w-sm"
+              >
                 <ServiceCard
                   card={card}
                   idx={idx}
@@ -546,11 +484,9 @@ export const ServicesSection: React.FC<ServicesSectionProps> = ({
                   className="h-full w-full"
                 />
               </div>
-          ))}
+            ))}
           />
         </div>
-
-      
       </div>
     </section>
   );

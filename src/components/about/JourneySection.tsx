@@ -339,7 +339,7 @@ function JourneyProcessCurve({
               const step = steps[index];
               const { label } = step;
               const left = (point.x / VB_W) * 100 + (label.leftOffset ?? 0);
-              const top = (point.y / VB_H) * 100 + (label.topOffset ?? 0);
+              const top = (point.y / VB_H) * 90 + (label.topOffset ?? 0);
 
               return (
                 <div

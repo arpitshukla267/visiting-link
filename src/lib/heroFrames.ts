@@ -14,6 +14,8 @@ const TOTAL_FRAMES = FRAME_SEQUENCE.length;
 
 /** Hero overlay timing — file numbers (xs-####). */
 export const HERO_INTRO_EXIT_FILE = 70;
+export const HERO_SERVICES_ENTER_FILE = 70;
+export const HERO_SERVICES_END_FILE = 388;
 export const HERO_MID_START_FILE = 388;
 export const HERO_MID_END_FILE = 560;
 /** CompanyStatement reveals progressively across the final 40 frames. */
