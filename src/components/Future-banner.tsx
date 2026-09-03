@@ -33,14 +33,14 @@ export const VisualBreak: React.FC = () => {
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
 
-          <div className="absolute top-1/2 left-4 z-10 w-[88%] -translate-y-1/2 sm:w-[70%] md:left-[6%] md:w-[50%] lg:w-[42%]">
+          <div className="absolute top-1/2 left-2 z-10 w-[88%] -translate-y-1/2 sm:w-[70%] md:left-[6%] md:w-[50%] lg:w-[42%]">
             <div className="overflow-hidden">
               <motion.h2
                 custom={0.05}
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 variants={lineVariants}
-                className="text-2xl font-semibold leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[58px]"
+                className="text-2xl font-semibold leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[58px] pb-1"
               >
                 Ideas are just the beginning.
               </motion.h2>

@@ -7,6 +7,8 @@ import {
   HERO_INTRO_EXIT_FILE,
   HERO_MID_START_FILE,
   HERO_MID_END_FILE,
+  HERO_CONNECT_START_FILE,
+  HERO_CONNECT_END_FILE,
   getCachedFrame,
   getFileNumberForIndex,
 } from "@/lib/heroFrames";
@@ -14,7 +16,38 @@ import { getScrollY } from "@/components/SmoothScroll";
 import { useStartupReady } from "@/components/StartupLoader";
 import { useHeroFileFrame } from "@/components/HeroFrameContext";
 
-const SCROLL_TRACK_VH = 300;
+const SCROLL_TRACK_VH_DESKTOP = 300;
+const SCROLL_TRACK_VH_MOBILE = 200;
+const HERO_BG = "#F8F8F8";
+
+/**
+ * Mobile frame size control — change MOBILE_FRAME_FIT only.
+ * Desktop cover behavior is unchanged.
+ *
+ * "contain"   — full frame fits inside the mobile viewport
+ * "height60"  — locked to 60% of screen height (sides may crop)
+ * "height70"  — locked to 70% of screen height
+ * "height80"  — locked to 80% of screen height
+ * "height90"  — locked to 90% of screen height
+ * "vh80"      — locked to 80vh height
+ *
+ * From frames 540→560 the mobile fit smoothly eases to height60
+ * (whether the starting fit is larger or smaller).
+ */
+type MobileFrameFit =
+  | "contain"
+  | "height50"
+  | "height60"
+  | "height70"
+  | "height80"
+  | "height90"
+  | "vh80";
+const MOBILE_FRAME_FIT: MobileFrameFit = "height90";
+const MOBILE_FIT_SHIFT_START = 540;
+const MOBILE_FIT_SHIFT_END = 560;
+const MOBILE_FIT_SHIFT_TARGET: MobileFrameFit = "height50";
+  
+const CONNECT_EMAIL = "info.visitinglink@gmail.com";
 
 const TAGLINE_1 = {
   line: "Turn imagination into something people can experience.",
@@ -25,6 +58,130 @@ const TAGLINE_2 = {
   line: "Where ideas take shape, and experiences come alive.",
   desc: "From first sketch to final launch, we shape digital worlds that move with clarity, craft, and purpose.",
 };
+
+function layoutCover(
+  cw: number,
+  ch: number,
+  imgAspect: number,
+): { dw: number; dh: number; dx: number; dy: number } {
+  const canvasAspect = cw / ch;
+  if (canvasAspect > imgAspect) {
+    const dw = cw;
+    const dh = cw / imgAspect;
+    return { dw, dh, dx: 0, dy: (ch - dh) / 2 };
+  }
+  const dh = ch;
+  const dw = ch * imgAspect;
+  return { dw, dh, dx: (cw - dw) / 2, dy: 0 };
+}
+
+function layoutContain(
+  boxW: number,
+  boxH: number,
+  imgAspect: number,
+  offsetX = 0,
+  offsetY = 0,
+): { dw: number; dh: number; dx: number; dy: number } {
+  const boxAspect = boxW / boxH;
+  if (boxAspect > imgAspect) {
+    const dh = boxH;
+    const dw = boxH * imgAspect;
+    return {
+      dw,
+      dh,
+      dx: offsetX + (boxW - dw) / 2,
+      dy: offsetY,
+    };
+  }
+  const dw = boxW;
+  const dh = boxW / imgAspect;
+  return {
+    dw,
+    dh,
+    dx: offsetX,
+    dy: offsetY + (boxH - dh) / 2,
+  };
+}
+
+function heightRatioForFit(mode: MobileFrameFit): number | null {
+  switch (mode) {
+    case "contain":
+      return null;
+    case "vh80":
+      return 0.8;
+    case "height50":
+      return 0.5;
+    case "height60":
+      return 0.6;
+    case "height70":
+      return 0.7;
+    case "height80":
+      return 0.8;
+    case "height90":
+      return 0.9;
+  }
+}
+
+function layoutMobileFrame(
+  mode: MobileFrameFit,
+  cw: number,
+  ch: number,
+  imgAspect: number,
+): { dw: number; dh: number; dx: number; dy: number } {
+  const ratio = heightRatioForFit(mode);
+  if (ratio == null) {
+    return layoutContain(cw, ch, imgAspect);
+  }
+
+  // Lock height ratio — sides may crop on landscape frames
+  const dh = ch * ratio;
+  const dw = dh * imgAspect;
+
+  return {
+    dw,
+    dh,
+    dx: (cw - dw) / 2,
+    dy: (ch - dh) / 2,
+  };
+}
+
+function lerp(a: number, b: number, t: number) {
+  return a + (b - a) * t;
+}
+
+/** Smoothly blend MOBILE_FRAME_FIT → height60 across frames 540–560. */
+function layoutMobileFrameAtFile(
+  fileNum: number,
+  cw: number,
+  ch: number,
+  imgAspect: number,
+): { dw: number; dh: number; dx: number; dy: number } {
+  const from = layoutMobileFrame(MOBILE_FRAME_FIT, cw, ch, imgAspect);
+  const to = layoutMobileFrame(MOBILE_FIT_SHIFT_TARGET, cw, ch, imgAspect);
+
+  if (fileNum <= MOBILE_FIT_SHIFT_START) return from;
+  if (fileNum >= MOBILE_FIT_SHIFT_END) return to;
+
+  const raw =
+    (fileNum - MOBILE_FIT_SHIFT_START) /
+    (MOBILE_FIT_SHIFT_END - MOBILE_FIT_SHIFT_START);
+  const t = easeOutCubic(Math.min(1, Math.max(0, raw)));
+
+  return {
+    dw: lerp(from.dw, to.dw, t),
+    dh: lerp(from.dh, to.dh, t),
+    dx: lerp(from.dx, to.dx, t),
+    dy: lerp(from.dy, to.dy, t),
+  };
+}
+
+function isMobileViewport() {
+  return typeof window !== "undefined" && window.innerWidth < 768;
+}
+
+function connectRestY() {
+  return isMobileViewport() ? 18 : 34;
+}
 
 function easeOutCubic(t: number) {
   return 1 - Math.pow(1 - t, 3);
@@ -87,6 +244,40 @@ function midMotion(fileFrame: number) {
   return { opacity: 1, translateY: 0, overlay: 0.72, blur: 0, scale: 1 };
 }
 
+/** Frames 553–589: smooth rise from bottom, then stays fixed lower on screen. */
+function connectMotion(fileFrame: number) {
+  const restY = connectRestY();
+
+  if (fileFrame < HERO_CONNECT_START_FILE) {
+    return { opacity: 0, translateY: 56, overlay: 0, blur: 10, scale: 0.94 };
+  }
+
+  const span = Math.max(1, HERO_CONNECT_END_FILE - HERO_CONNECT_START_FILE);
+  const t = Math.min(1, (fileFrame - HERO_CONNECT_START_FILE) / span);
+  // Longer enter so it eases in smoothly across more frames
+  const enterEnd = 0.62;
+
+  if (t < enterEnd) {
+    const p = easeOutCubic(t / enterEnd);
+    return {
+      opacity: p,
+      translateY: (1 - p) * 56 + p * restY,
+      // Same gradient overlay strength as rest — no solid-dark flash on entry
+      overlay: p,
+      blur: (1 - p) * 10,
+      scale: 0.94 + p * 0.06,
+    };
+  }
+
+  return {
+    opacity: 1,
+    translateY: restY,
+    overlay: 1,
+    blur: 0,
+    scale: 1,
+  };
+}
+
 function HeroTagline({
   eyebrow,
   line,
@@ -116,6 +307,60 @@ function HeroTagline({
   );
 }
 
+function HeroConnectCta({
+  style,
+  interactive,
+}: {
+  style: CSSProperties;
+  interactive: boolean;
+}) {
+  return (
+    <div
+      className="absolute inset-0 z-20 flex flex-col items-center justify-center px-6 text-center"
+      style={{
+        ...style,
+        pointerEvents: interactive ? "auto" : "none",
+      }}
+    >
+      <a
+        href={`mailto:${CONNECT_EMAIL}`}
+        className="group inline-flex cursor-pointer items-center gap-3 rounded-full border border-white/20 bg-black/5 px-6 py-4 shadow-[0_0_25px_rgba(255,255,255,0.05)] backdrop-blur-5xl transition-colors hover:bg-white/10 md:gap-5 md:px-16 md:py-8 [backdrop-filter:blur(40px)]"
+        aria-label={`Email ${CONNECT_EMAIL}`}
+      >
+        <h2
+          className="text-3xl uppercase tracking-wide text-white drop-shadow-[0_0_15px_rgba(255,255,255,0.3)] md:text-5xl"
+          style={{
+            fontFamily: "var(--font-montserrat-alt)",
+            fontWeight: 600,
+          }}
+        >
+          L<span className="text-2xl md:text-4xl">et&apos;s</span> C
+          <span className="text-2xl md:text-4xl">onnect</span>
+        </h2>
+        <span
+          className="inline-flex h-9 w-9 shrink-0 items-center justify-center rounded-full border border-black/25 bg-white text-black transition-transform duration-200 group-hover:translate-x-0.5 md:h-11 md:w-11"
+          aria-hidden
+        >
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 24 24"
+            strokeWidth={2.25}
+            stroke="currentColor"
+            className="h-4 w-4 md:h-6 md:w-6"
+          >
+            <path
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              d="M17.25 8.25L21 12m0 0l-3.75 3.75M21 12H3"
+            />
+          </svg>
+        </span>
+      </a>
+    </div>
+  );
+}
+
 export function Hero() {
   const trackRef = useRef<HTMLDivElement>(null);
   const heroSectionRef = useRef<HTMLDivElement>(null);
@@ -128,6 +373,7 @@ export function Hero() {
 
   const intro = introMotion(fileFrame);
   const mid = midMotion(fileFrame);
+  const connect = connectMotion(fileFrame);
 
   const drawFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
@@ -140,26 +386,19 @@ export function Hero() {
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
     const imgAspect = img.naturalWidth / img.naturalHeight;
-    const canvasAspect = cw / ch;
+    const isMobile = cw < 768;
+    const fileNum = getFileNumberForIndex(index);
 
-    let dw: number;
-    let dh: number;
-    let dx: number;
-    let dy: number;
+    const { dw, dh, dx, dy } = isMobile
+      ? layoutMobileFrameAtFile(fileNum, cw, ch, imgAspect)
+      : layoutCover(cw, ch, imgAspect);
 
-    if (canvasAspect > imgAspect) {
-      dw = cw;
-      dh = cw / imgAspect;
-      dx = 0;
-      dy = (ch - dh) / 2;
-    } else {
-      dw = ch * imgAspect;
-      dh = ch;
-      dx = (cw - dw) / 2;
-      dy = 0;
-    }
-
-    ctx.clearRect(0, 0, cw, ch);
+    ctx.fillStyle = HERO_BG;
+    ctx.fillRect(0, 0, cw, ch);
+    ctx.shadowColor = "transparent";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
     ctx.drawImage(img, dx, dy, dw, dh);
   }, []);
 
@@ -175,6 +414,13 @@ export function Hero() {
     canvas.height = h * dpr;
     canvas.style.width = `${w}px`;
     canvas.style.height = `${h}px`;
+
+    const track = trackRef.current;
+    if (track) {
+      const trackVh =
+        w < 768 ? SCROLL_TRACK_VH_MOBILE : SCROLL_TRACK_VH_DESKTOP;
+      track.style.height = `${trackVh}vh`;
+    }
 
     const ctx = canvas.getContext("2d", { alpha: false });
     if (ctx) {
@@ -277,10 +523,15 @@ export function Hero() {
       <div
         ref={heroSectionRef}
         id="hero-section"
-        className="pointer-events-none fixed inset-0 z-0 bg-[#0A0A0C] transition-opacity duration-300"
-        aria-hidden
+        className={`pointer-events-none fixed inset-0 bg-[#F8F8F8] transition-opacity duration-300 ${
+          connect.opacity > 0.4 ? "z-[5]" : "z-0"
+        }`}
       >
-        <canvas ref={canvasRef} className="block h-full w-full" />
+        <canvas
+          ref={canvasRef}
+          className="block h-full w-full shadow-none"
+          aria-hidden
+        />
 
         <div className="absolute inset-0 z-10 overflow-hidden">
           {/* Intro — tagline 1 exits by frame 70 */}
@@ -300,7 +551,7 @@ export function Hero() {
             }}
           />
 
-          {/* Mid — tagline 2 enters from bottom at 388, exits at 560 */}
+          {/* Mid — tagline 2 enters from bottom at 157, exits at 300 */}
           <div
             className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 transition-none"
             style={{ opacity: mid.overlay }}
@@ -317,14 +568,29 @@ export function Hero() {
             }}
           />
 
+          {/* Connect — bright/clear at top, dark at bottom so center branding stays readable */}
+          <div
+            className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/85 transition-none"
+            style={{ opacity: connect.overlay }}
+          />
+
+          <HeroConnectCta
+            interactive={connect.opacity > 0.4}
+            style={{
+              opacity: connect.opacity,
+              transform: `translateY(${connect.translateY}vh) scale(${connect.scale})`,
+              filter: `blur(${connect.blur}px)`,
+            }}
+          />
+
         </div>
       </div>
 
       <div
         ref={trackRef}
         id="hero-scroll-track"
-        className="relative z-[2] w-full"
-        style={{ height: `${SCROLL_TRACK_VH}vh` }}
+        className="pointer-events-none relative z-[2] w-full"
+        style={{ height: `${SCROLL_TRACK_VH_MOBILE}vh` }}
       />
     </>
   );

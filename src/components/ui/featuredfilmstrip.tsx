@@ -13,6 +13,7 @@ export type FeatureItem = {
   tagline: string;
   description: string;
   image: string;
+  url: string;
 };
 
 export type FilmstripScrollerProps = {
@@ -176,7 +177,7 @@ export function FeatureFilmstrip({
             </div>
           </div>
 
-          <div className="group relative hidden aspect-[16/14] w-full max-h-[70vh] overflow-hidden rounded-2xl border border-border/80 bg-card shadow-[0_14px_36px_-6px_rgba(0,0,0,0.08)] md:block">
+          <div className="group relative hidden aspect-[18/14] w-full max-h-[75vh] overflow-hidden rounded-2xl bg-card shadow-[0_14px_36px_-6px_rgba(0,0,0,0.08)] md:block">
             <Image
               src={item.image}
               alt={item.title}
@@ -208,7 +209,9 @@ export function FeatureFilmstrip({
 
               <div className="pt-3">
                 <Link
-                  href={`/contact?service=${encodeURIComponent(item.title)}&additionalRequirement=${encodeURIComponent(`Enquiry for ${item.title} service`)}`}
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className="group/btn inline-flex items-center gap-2 text-xs font-semibold text-white transition-colors hover:text-accent"
                 >
                   View Project

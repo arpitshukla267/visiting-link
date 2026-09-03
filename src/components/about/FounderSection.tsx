@@ -369,7 +369,7 @@ export function TeamSection({
   };
 
   return (
-    <section className="bg-white py-12 md:pb-22" aria-label="Meet the team">
+    <section className="hidden bg-white py-12 md:pb-22" aria-label="Meet the team">
       <div className="mx-auto w-full max-w-[90vw] md:max-w-[85vw]">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <FadeIn>

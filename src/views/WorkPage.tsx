@@ -16,6 +16,7 @@ import {
   Star,
 } from "lucide-react";
 import Image from "next/image";
+import { WORK_PROJECTS } from "../data/pages";
 
 interface WorkPageProps {
   onNavigateHome: () => void;
@@ -35,44 +36,44 @@ const FILTER_OPTIONS: { key: FilterKey; label: string }[] = [
   { key: "company-profile", label: "Company Profile" },
 ];
 
-type Project = {
-  id: string;
-  name: string;
-  category: string;
-  url: string;
-  image: string;
-  filters: FilterKey[];
-};
+// type Project = {
+//   id: string;
+//   name: string;
+//   category: string;
+//   url: string;
+//   image: string;
+//   filters: FilterKey[];
+// };
 
-const PROJECTS: Project[] = [
-  {
-    id: "videha-overseas",
-    name: "Videha Overseas",
-    category: "International Food Export",
-    url: "https://www.videhaoverseas.com/",
-    image:
-      "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=85",
-    filters: ["web-development"],
-  },
-  {
-    id: "sandora",
-    name: "Sandora",
-    category: "Digital Commerce Platform",
-    url: "https://www.sandora.in/",
-    image:
-      "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85",
-    filters: ["web-development"],
-  },
-  {
-    id: "himvarsha",
-    name: "Himvarsha",
-    category: "Food & Beverage Brand",
-    url: "https://www.himvarshafoods.com/",
-    image:
-      "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1400&q=85",
-    filters: ["web-development"],
-  },
-];
+// const PROJECTS: Project[] = [
+//   {
+//     id: "videha-overseas",
+//     name: "Videha Overseas",
+//     category: "International Food Export",
+//     url: "https://www.videhaoverseas.com/",
+//     image:
+//       "https://images.unsplash.com/photo-1542838132-92c53300491e?auto=format&fit=crop&w=1400&q=85",
+//     filters: ["web-development"],
+//   },
+//   {
+//     id: "sandora",
+//     name: "Sandora",
+//     category: "Digital Commerce Platform",
+//     url: "https://www.sandora.in/",
+//     image:
+//       "https://images.unsplash.com/photo-1504307651254-35680f356dfd?auto=format&fit=crop&w=1400&q=85",
+//     filters: ["web-development"],
+//   },
+//   {
+//     id: "himvarsha",
+//     name: "Himvarsha",
+//     category: "Food & Beverage Brand",
+//     url: "https://www.himvarshafoods.com/",
+//     image:
+//       "https://images.unsplash.com/photo-1596040033229-a9821ebd058d?auto=format&fit=crop&w=1400&q=85",
+//     filters: ["web-development"],
+//   },
+// ];
 
 export const WorkPage: React.FC<WorkPageProps> = ({
   onNavigateHome,
@@ -82,10 +83,22 @@ export const WorkPage: React.FC<WorkPageProps> = ({
 
   const filtered =
     activeFilter === "all"
-      ? PROJECTS
-      : PROJECTS.filter((project) => project.filters.includes(activeFilter));
-
-
+      ? WORK_PROJECTS
+      : WORK_PROJECTS.filter((project) => {
+          if (activeFilter === "web-development") {
+            return project.discipline === "web";
+          }
+  
+          if (activeFilter === "graphic-designing") {
+            return project.discipline === "graphics";
+          }
+  
+          if (activeFilter === "company-profile") {
+            return project.discipline === "identity";
+          }
+  
+          return true;
+        });
 
   return (
     <div className="w-full bg-white text-[#111111]">
@@ -119,7 +132,17 @@ export const WorkPage: React.FC<WorkPageProps> = ({
             {FILTER_OPTIONS.map((opt) => (
               <button
                 key={opt.key}
-                onClick={() => setActiveFilter(opt.key)}
+                onClick={() => {
+                  if (opt.key === "company-profile") {
+                    window.open(
+                      "https://social-offer.vercel.app/",
+                      "_blank",
+                      "noopener,noreferrer",
+                    );
+                    return;
+                  }
+                  setActiveFilter(opt.key);
+                }}
                 className={`px-5 py-2 text-sm font-medium rounded-full transition-all cursor-pointer ${
                   activeFilter === opt.key
                     ? "bg-[#111111] text-white"
@@ -149,7 +172,9 @@ export const WorkPage: React.FC<WorkPageProps> = ({
                   ease: [0.16, 1, 0.3, 1],
                 }}
                 className="group cursor-pointer"
-                onClick={() => onNavigateContact(project.name)}
+                onClick={() =>
+                  window.open(project.url, "_blank", "noopener,noreferrer")
+                }
               >
                 {/* Image section - rounded top */}
                 <div className="relative h-72 overflow-hidden rounded-t-2xl bg-[#f3f3f3]">

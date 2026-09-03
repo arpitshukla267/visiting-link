@@ -3,6 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { getScrollY } from '@/components/SmoothScroll';
 
 interface NavbarProps {
   currentPage: string;
@@ -17,6 +18,14 @@ const MOBILE_SERVICES = [
   { id: 'web-development', label: 'Web Development' },
   { id: 'graphics', label: 'Graphics & Identity' },
 ] as const;
+
+function isPastHeroSection() {
+  const track = document.getElementById('hero-scroll-track');
+  if (!track) return getScrollY() > 30;
+  const viewport = window.innerHeight;
+  const trackBottom = track.offsetTop + track.offsetHeight;
+  return getScrollY() >= trackBottom - viewport * 0.15;
+}
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentPage,
@@ -34,13 +43,30 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   useEffect(() => {
     const handleScroll = () => {
+      // Home: stay transparent for the full hero; scrolled style only after hero ends.
+      // Other pages: unchanged — bg after a small scroll threshold.
+      if (isHomePage) {
+        setIsScrolled(isPastHeroSection());
+        return;
+      }
       setIsScrolled(window.scrollY > 30);
     };
 
     handleScroll();
     window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+
+    const lenis = (
+      window as Window & {
+        __lenis?: { on: (e: string, fn: () => void) => () => void };
+      }
+    ).__lenis;
+    const unsubLenis = lenis?.on('scroll', handleScroll);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      unsubLenis?.();
+    };
+  }, [isHomePage]);
 
   useEffect(() => {
     if (!mobileMenuOpen) return;
@@ -123,67 +149,12 @@ export const Navbar: React.FC<NavbarProps> = ({
               Home
             </button>
 
-            {/* <div
-              className="relative"
-              onMouseEnter={() => setServicesDropdownOpen(true)}
-              onMouseLeave={() => setServicesDropdownOpen(false)}
+            <button
+              onClick={() => handlePageNav('services')}
+              className={navLinkClass(currentPage === 'services')}
             >
-              <button
-                onClick={() => {
-                  if (isHomePage) {
-                    const target = document.getElementById('services');
-                    if (target) target.scrollIntoView({ behavior: 'smooth' });
-                  } else {
-                    onNavigateHome();
-                    setTimeout(() => {
-                      const target = document.getElementById('services');
-                      if (target) target.scrollIntoView({ behavior: 'smooth' });
-                    }, 100);
-                  }
-                }}
-                className={`inline-flex cursor-pointer items-center gap-1.5 text-[13px] font-medium uppercase tracking-widest transition-colors duration-200 ${
-                  navThemeDark
-                    ? 'text-white/80 hover:text-white'
-                    : 'text-[#666666] hover:text-black'
-                }`}
-              >
-                <span>Services</span>
-                <ChevronDown className="h-3 w-3 opacity-60" />
-              </button>
-
-              <AnimatePresence>
-                {servicesDropdownOpen && (
-                  <motion.div
-                    initial={{ opacity: 0, y: 8 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: 8 }}
-                    transition={{ duration: 0.15 }}
-                    className="absolute top-full -left-4 z-50 w-64 pt-2"
-                  >
-                    <div className="space-y-1 border border-[#E5E7EB] bg-white p-3 shadow-xl">
-                      {MOBILE_SERVICES.map((service, i) => (
-                        <button
-                          key={service.id}
-                          onClick={() => {
-                            setServicesDropdownOpen(false);
-                            onNavigateService(service.id);
-                          }}
-                          className={`w-full cursor-pointer p-2.5 text-left transition-colors ${
-                            currentPage === service.id
-                              ? 'bg-[#FAFAFA]'
-                              : 'hover:bg-[#FAFAFA]'
-                          }`}
-                        >
-                          <div className="text-xs font-semibold text-[#111111]">
-                            0{i + 1} — {service.label}
-                          </div>
-                        </button>
-                      ))}
-                    </div>
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </div> */}
+              Services
+            </button>
 
             <button
               onClick={() => handlePageNav('work')}
@@ -211,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             <button
               id="navbar-cta-button"
               onClick={() => onNavigateContact()}
-              className={`group flex cursor-pointer items-center gap-2 px-6 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+              className={`group flex cursor-pointer items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 ${
                 navThemeDark
                   ? 'bg-white text-[#111111] hover:bg-[#F0F0F0]'
                   : 'bg-[#111111] text-white hover:bg-[#333333]'
@@ -280,51 +251,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   Home
                 </button>
 
-                {/* <div className="border-b border-[#E8E8E8]">
-                  <button
-                    type="button"
-                    onClick={() => setMobileServicesOpen((open) => !open)}
-                    className="flex w-full cursor-pointer items-center justify-between py-4 text-left text-base font-medium text-[#444444] transition-colors hover:text-[#111111]"
-                  >
-                    <span>Services</span>
-                    <ChevronDown
-                      className={`h-4 w-4 text-[#888888] transition-transform duration-200 ${
-                        mobileServicesOpen ? 'rotate-180' : ''
-                      }`}
-                    />
-                  </button>
-
-                  <AnimatePresence initial={false}>
-                    {mobileServicesOpen && (
-                      <motion.div
-                        initial={{ height: 0, opacity: 0 }}
-                        animate={{ height: 'auto', opacity: 1 }}
-                        exit={{ height: 0, opacity: 0 }}
-                        transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1] }}
-                        className="overflow-hidden"
-                      >
-                        <div className="space-y-1 pb-4 pl-1">
-                          {MOBILE_SERVICES.map((service) => (
-                            <button
-                              key={service.id}
-                              type="button"
-                              onClick={() => handleServiceNav(service.id)}
-                              className={`block w-full cursor-pointer py-2.5 text-left text-sm transition-colors ${
-                                currentPage === service.id
-                                  ? 'font-semibold text-[#111111]'
-                                  : 'text-[#666666] hover:text-[#111111]'
-                              }`}
-                            >
-                              {service.label}
-                            </button>
-                          ))}
-                        </div>
-                      </motion.div>
-                    )}
-                  </AnimatePresence>
-                </div> */}
-
                 {[
+                  { label: 'Services', page: 'services' },
                   { label: 'Work', page: 'work' },
                   { label: 'About', page: 'about' },
                   { label: 'Contact', page: 'contact' },

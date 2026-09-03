@@ -1,90 +1,68 @@
-export interface WorkProject {
+export interface Work_Project {
   id: string;
   name: string;
   category: string;
   description: string;
   outcome: string;
   year: string;
-  discipline: 'web' | 'identity' | 'graphics';
+  discipline: "web" | "identity" | "graphics";
   accent: string;
+  image: string;
+  url: string;
 }
 
-export const WORK_PROJECTS: WorkProject[] = [
+export const WORK_PROJECTS = [
   {
-    id: 'vance',
-    name: 'Vance & Associates',
-    category: 'Architecture practice platform',
+    id: "himvarsha",
+    name: "Himvarsha Foods",
+    category: "Spice brand & e-commerce platform",
     description:
-      'A complete digital rebuild for a mid-size architecture firm — portfolio galleries, project inquiry flows, and a content system their team manages without developers.',
-    outcome: 'LCP reduced from 4.2s to 0.48s',
-    year: '2025',
-    discipline: 'web',
-    accent: '#111111',
+      "A complete digital presence for a premium spice brand, combining product discovery, category-led navigation, brand storytelling, recipes, and content publishing into a polished customer experience.",
+    outcome: "Built a unified digital storefront for the brand",
+    year: "2026",
+    discipline: "web",
+    accent: "#8B2E2E",
+    image: "/images/himvarsha.webp",
+    url: "https://www.himvarshafoods.com/",
   },
+
   {
-    id: 'northline',
-    name: 'Northline Freight',
-    category: 'Logistics operations dashboard',
+    id: "videha",
+    name: "Videha Overseas",
+    category: "Export & B2B business platform",
     description:
-      'Custom booking and quote management platform replacing a patchwork of spreadsheets and legacy tools used across three regional offices.',
-    outcome: '3.1× faster quote turnaround',
-    year: '2025',
-    discipline: 'web',
-    accent: '#333333',
+      "A conversion-focused export platform built to present agricultural products, private-label capabilities, quality standards, and global supply operations while making buyer enquiries and quotation requests effortless.",
+    outcome: "Built a global-facing B2B export presence",
+    year: "2026",
+    discipline: "web",
+    accent: "#1B4D3E",
+    image: "/images/videha.webp",
+    url: "https://www.videhaoverseas.com/",
   },
+
   {
-    id: 'marrow',
-    name: 'Marrow Studio',
-    category: 'Headless commerce storefront',
+    id: "sandora",
+    name: "Sandora",
+    category: "Construction materials platform",
     description:
-      'Performance-first e-commerce experience with modular product storytelling, integrated inventory sync, and a mobile checkout rebuilt from scratch.',
-    outcome: '61% mobile conversion lift',
-    year: '2024',
-    discipline: 'web',
-    accent: '#555555',
-  },
-  {
-    id: 'sterling',
-    name: 'Sterling Capital Group',
-    category: 'VisitingLink identity gateway',
-    description:
-      'Executive presence hub consolidating investor relations, team profiles, and deal-room access behind a single branded entry point.',
-    outcome: 'Unified 12 channels into one gateway',
-    year: '2025',
-    discipline: 'identity',
-    accent: '#111111',
-  },
-  {
-    id: 'kroma',
-    name: 'Kroma Technology Labs',
-    category: 'Product launch visual system',
-    description:
-      'Full brand identity for a hardware startup — logo architecture, product photography direction, launch deck, and a 40-page guidelines document.',
-    outcome: 'Cohesive launch across 6 touchpoints',
-    year: '2024',
-    discipline: 'graphics',
-    accent: '#0BA95B',
-  },
-  {
-    id: 'atelier',
-    name: 'Atelier Monochrome',
-    category: 'Design system & web presence',
-    description:
-      'Editorial website and component library for a luxury interiors studio, built around restrained typography and a custom CMS workflow.',
-    outcome: 'Team publishes updates in under 5 minutes',
-    year: '2024',
-    discipline: 'graphics',
-    accent: '#666666',
+      "A modern digital platform for an engineered sand and construction materials brand, bringing products, processing technology, bulk supply, sustainability, and enquiry flows together in one experience.",
+    outcome:
+      "Created a digital platform for product discovery and bulk enquiries",
+    year: "2026",
+    discipline: "web",
+    accent: "#C47A2C",
+    image: "/images/sandora.webp",
+    url: "https://www.sandora.in/",
   },
 ];
 
 export const ABOUT_HERO_IMAGE =
-  'https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80';
+  "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=1600&q=80";
 
 export const ABOUT_HERO_STATS = [
-  { value: '900+', label: 'clients' },
-  { value: '100+', label: 'designers' },
-  { value: '120+', label: 'brands' },
+  { value: "900+", label: "clients" },
+  { value: "100+", label: "designers" },
+  { value: "120+", label: "brands" },
 ];
 
 export interface AboutChapter {
@@ -99,99 +77,103 @@ export interface AboutChapter {
 
 export const ABOUT_CHAPTERS: AboutChapter[] = [
   {
-    id: 'legacy',
-    eyebrow: 'A Legacy of Creating',
-    headline: '900+ Clients',
+    id: "legacy",
+    eyebrow: "A Legacy of Creating",
+    headline: "900+ Clients",
     paragraphs: [
-      'Our previous businesses gave us the opportunity to work with 900+ clients across different industries and markets.',
-      'Every project taught us something.',
-      'Every client made us better.',
-      'And every challenge became part of what we are building today.',
+      "Our previous businesses gave us the opportunity to work with 900+ clients across different industries and markets.",
+      "Every project taught us something.",
+      "Every client made us better.",
+      "And every challenge became part of what we are building today.",
     ],
   },
   {
-    id: 'designers',
-    eyebrow: '100+ Designers. One Creative Mindset.',
-    headline: '100+ Designers',
+    id: "designers",
+    eyebrow: "100+ Designers. One Creative Mindset.",
+    headline: "100+ Designers",
     paragraphs: [
-      'Over the years, we have worked with and managed a network of 100+ designers.',
-      'Different people. Different skills. Different perspectives.',
+      "Over the years, we have worked with and managed a network of 100+ designers.",
+      "Different people. Different skills. Different perspectives.",
     ],
-    pullQuote: 'Great work happens when talent moves in the same direction.',
+    pullQuote: "Great work happens when talent moves in the same direction.",
   },
   {
-    id: 'developers',
+    id: "developers",
     eyebrow: "Now, We're Building the Next Chapter.",
-    headline: '100+ Developers',
+    headline: "100+ Developers",
     paragraphs: [
       "The next milestone isn't just another number. It is a team.",
-      'A technology ecosystem built around people who can design, develop, solve and execute.',
-      'Our ambition is to bring together 100+ developers under one vision and create the capacity to build products at a completely different scale.',
+      "A technology ecosystem built around people who can design, develop, solve and execute.",
+      "Our ambition is to bring together 100+ developers under one vision and create the capacity to build products at a completely different scale.",
     ],
     dark: true,
   },
   {
-    id: 'brands',
-    eyebrow: '120+ Brands. One Digital Perspective.',
-    headline: '120+ Brands',
+    id: "brands",
+    eyebrow: "120+ Brands. One Digital Perspective.",
+    headline: "120+ Brands",
     paragraphs: [
-      'We have worked with 120+ brands across digital marketing.',
-      'That experience taught us something simple:',
+      "We have worked with 120+ brands across digital marketing.",
+      "That experience taught us something simple:",
     ],
     highlights: [
-      'Technology gets attention.',
-      'Design creates connection.',
-      'Execution creates growth.',
+      "Technology gets attention.",
+      "Design creates connection.",
+      "Execution creates growth.",
     ],
   },
   {
-    id: 'record',
-    eyebrow: 'The Next Record',
+    id: "record",
+    eyebrow: "The Next Record",
     headline: "We've done it once. Now we're building it again.",
     paragraphs: [
-      '900+ clients was our previous benchmark.',
+      "900+ clients was our previous benchmark.",
       "We don't want to simply repeat the number. We want to create a new one.",
-      'A bigger team. Bigger ideas. Bigger execution.',
-      'And a new record that becomes part of our story.',
+      "A bigger team. Bigger ideas. Bigger execution.",
+      "And a new record that becomes part of our story.",
     ],
   },
 ];
 
 export const ABOUT_VISION = {
-  title: 'Our Vision',
-  headline: 'Build something that outlives the project.',
+  title: "Our Vision",
+  headline: "Build something that outlives the project.",
   paragraphs: [
-    'We are building more than an agency.',
-    'We are building a creative and technology ecosystem where designers, developers and digital experts work together to turn ambitious ideas into reality.',
-    'Our long-term vision is simple:',
+    "We are building more than an agency.",
+    "We are building a creative and technology ecosystem where designers, developers and digital experts work together to turn ambitious ideas into reality.",
+    "Our long-term vision is simple:",
   ],
   pillars: [
-    '100+ Developers.',
-    '100+ Creators.',
-    'Thousands of Ideas.',
-    'One Direction.',
+    "100+ Developers.",
+    "100+ Creators.",
+    "Thousands of Ideas.",
+    "One Direction.",
   ],
 };
 
 export const ABOUT_MISSION = {
-  title: 'Our Mission',
-  headline: 'Make ambitious ideas possible.',
+  title: "Our Mission",
+  headline: "Make ambitious ideas possible.",
   paragraphs: [
     "We believe great ideas shouldn't fail because people don't know how to build them.",
-    'Our mission is to create the people, technology and systems required to take an idea from zero to something real.',
-    'We want to make world-class design and technology accessible to businesses of every size.',
-    'And keep building until the numbers become history.',
+    "Our mission is to create the people, technology and systems required to take an idea from zero to something real.",
+    "We want to make world-class design and technology accessible to businesses of every size.",
+    "And keep building until the numbers become history.",
   ],
 };
 
 export const ABOUT_CLOSING = {
-  title: 'This Is Only the Beginning.',
+  title: "This Is Only the Beginning.",
   stats: [
-    '900+ clients behind us.',
+    "900+ clients behind us.",
     "100+ designers we've worked with.",
     "120+ brands we've helped digitally.",
     "100+ developers we're building toward.",
   ],
-  tagline: 'The next chapter starts here.',
-  footer: ['Built with experience.', 'Driven by vision.', 'Designed for the future.'],
+  tagline: "The next chapter starts here.",
+  footer: [
+    "Built with experience.",
+    "Driven by vision.",
+    "Designed for the future.",
+  ],
 };

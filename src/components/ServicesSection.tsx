@@ -302,6 +302,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const cardId = card.pageRoute ?? serviceId;
 
   const handleNavigate = () => {
+    if (card.accent === "companyProfile" || card.matchKeyword === "company profile") {
+      window.open(
+        "https://social-offer.vercel.app/",
+        "_blank",
+        "noopener,noreferrer",
+      );
+      return;
+    }
     if (card.pageRoute) {
       onNavigatePage(card.pageRoute);
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -376,9 +384,8 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         </div>
       </RevealBlock>
 
-      <RevealBlock delay={0.24} className={uniformMobileHeight ? "mt-auto shrink-0 pt-5" : "mt-7"}>
         <button
-          className="inline-flex items-center gap-1.5 self-start text-sm font-medium text-[#111111]"
+          className="inline-flex items-center gap-1.5 mt-10 self-start text-sm font-medium text-[#111111]"
           onClick={(e) => {
             e.stopPropagation();
             handleNavigate();
@@ -387,7 +394,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
           Explore
           <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
         </button>
-      </RevealBlock>
     </>
   );
 

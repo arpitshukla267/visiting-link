@@ -1,23 +1,38 @@
-const FRAME_FOLDER = "/webp";
-const FRAME_PREFIX = "xs";
-const SKIPPED_FRAME_NUMBERS = new Set([601]);
+/* ------------------------------------------------------------------ */
+/*  Previous /webp sequence (xs-####, skip 601) — restore if needed     */
+/* ------------------------------------------------------------------ */
+// const FRAME_FOLDER = "/webp";
+// const FRAME_PREFIX = "xs";
+// const SKIPPED_FRAME_NUMBERS = new Set([601]);
+//
+// /** File numbers present in /public/webp (xs-0001 … xs-0630, excluding xs-0601). */
+// const FRAME_SEQUENCE: number[] = [];
+// for (let n = 1; n <= 630; n++) {
+//   if (!SKIPPED_FRAME_NUMBERS.has(n)) {
+//     FRAME_SEQUENCE.push(n);
+//   }
+// }
 
-/** File numbers present in /public/webp (xs-0001 … xs-0630, excluding xs-0601). */
+/** Active sequence: /public/frames/hero-bg-0001.webp … hero-bg-0589.webp */
+const FRAME_FOLDER = "/frames";
+const FRAME_PREFIX = "hero-bg";
+
 const FRAME_SEQUENCE: number[] = [];
-for (let n = 1; n <= 630; n++) {
-  if (!SKIPPED_FRAME_NUMBERS.has(n)) {
-    FRAME_SEQUENCE.push(n);
-  }
+for (let n = 1; n <= 589; n++) {
+  FRAME_SEQUENCE.push(n);
 }
 
 const TOTAL_FRAMES = FRAME_SEQUENCE.length;
 
-/** Hero overlay timing — file numbers (xs-####). */
+/** Hero overlay timing — file numbers (hero-bg-####). */
 export const HERO_INTRO_EXIT_FILE = 70;
 export const HERO_SERVICES_ENTER_FILE = 70;
-export const HERO_SERVICES_END_FILE = 388;
-export const HERO_MID_START_FILE = 388;
-export const HERO_MID_END_FILE = 560;
+export const HERO_SERVICES_END_FILE = 157;
+export const HERO_MID_START_FILE = 157;
+export const HERO_MID_END_FILE = 300;
+/** Third headline — glass “Let’s Connect” pill (from bottom, stays over frames). */
+export const HERO_CONNECT_START_FILE = 553;
+export const HERO_CONNECT_END_FILE = 589;
 /** CompanyStatement reveals progressively across the final 40 frames. */
 export const HERO_STATEMENT_REVEAL_START_FILE = TOTAL_FRAMES - 40;
 export const HERO_STATEMENT_ENTER_FILE = TOTAL_FRAMES;
@@ -35,7 +50,7 @@ export function getIndexForFileNumber(fileNum: number): number {
   return idx === -1 ? 1 : idx + 1;
 }
 
-/** Scroll frame index → /webp/xs-####.webp */
+/** Scroll frame index → /frames/hero-bg-####.webp */
 export const frameUrl = (index: number) => {
   const fileNum = getFileNumberForIndex(index);
   const pad = String(fileNum).padStart(4, "0");

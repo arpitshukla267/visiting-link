@@ -208,7 +208,7 @@ export default function HowWeWorkSection() {
           >
             Studio operation across the world
           </p>
-          <h2 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-[#111111]">
+          <h2 className="mb-3 text-2xl font-medium tracking-tight text-[#111111]">
             We have best team and best process
           </h2>
           <p className="mb-8 text-sm leading-relaxed text-[#666666]">
@@ -262,7 +262,7 @@ export default function HowWeWorkSection() {
             >
               Studio operation across the world
             </p>
-            <h2 className="mb-5 text-3xl font-bold leading-[1.12] tracking-tight text-[#111111] md:text-4xl lg:text-[42px]">
+            <h2 className="mb-5 text-3xl font-medium leading-[1.12] tracking-tight text-[#111111] md:text-4xl lg:text-[42px]">
               We have best team
               <br />
               and best process

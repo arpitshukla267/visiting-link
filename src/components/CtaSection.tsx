@@ -39,7 +39,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onNavigateContact }) => 
         className="pointer-events-none absolute inset-0 opacity-60"
         style={{
           background:
-            'radial-gradient(600px circle at 50% 0%, rgba(255,255,255,0.06), transparent 70%)',
+            "radial-gradient(600px circle at 50% 0%, rgba(255,255,255,0.06), transparent 70%)",
         }}
       />
       <div
@@ -47,8 +47,8 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onNavigateContact }) => 
         className="pointer-events-none absolute inset-0 opacity-[0.04]"
         style={{
           backgroundImage:
-            'linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)',
-          backgroundSize: '48px 48px',
+            "linear-gradient(#fff 1px, transparent 1px), linear-gradient(90deg, #fff 1px, transparent 1px)",
+          backgroundSize: "48px 48px",
         }}
       />
 
@@ -56,7 +56,7 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onNavigateContact }) => 
         <motion.div
           initial="hidden"
           whileInView="visible"
-          viewport={{ once: true, margin: '-80px' }}
+          viewport={{ once: true, margin: "-80px" }}
           variants={containerVariants}
           className="space-y-8 max-w-3xl flex flex-col items-center"
         >
@@ -83,7 +83,8 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onNavigateContact }) => 
             variants={itemVariants}
             className="text-base sm:text-lg md:text-xl text-neutral-300 font-normal leading-relaxed max-w-xl mx-auto"
           >
-            Let's create something thoughtful, useful and built around your goals.
+            Let's create something thoughtful, useful and built around your
+            goals.
           </motion.p>
 
           {/* Primary CTA Button */}
@@ -107,11 +108,11 @@ export const CtaSection: React.FC<CtaSectionProps> = ({ onNavigateContact }) => 
             className="pt-10 border-t border-[#2a2a2a] w-full flex flex-wrap items-center justify-center gap-8 text-xs text-[#888888]"
           >
             <a
-              href="mailto:hello@visitinglink.studio"
+              href="mailto:info.visitinglink@gmail.com"
               className="flex items-center gap-2 transition-colors duration-200 hover:text-white"
             >
               <Mail className="w-3.5 h-3.5 text-[#666666]" />
-              <span className="font-mono">hello@visitinglink.studio</span>
+              <span className="font-mono">info.visitinglink@gmail.com</span>
             </a>
             <div className="flex items-center gap-2">
               <Clock className="w-3.5 h-3.5 text-[#666666]" />

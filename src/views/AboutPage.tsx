@@ -318,30 +318,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       </section>
 
       {/* ─────────────────────────────────────────────────────────
-         SECTION 02 — OUR STORY (8 years)
-      ───────────────────────────────────────────────────────── */}
-      <EightYearsSection />
-
-      {/* ─────────────────────────────────────────────────────────
-          SECTION 02 — OUR JOURNEY
-      ───────────────────────────────────────────────────────── */}
-      <div className="h-full">
-        <JourneySection
-          className="h-full"
-          headline="From first brand to a bigger platform."
-          intro="What started as client work — identities, websites, products — became the foundation for something we wanted to build ourselves."
-          milestones={JOURNEY_MILESTONES}
-        />
-      </div>
-
-      {/* ─────────────────────────────────────────────────────────
-          SECTION 03 — VISION + MISSION
-      ───────────────────────────────────────────────────────── */}
-
-      <VisionMissionSection />
-
-      {/* ─────────────────────────────────────────────────────────
-          SECTION 04 — PEOPLE / FOUNDER
+          SECTION 02 — PEOPLE / FOUNDER
       ───────────────────────────────────────────────────────── */}
       <AboutTeamSection
         founder={{
@@ -355,6 +332,30 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           onNavigateContact: () => onNavigateContact(),
         }}
       />
+
+      {/* ─────────────────────────────────────────────────────────
+         SECTION 03 — OUR STORY (8 years)
+      ───────────────────────────────────────────────────────── */}
+      <EightYearsSection />
+
+      {/* ─────────────────────────────────────────────────────────
+          SECTION 04 — OUR JOURNEY
+      ───────────────────────────────────────────────────────── */}
+      <div className="h-full">
+        <JourneySection
+          className="h-full"
+          headline="From first brand to a bigger platform."
+          intro="What started as client work — identities, websites, products — became the foundation for something we wanted to build ourselves."
+          milestones={JOURNEY_MILESTONES}
+        />
+      </div>
+
+      {/* ─────────────────────────────────────────────────────────
+          SECTION 05 — VISION + MISSION
+      ───────────────────────────────────────────────────────── */}
+
+      <VisionMissionSection />
+
     </div>
   );
 };

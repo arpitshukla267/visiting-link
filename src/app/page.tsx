@@ -7,7 +7,6 @@ import { CompanyStatement } from "@/components/CompanyStatement";
 import { ServicesSection } from "@/components/ServicesSection";
 import { VisualBreak } from "@/components/Future-banner";
 import { TestimonialsSection } from "@/components/TestimonialsSection";
-import { CtaSection } from "@/components/CtaSection";
 import SelectedWorkSection from "@/components/SelectedWorkSection";
 import { StaggeredSections } from "@/components/StaggeredSections";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
@@ -38,11 +37,7 @@ export default function HomePage() {
     <CompanyStatement key="promises" />,
     <SelectedWorkSection key="work" />,
     <VisualBreak key="break" />,
-    <TestimonialsSection key="testimonials" />,
-    <CtaSection
-      key="cta"
-      onNavigateContact={() => nav.navigateToContact("New Project Inquiry")}
-    />,
+    // <TestimonialsSection key="testimonials" />,
   ];
 
   return (
