@@ -13,26 +13,36 @@
 //   }
 // }
 
-/** Active sequence: /public/frames/hero-bg-0001.webp … hero-bg-0589.webp */
-const FRAME_FOLDER = "/frames";
-const FRAME_PREFIX = "hero-bg";
+/* ------------------------------------------------------------------ */
+/*  Previous /frames sequence (hero-bg-####) — restore if needed        */
+/* ------------------------------------------------------------------ */
+// const FRAME_FOLDER = "/frames";
+// const FRAME_PREFIX = "hero-bg";
+// const FRAME_SEQUENCE: number[] = [];
+// for (let n = 1; n <= 589; n++) {
+//   FRAME_SEQUENCE.push(n);
+// }
+
+/** Active sequence: /public/optimized/…Collage-0001.webp … -0565.webp */
+const FRAME_FOLDER = "/optimized";
+const FRAME_PREFIX = "Black and Blue Simple Countdown Video Collage";
 
 const FRAME_SEQUENCE: number[] = [];
-for (let n = 1; n <= 589; n++) {
+for (let n = 1; n <= 565; n++) {
   FRAME_SEQUENCE.push(n);
 }
 
 const TOTAL_FRAMES = FRAME_SEQUENCE.length;
 
-/** Hero overlay timing — file numbers (hero-bg-####). */
+/** Hero overlay timing — file numbers (optimized Collage-####). */
 export const HERO_INTRO_EXIT_FILE = 70;
 export const HERO_SERVICES_ENTER_FILE = 70;
 export const HERO_SERVICES_END_FILE = 157;
 export const HERO_MID_START_FILE = 157;
 export const HERO_MID_END_FILE = 300;
 /** Third headline — glass “Let’s Connect” pill (from bottom, stays over frames). */
-export const HERO_CONNECT_START_FILE = 553;
-export const HERO_CONNECT_END_FILE = 589;
+export const HERO_CONNECT_START_FILE = 355;
+export const HERO_CONNECT_END_FILE = 375;
 /** CompanyStatement reveals progressively across the final 40 frames. */
 export const HERO_STATEMENT_REVEAL_START_FILE = TOTAL_FRAMES - 40;
 export const HERO_STATEMENT_ENTER_FILE = TOTAL_FRAMES;
@@ -50,16 +60,33 @@ export function getIndexForFileNumber(fileNum: number): number {
   return idx === -1 ? 1 : idx + 1;
 }
 
-/** Scroll frame index → /frames/hero-bg-####.webp */
+/** Scroll frame index → /optimized/…Collage-####.webp */
 export const frameUrl = (index: number) => {
   const fileNum = getFileNumberForIndex(index);
   const pad = String(fileNum).padStart(4, "0");
-  return `${FRAME_FOLDER}/${FRAME_PREFIX}-${pad}.webp`;
+  const fileName = `${FRAME_PREFIX}-${pad}.webp`;
+  return `${FRAME_FOLDER}/${encodeURIComponent(fileName)}`;
 };
 
 export function getCachedFrame(index: number): HTMLImageElement | null {
   const clamped = Math.min(TOTAL_FRAMES, Math.max(1, index));
   return frameCache.get(clamped) ?? null;
+}
+
+/** Warm the next few frames so scroll playback stays smooth. */
+export function prefetchHeroFramesAround(
+  centerIndex: number,
+  radius = 6,
+): void {
+  const start = Math.max(1, centerIndex);
+  const end = Math.min(TOTAL_FRAMES, centerIndex + radius);
+  for (let i = start; i <= end; i++) {
+    if (frameCache.has(i)) continue;
+    const img = new window.Image();
+    img.decoding = "async";
+    img.onload = () => frameCache.set(i, img);
+    img.src = frameUrl(i);
+  }
 }
 
 export function areAllFramesCached(): boolean {

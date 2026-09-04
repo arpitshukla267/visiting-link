@@ -231,50 +231,62 @@ export type TeamSectionProps = {
 
 const defaultMembers: TeamMember[] = [
   {
-    name: "Jitesh Singh",
-    role: "Founder",
+    name: "Ansh Katariya",
+    role: "Graphic Designer",
     photoUrl:
       "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Creative Director",
-    role: "Brand & Design",
+    name: "Arpit Shukla",
+    role: "Full Stack Developer",
     photoUrl:
       "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Lead Engineer",
-    role: "Platform & Architecture",
+    name: "Nipurn Patel",
+    role: "Graphic Designer",
     photoUrl:
       "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Head of Product",
-    role: "Product Strategy",
+    name: "Sandeep",
+    role: "-------",
     photoUrl:
       "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Design Lead",
-    role: "UI / UX",
+    name: "Chitranshi",
+    role: "Brand Ambassador",
     photoUrl:
       "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Growth Lead",
-    role: "Marketing & Growth",
+    name: "Hargun",
+    role: "Social Media Manager",
     photoUrl:
       "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Senior Developer",
-    role: "Frontend Engineering",
+    name: "Samaira",
+    role: "Marketing",
     photoUrl:
       "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=85",
   },
   {
-    name: "Client Partner",
-    role: "Client Relations",
+    name: "Aastha",
+    role: " Sales Executive",
+    photoUrl:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
+  },
+  {
+    name: "Tanya Tiwari",
+    role: " Sales Executive",
+    photoUrl:
+      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
+  },
+  {
+    name: "Manav",
+    role: "Video Editor",
     photoUrl:
       "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
   },
@@ -369,7 +381,7 @@ export function TeamSection({
   };
 
   return (
-    <section className="hidden bg-white py-12 md:pb-22" aria-label="Meet the team">
+    <section className=" bg-white py-12 md:pb-22" aria-label="Meet the team">
       <div className="mx-auto w-full max-w-[90vw] md:max-w-[85vw]">
         <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
           <FadeIn>

@@ -8,7 +8,10 @@ import {
   JourneySection,
   type Milestone,
 } from "@/components/about/JourneySection";
-import AboutTeamSection from "@/components/about/FounderSection";
+import {
+  FounderSection,
+  TeamSection,
+} from "@/components/about/FounderSection";
 import { VisionMissionSection } from "@/components/about/VisionMissionSection";
 import { EightYearsSection } from "@/components/about/Eightyearssection";
 
@@ -320,17 +323,14 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       {/* ─────────────────────────────────────────────────────────
           SECTION 02 — PEOPLE / FOUNDER
       ───────────────────────────────────────────────────────── */}
-      <AboutTeamSection
-        founder={{
-          eyebrow: "Built by People",
-          headline: "Meet Our Founder",
-          founderName: "Mr. Jitesh Singh",
-          founderTitle: "CEO & Founder",
-          yearsLabel: "8 Years of Digital Innovation",
-          words:
-            "VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity.",
-          onNavigateContact: () => onNavigateContact(),
-        }}
+      <FounderSection
+        eyebrow="Built by People"
+        headline="Meet Our Founder"
+        founderName="Mr. Jitesh Singh"
+        founderTitle="CEO & Founder"
+        yearsLabel="8 Years of Digital Innovation"
+        words="VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity."
+        onNavigateContact={() => onNavigateContact()}
       />
 
       {/* ─────────────────────────────────────────────────────────
@@ -355,6 +355,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       ───────────────────────────────────────────────────────── */}
 
       <VisionMissionSection />
+
+      {/* ─────────────────────────────────────────────────────────
+          SECTION 06 — TEAM
+      ───────────────────────────────────────────────────────── */}
+      <TeamSection />
 
     </div>
   );

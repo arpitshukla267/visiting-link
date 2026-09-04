@@ -11,12 +11,20 @@ import {
   HERO_CONNECT_END_FILE,
   getCachedFrame,
   getFileNumberForIndex,
+  getIndexForFileNumber,
+  prefetchHeroFramesAround,
 } from "@/lib/heroFrames";
 import { getScrollY } from "@/components/SmoothScroll";
 import { useStartupReady } from "@/components/StartupLoader";
 import { useHeroFileFrame } from "@/components/HeroFrameContext";
 
-const SCROLL_TRACK_VH_DESKTOP = 300;
+/** Desktop: 500vh covers frames 1→354, then 350vh covers 355→end. */
+const SCROLL_TRACK_VH_DESKTOP_EARLY = 500;
+const SCROLL_TRACK_VH_DESKTOP_LATE = 150;
+const SCROLL_TRACK_VH_DESKTOP =
+  SCROLL_TRACK_VH_DESKTOP_EARLY + SCROLL_TRACK_VH_DESKTOP_LATE;
+/** File number where desktop scroll density switches (early → late). */
+const DESKTOP_SCROLL_SPLIT_FILE = 354;
 const SCROLL_TRACK_VH_MOBILE = 200;
 const HERO_BG = "#F8F8F8";
 
@@ -31,7 +39,7 @@ const HERO_BG = "#F8F8F8";
  * "height90"  — locked to 90% of screen height
  * "vh80"      — locked to 80vh height
  *
- * From frames 540→560 the mobile fit smoothly eases to height60
+ * From frames 355→375 the mobile fit smoothly eases to the shift target
  * (whether the starting fit is larger or smaller).
  */
 type MobileFrameFit =
@@ -43,8 +51,8 @@ type MobileFrameFit =
   | "height90"
   | "vh80";
 const MOBILE_FRAME_FIT: MobileFrameFit = "height90";
-const MOBILE_FIT_SHIFT_START = 540;
-const MOBILE_FIT_SHIFT_END = 560;
+const MOBILE_FIT_SHIFT_START = 355;
+const MOBILE_FIT_SHIFT_END = 375;
 const MOBILE_FIT_SHIFT_TARGET: MobileFrameFit = "height50";
   
 const CONNECT_EMAIL = "info.visitinglink@gmail.com";
@@ -149,7 +157,7 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-/** Smoothly blend MOBILE_FRAME_FIT → height60 across frames 540–560. */
+/** Smoothly blend MOBILE_FRAME_FIT → shift target across frames 355–375. */
 function layoutMobileFrameAtFile(
   fileNum: number,
   cw: number,
@@ -175,12 +183,47 @@ function layoutMobileFrameAtFile(
   };
 }
 
+function frameIndexFromScrollFraction(
+  fraction: number,
+  isMobile: boolean,
+): number {
+  const clamped = Math.min(1, Math.max(0, fraction));
+
+  // Mobile: even pace across the full track
+  if (isMobile) {
+    return Math.min(
+      TOTAL_FRAMES,
+      Math.max(1, Math.round(1 + clamped * (TOTAL_FRAMES - 1))),
+    );
+  }
+
+  // Desktop: denser early scroll (500vh → file 354), then 350vh for the rest
+  const splitIndex = getIndexForFileNumber(DESKTOP_SCROLL_SPLIT_FILE);
+  const earlyShare =
+    SCROLL_TRACK_VH_DESKTOP_EARLY / SCROLL_TRACK_VH_DESKTOP;
+
+  if (clamped <= earlyShare) {
+    const t = earlyShare <= 0 ? 1 : clamped / earlyShare;
+    return Math.min(
+      splitIndex,
+      Math.max(1, Math.round(1 + t * (splitIndex - 1))),
+    );
+  }
+
+  const t = (clamped - earlyShare) / Math.max(0.0001, 1 - earlyShare);
+  const start = Math.min(TOTAL_FRAMES, splitIndex + 1);
+  return Math.min(
+    TOTAL_FRAMES,
+    Math.max(start, Math.round(start + t * (TOTAL_FRAMES - start))),
+  );
+}
+
 function isMobileViewport() {
   return typeof window !== "undefined" && window.innerWidth < 768;
 }
 
 function connectRestY() {
-  return isMobileViewport() ? 18 : 34;
+  return isMobileViewport() ? 18 : 14;
 }
 
 function easeOutCubic(t: number) {
@@ -244,37 +287,26 @@ function midMotion(fileFrame: number) {
   return { opacity: 1, translateY: 0, overlay: 0.72, blur: 0, scale: 1 };
 }
 
-/** Frames 553–589: smooth rise from bottom, then stays fixed lower on screen. */
+/** Frames 355–375: rise from bottom and settle; stay put after. */
 function connectMotion(fileFrame: number) {
   const restY = connectRestY();
 
   if (fileFrame < HERO_CONNECT_START_FILE) {
-    return { opacity: 0, translateY: 56, overlay: 0, blur: 10, scale: 0.94 };
+    return { opacity: 0, translateY: 56, overlay: 0, scale: 0.96 };
   }
 
-  const span = Math.max(1, HERO_CONNECT_END_FILE - HERO_CONNECT_START_FILE);
-  const t = Math.min(1, (fileFrame - HERO_CONNECT_START_FILE) / span);
-  // Longer enter so it eases in smoothly across more frames
-  const enterEnd = 0.62;
-
-  if (t < enterEnd) {
-    const p = easeOutCubic(t / enterEnd);
-    return {
-      opacity: p,
-      translateY: (1 - p) * 56 + p * restY,
-      // Same gradient overlay strength as rest — no solid-dark flash on entry
-      overlay: p,
-      blur: (1 - p) * 10,
-      scale: 0.94 + p * 0.06,
-    };
+  if (fileFrame >= HERO_CONNECT_END_FILE) {
+    return { opacity: 1, translateY: restY, overlay: 1, scale: 1 };
   }
+
+  const span = HERO_CONNECT_END_FILE - HERO_CONNECT_START_FILE;
+  const p = easeOutCubic((fileFrame - HERO_CONNECT_START_FILE) / span);
 
   return {
-    opacity: 1,
-    translateY: restY,
-    overlay: 1,
-    blur: 0,
-    scale: 1,
+    opacity: p,
+    translateY: (1 - p) * 56 + p * restY,
+    overlay: p,
+    scale: 0.96 + p * 0.04,
   };
 }
 
@@ -324,7 +356,7 @@ function HeroConnectCta({
     >
       <a
         href={`mailto:${CONNECT_EMAIL}`}
-        className="group inline-flex cursor-pointer items-center gap-3 rounded-full border border-white/20 bg-black/5 px-6 py-4 shadow-[0_0_25px_rgba(255,255,255,0.05)] backdrop-blur-5xl transition-colors hover:bg-white/10 md:gap-5 md:px-16 md:py-8 [backdrop-filter:blur(40px)]"
+        className="group inline-flex cursor-pointer items-center gap-3 rounded-full border border-white/25 bg-white/15 px-6 py-4 backdrop-blur-md transition-colors hover:bg-white/25 md:gap-5 md:px-16 md:py-8"
         aria-label={`Email ${CONNECT_EMAIL}`}
       >
         <h2
@@ -381,7 +413,11 @@ export function Hero() {
     if (!canvas || !ctx) return;
 
     const img = getCachedFrame(index);
-    if (!img?.complete || !img.naturalWidth) return;
+    if (!img?.complete || !img.naturalWidth) {
+      // Keep scrolling smooth while a frame is still loading
+      prefetchHeroFramesAround(index, 10);
+      return;
+    }
 
     const cw = canvas.clientWidth;
     const ch = canvas.clientHeight;
@@ -395,18 +431,17 @@ export function Hero() {
 
     ctx.fillStyle = HERO_BG;
     ctx.fillRect(0, 0, cw, ch);
-    ctx.shadowColor = "transparent";
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
     ctx.drawImage(img, dx, dy, dw, dh);
+    prefetchHeroFramesAround(index, 8);
   }, []);
 
   const resizeCanvas = useCallback(() => {
     const canvas = canvasRef.current;
     if (!canvas) return;
 
-    const dpr = Math.min(window.devicePixelRatio || 1, 2);
+    // Cap DPR on mobile — biggest canvas cost during scroll redraws
+    const isMobile = window.innerWidth < 768;
+    const dpr = Math.min(window.devicePixelRatio || 1, isMobile ? 1.25 : 1.75);
     const w = window.innerWidth;
     const h = window.innerHeight;
 
@@ -424,9 +459,9 @@ export function Hero() {
 
     const ctx = canvas.getContext("2d", { alpha: false });
     if (ctx) {
-      ctx.scale(dpr, dpr);
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
       ctx.imageSmoothingEnabled = true;
-      ctx.imageSmoothingQuality = "high";
+      ctx.imageSmoothingQuality = isMobile ? "medium" : "high";
       ctxRef.current = ctx;
     }
 
@@ -458,10 +493,8 @@ export function Hero() {
       Math.max(0, getScrollY() - trackTop),
     );
     const fraction = scrolled / scrollable;
-    const nextFrame = Math.min(
-      TOTAL_FRAMES,
-      Math.max(1, Math.round(1 + fraction * (TOTAL_FRAMES - 1))),
-    );
+    const isMobile = window.innerWidth < 768;
+    const nextFrame = frameIndexFromScrollFraction(fraction, isMobile);
 
     setFrame(nextFrame);
 
@@ -546,8 +579,8 @@ export function Hero() {
             desc={TAGLINE_1.desc}
             style={{
               opacity: intro.opacity,
-              transform: `translateY(${intro.translateY}vh) scale(${intro.scale})`,
-              filter: `blur(${intro.blur}px)`,
+              transform: `translate3d(0, ${intro.translateY}vh, 0) scale(${intro.scale})`,
+              willChange: "transform, opacity",
             }}
           />
 
@@ -563,12 +596,12 @@ export function Hero() {
             desc={TAGLINE_2.desc}
             style={{
               opacity: mid.opacity,
-              transform: `translateY(${mid.translateY}vh) scale(${mid.scale})`,
-              filter: `blur(${mid.blur}px)`,
+              transform: `translate3d(0, ${mid.translateY}vh, 0) scale(${mid.scale})`,
+              willChange: "transform, opacity",
             }}
           />
 
-          {/* Connect — bright/clear at top, dark at bottom so center branding stays readable */}
+          {/* Connect — frames 355–375; gradient overlay, settles and stays */}
           <div
             className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/85 transition-none"
             style={{ opacity: connect.overlay }}
@@ -578,8 +611,8 @@ export function Hero() {
             interactive={connect.opacity > 0.4}
             style={{
               opacity: connect.opacity,
-              transform: `translateY(${connect.translateY}vh) scale(${connect.scale})`,
-              filter: `blur(${connect.blur}px)`,
+              transform: `translate3d(0, ${connect.translateY}vh, 0) scale(${connect.scale})`,
+              willChange: "transform, opacity",
             }}
           />
 
