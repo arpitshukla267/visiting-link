@@ -226,7 +226,7 @@ export type TeamSectionProps = {
   eyebrow?: string;
   headline?: string;
   intro?: string;
-  members: TeamMember[];
+  members?: TeamMember[];
 };
 
 const defaultMembers: TeamMember[] = [
