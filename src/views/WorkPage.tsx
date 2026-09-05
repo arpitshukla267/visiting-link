@@ -27,13 +27,15 @@ type FilterKey =
   | "all"
   | "web-development"
   | "graphic-designing"
-  | "company-profile";
+  | "company-profile"
+  | "ui-ux";
 
 const FILTER_OPTIONS: { key: FilterKey; label: string }[] = [
   { key: "all", label: "All" },
   { key: "web-development", label: "Web Development" },
   { key: "graphic-designing", label: "Graphic Designing" },
   { key: "company-profile", label: "Company Profile" },
+  { key: "ui-ux", label: "UI/UX" },
 ];
 
 // type Project = {
@@ -95,6 +97,10 @@ export const WorkPage: React.FC<WorkPageProps> = ({
   
           if (activeFilter === "company-profile") {
             return project.discipline === "identity";
+          }
+
+          if (activeFilter === "ui-ux") {
+            return project.discipline === "uiux";
           }
   
           return true;

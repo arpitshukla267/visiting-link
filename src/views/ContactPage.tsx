@@ -37,7 +37,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     email: "",
     company: "",
     service: initialService,
-    budgetRange: "$5k – $15k",
+    budgetRange: "",
     timeframe: "1 – 2 Months",
     details: "",
   });
@@ -53,9 +53,15 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     "VisitingLink",
     "Web Development",
     "Graphics",
+    "UI/UX",
     "Combined Digital Suite",
   ];
-  const budgetOptions = ["$3k – $5k", "$5k – $15k", "$15k – $30k", "$30k+"];
+  const budgetPresets = [
+    "₹25,000 – ₹50,000",
+    "₹50,000 – ₹1,00,000",
+    "₹1,00,000 – ₹3,00,000",
+    "₹3,00,000+",
+  ];
   const timeframeOptions = [
     "Immediate (< 1 mo)",
     "1 – 2 Months",
@@ -176,7 +182,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       email: "",
                       company: "",
                       service: initialService,
-                      budgetRange: "$5k – $15k",
+                      budgetRange: "",
                       timeframe: "1 – 2 Months",
                       details: "",
                     });
@@ -312,22 +318,36 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     />
                   </div>
                   <div>
-                    <select
-                      value={formData.budgetRange}
+                    <input
+                      type="text"
+                      placeholder="Budget in ₹ (optional)"
+                      value={formData.budgetRange ?? ""}
                       onChange={(e) =>
                         setFormData({
                           ...formData,
                           budgetRange: e.target.value,
                         })
                       }
-                      className="w-full cursor-pointer border-0 border-b border-[#E5E7EB] bg-transparent px-0 py-3 text-[#111111] transition-colors focus:border-black focus:outline-none"
-                    >
-                      {budgetOptions.map((opt) => (
-                        <option key={opt} value={opt}>
-                          Budget: {opt}
-                        </option>
+                      className="w-full border-0 border-b border-[#E5E7EB] bg-transparent px-0 py-3 text-[#111111] placeholder:text-[#BBBBBB] transition-colors focus:border-black focus:outline-none"
+                    />
+                    <div className="mt-3 flex flex-wrap gap-2">
+                      {budgetPresets.map((preset) => (
+                        <button
+                          type="button"
+                          key={preset}
+                          onClick={() =>
+                            setFormData({ ...formData, budgetRange: preset })
+                          }
+                          className={`cursor-pointer border px-3 py-1.5 text-xs transition-all ${
+                            formData.budgetRange === preset
+                              ? "border-[#111111] bg-[#111111] text-white"
+                              : "border-[#E5E7EB] text-[#555555] hover:border-[#111111]"
+                          }`}
+                        >
+                          {preset}
+                        </button>
                       ))}
-                    </select>
+                    </div>
                   </div>
                 </div>
 

@@ -179,18 +179,20 @@ export const Navbar: React.FC<NavbarProps> = ({
           </nav>
 
           <div className="hidden items-center md:flex">
-            <button
+            <a
               id="navbar-cta-button"
-              onClick={() => onNavigateContact()}
+              href="https://social-offer.vercel.app/"
+              target="_blank"
+              rel="noopener noreferrer"
               className={`group flex cursor-pointer items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 ${
                 navThemeDark
                   ? 'bg-white text-[#111111] hover:bg-[#F0F0F0]'
                   : 'bg-[#111111] text-white hover:bg-[#333333]'
               }`}
             >
-              <span>Start a Project</span>
+              <span>Company Profile</span>
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </button>
+            </a>
           </div>
 
           <button
@@ -277,18 +279,17 @@ export const Navbar: React.FC<NavbarProps> = ({
               </nav>
 
               <div className="border-t border-[#E8E8E8] p-6">
-                <button
+                <a
                   id="mobile-menu-cta-button"
-                  type="button"
-                  onClick={() => {
-                    closeMobileMenu();
-                    onNavigateContact();
-                  }}
+                  href="https://social-offer.vercel.app/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  onClick={closeMobileMenu}
                   className="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#111111] py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#333333]"
                 >
-                  <span>Start a Project</span>
+                  <span>Company Profile</span>
                   <ArrowUpRight className="h-4 w-4" />
-                </button>
+                </a>
               </div>
             </motion.aside>
           </>

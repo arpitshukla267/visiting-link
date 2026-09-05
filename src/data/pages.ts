@@ -5,7 +5,7 @@ export interface Work_Project {
   description: string;
   outcome: string;
   year: string;
-  discipline: "web" | "identity" | "graphics";
+  discipline: "web" | "identity" | "graphics" | "uiux";
   accent: string;
   image: string;
   url: string;

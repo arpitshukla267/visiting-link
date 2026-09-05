@@ -162,6 +162,10 @@ export const Footer: React.FC<FooterProps> = ({
                   label: "Graphics",
                   id: "graphics",
                 },
+                {
+                  label: "UI/UX Design",
+                  id: "uiux",
+                },
               ].map((item) => (
                 <li key={item.id}>
                   <button
@@ -225,7 +229,7 @@ export const Footer: React.FC<FooterProps> = ({
               </a>
             </div>
 
-            <div className="mt-4 flex items-center gap-4 text-xs text-[#666666]">
+            {/* <div className="mt-4 flex items-center gap-4 text-xs text-[#666666]">
               {["X", "LinkedIn", "GitHub"].map((social) => (
                 <a
                   key={social}
@@ -235,7 +239,7 @@ export const Footer: React.FC<FooterProps> = ({
                   {social}
                 </a>
               ))}
-            </div>
+            </div> */}
           </div>
         </div>
 

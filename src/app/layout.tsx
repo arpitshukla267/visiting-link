@@ -20,6 +20,10 @@ export const metadata: Metadata = {
   title: "VisitingLink — Digital Services Studio",
   description:
     "Web development, graphics, and digital identity — engineered with clarity and precision.",
+  icons: {
+    icon: "/logo.png",
+    apple: "/logo.png",
+  },
 };
 
 export default function RootLayout({

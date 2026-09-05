@@ -231,64 +231,70 @@ export type TeamSectionProps = {
 
 const defaultMembers: TeamMember[] = [
   {
+    name: "Geetanjali Shakya",
+    role: "Co-Founder & CEO",
+    photoUrl:
+      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85",
+  },
+  {
     name: "Ansh Katariya",
     role: "Graphic Designer",
     photoUrl:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85",
+      "/images/ansh.jpeg",
   },
   {
     name: "Arpit Shukla",
     role: "Full Stack Developer",
     photoUrl:
-      "https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&w=800&q=85",
+      "/images/arpit.jpg",
   },
   {
     name: "Nipurn Patel",
     role: "Graphic Designer",
     photoUrl:
-      "https://images.unsplash.com/photo-1517245386807-bb43f82c33c4?auto=format&fit=crop&w=800&q=85",
+      "/images/nipurn.webp",
   },
   {
-    name: "Sandeep",
-    role: "-------",
+    name: "Sandeep Soni",
+    role: "Customer Relation Manager",
     photoUrl:
-      "https://images.unsplash.com/photo-1551836022-d5d88e9218df?auto=format&fit=crop&w=800&q=85",
+      "/images/sandeep.jpeg",
   },
   {
     name: "Chitranshi",
     role: "Brand Ambassador",
     photoUrl:
-      "https://images.unsplash.com/photo-1521737711867-e3b97375f902?auto=format&fit=crop&w=800&q=85",
+      "/images/chitranshi.webp",
   },
   {
     name: "Hargun",
     role: "Social Media Manager",
     photoUrl:
-      "https://images.unsplash.com/photo-1556761175-5973dc0f32e7?auto=format&fit=crop&w=800&q=85",
+      "/images/hargun.webp",
   },
   {
-    name: "Samaira",
+    name: "Sameera",
     role: "Marketing",
     photoUrl:
-      "https://images.unsplash.com/photo-1531482615713-2afd69097998?auto=format&fit=crop&w=800&q=85",
+      "/images/sameera.webp",
   },
   {
     name: "Aastha",
     role: " Sales Executive",
     photoUrl:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
+      "/images/aastha.webp",
   },
   {
     name: "Tanya Tiwari",
     role: " Sales Executive",
     photoUrl:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
+      "/images/tanya.jpeg",
   },
   {
     name: "Manav",
     role: "Video Editor",
     photoUrl:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?auto=format&fit=crop&w=800&q=85",
+      "/images/manav.webp",
   },
 ];
 

@@ -23,12 +23,12 @@
 //   FRAME_SEQUENCE.push(n);
 // }
 
-/** Active sequence: /public/optimized/…Collage-0001.webp … -0565.webp */
+/** Active sequence: /public/optimized/…Collage-0001.webp … -0354.webp */
 const FRAME_FOLDER = "/optimized";
 const FRAME_PREFIX = "Black and Blue Simple Countdown Video Collage";
 
 const FRAME_SEQUENCE: number[] = [];
-for (let n = 1; n <= 565; n++) {
+for (let n = 1; n <= 354; n++) {
   FRAME_SEQUENCE.push(n);
 }
 
@@ -40,9 +40,9 @@ export const HERO_SERVICES_ENTER_FILE = 70;
 export const HERO_SERVICES_END_FILE = 157;
 export const HERO_MID_START_FILE = 157;
 export const HERO_MID_END_FILE = 300;
-/** Third headline — glass “Let’s Connect” pill (from bottom, stays over frames). */
-export const HERO_CONNECT_START_FILE = 355;
-export const HERO_CONNECT_END_FILE = 375;
+/** Final segment — mobile fit shift / connect timing (last ~20 frames). */
+export const HERO_CONNECT_START_FILE = TOTAL_FRAMES - 20;
+export const HERO_CONNECT_END_FILE = TOTAL_FRAMES;
 /** CompanyStatement reveals progressively across the final 40 frames. */
 export const HERO_STATEMENT_REVEAL_START_FILE = TOTAL_FRAMES - 40;
 export const HERO_STATEMENT_ENTER_FILE = TOTAL_FRAMES;

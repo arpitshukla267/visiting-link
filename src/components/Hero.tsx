@@ -11,21 +11,15 @@ import {
   HERO_CONNECT_END_FILE,
   getCachedFrame,
   getFileNumberForIndex,
-  getIndexForFileNumber,
   prefetchHeroFramesAround,
 } from "@/lib/heroFrames";
 import { getScrollY } from "@/components/SmoothScroll";
 import { useStartupReady } from "@/components/StartupLoader";
 import { useHeroFileFrame } from "@/components/HeroFrameContext";
 
-/** Desktop: 500vh covers frames 1→354, then 350vh covers 355→end. */
-const SCROLL_TRACK_VH_DESKTOP_EARLY = 500;
-const SCROLL_TRACK_VH_DESKTOP_LATE = 150;
-const SCROLL_TRACK_VH_DESKTOP =
-  SCROLL_TRACK_VH_DESKTOP_EARLY + SCROLL_TRACK_VH_DESKTOP_LATE;
-/** File number where desktop scroll density switches (early → late). */
-const DESKTOP_SCROLL_SPLIT_FILE = 354;
-const SCROLL_TRACK_VH_MOBILE = 200;
+/** Scroll track scales with frame count so the last frame aligns with track end. */
+const SCROLL_TRACK_VH_DESKTOP = Math.round(TOTAL_FRAMES * (360 / 565));
+const SCROLL_TRACK_VH_MOBILE = Math.round(TOTAL_FRAMES * (200 / 565));
 const HERO_BG = "#F8F8F8";
 
 /**
@@ -39,7 +33,7 @@ const HERO_BG = "#F8F8F8";
  * "height90"  — locked to 90% of screen height
  * "vh80"      — locked to 80vh height
  *
- * From frames 355→375 the mobile fit smoothly eases to the shift target
+ * From the final frames the mobile fit smoothly eases to the shift target
  * (whether the starting fit is larger or smaller).
  */
 type MobileFrameFit =
@@ -51,8 +45,8 @@ type MobileFrameFit =
   | "height90"
   | "vh80";
 const MOBILE_FRAME_FIT: MobileFrameFit = "height90";
-const MOBILE_FIT_SHIFT_START = 355;
-const MOBILE_FIT_SHIFT_END = 375;
+const MOBILE_FIT_SHIFT_START = HERO_CONNECT_START_FILE;
+const MOBILE_FIT_SHIFT_END = HERO_CONNECT_END_FILE;
 const MOBILE_FIT_SHIFT_TARGET: MobileFrameFit = "height50";
   
 const CONNECT_EMAIL = "info.visitinglink@gmail.com";
@@ -157,7 +151,7 @@ function lerp(a: number, b: number, t: number) {
   return a + (b - a) * t;
 }
 
-/** Smoothly blend MOBILE_FRAME_FIT → shift target across frames 355–375. */
+/** Smoothly blend MOBILE_FRAME_FIT → shift target across the final hero frames. */
 function layoutMobileFrameAtFile(
   fileNum: number,
   cw: number,
@@ -185,36 +179,12 @@ function layoutMobileFrameAtFile(
 
 function frameIndexFromScrollFraction(
   fraction: number,
-  isMobile: boolean,
+  _isMobile: boolean,
 ): number {
   const clamped = Math.min(1, Math.max(0, fraction));
-
-  // Mobile: even pace across the full track
-  if (isMobile) {
-    return Math.min(
-      TOTAL_FRAMES,
-      Math.max(1, Math.round(1 + clamped * (TOTAL_FRAMES - 1))),
-    );
-  }
-
-  // Desktop: denser early scroll (500vh → file 354), then 350vh for the rest
-  const splitIndex = getIndexForFileNumber(DESKTOP_SCROLL_SPLIT_FILE);
-  const earlyShare =
-    SCROLL_TRACK_VH_DESKTOP_EARLY / SCROLL_TRACK_VH_DESKTOP;
-
-  if (clamped <= earlyShare) {
-    const t = earlyShare <= 0 ? 1 : clamped / earlyShare;
-    return Math.min(
-      splitIndex,
-      Math.max(1, Math.round(1 + t * (splitIndex - 1))),
-    );
-  }
-
-  const t = (clamped - earlyShare) / Math.max(0.0001, 1 - earlyShare);
-  const start = Math.min(TOTAL_FRAMES, splitIndex + 1);
   return Math.min(
     TOTAL_FRAMES,
-    Math.max(start, Math.round(start + t * (TOTAL_FRAMES - start))),
+    Math.max(1, Math.round(1 + clamped * (TOTAL_FRAMES - 1))),
   );
 }
 
@@ -404,8 +374,8 @@ export function Hero() {
   const { framesReady } = useStartupReady();
 
   const intro = introMotion(fileFrame);
-  const mid = midMotion(fileFrame);
-  const connect = connectMotion(fileFrame);
+  // const mid = midMotion(fileFrame);
+  // const connect = connectMotion(fileFrame);
 
   const drawFrame = useCallback((index: number) => {
     const canvas = canvasRef.current;
@@ -556,9 +526,7 @@ export function Hero() {
       <div
         ref={heroSectionRef}
         id="hero-section"
-        className={`pointer-events-none fixed inset-0 bg-[#F8F8F8] transition-opacity duration-300 ${
-          connect.opacity > 0.4 ? "z-[5]" : "z-0"
-        }`}
+        className={`pointer-events-none fixed inset-0 bg-[#F8F8F8] transition-opacity duration-300 z-0`}
       >
         <canvas
           ref={canvasRef}
@@ -585,6 +553,7 @@ export function Hero() {
           />
 
           {/* Mid — tagline 2 enters from bottom at 157, exits at 300 */}
+          {/*
           <div
             className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/50 to-black/20 transition-none"
             style={{ opacity: mid.overlay }}
@@ -600,8 +569,10 @@ export function Hero() {
               willChange: "transform, opacity",
             }}
           />
+          */}
 
           {/* Connect — frames 355–375; gradient overlay, settles and stays */}
+          {/*
           <div
             className="absolute inset-0 bg-gradient-to-b from-transparent via-black/10 to-black/85 transition-none"
             style={{ opacity: connect.overlay }}
@@ -615,6 +586,7 @@ export function Hero() {
               willChange: "transform, opacity",
             }}
           />
+          */}
 
         </div>
       </div>

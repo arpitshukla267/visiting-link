@@ -22,7 +22,7 @@ export const VisualBreak: React.FC = () => {
     <section
       ref={sectionRef}
       id="visual-break-section"
-      className="w-full overflow-hidden border-b border-[#222222] bg-[#111111] text-white"
+      className="w-full overflow-hidden mb-12 border-b border-[#222222] bg-[#111111] text-white"
     >
       <div className="relative w-full overflow-hidden">
         <div

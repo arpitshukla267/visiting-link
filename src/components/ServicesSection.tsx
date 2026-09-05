@@ -1,8 +1,16 @@
 "use client";
 
-import React, { useRef } from "react";
-import { motion, useInView } from "motion/react";
-import { Check, ArrowUpRight, Code2, PenTool, Building2 } from "lucide-react";
+import React, { useLayoutEffect, useRef, useState } from "react";
+import {
+  motion,
+  useInView,
+  useScroll,
+  useSpring,
+  useMotionValue,
+  useMotionValueEvent,
+  animate,
+} from "motion/react";
+import { Check, ArrowUpRight, Code2, PenTool, Building2, Layers } from "lucide-react";
 import { SERVICES_DATA } from "../data/content";
 import { ServiceItem } from "../types";
 import { FilmstripScroller } from "@/components/ui/featuredfilmstrip";
@@ -12,6 +20,7 @@ interface ServicesSectionProps {
   onNavigateService: (serviceId: string) => void;
   onNavigateContact: (serviceName?: string) => void;
   onNavigatePage: (page: string) => void;
+  layout?: "filmstrip" | "grid";
 }
 
 /* -------------------------------------------------------------------------
@@ -21,7 +30,7 @@ interface ServicesSectionProps {
  * existing "Explore" -> onNavigateService(id) wiring keeps working. If no
  * match is found the card still renders but falls back to a slugified id.
  * ------------------------------------------------------------------------- */
-type AccentKey = "web" | "graphics" | "companyProfile";
+type AccentKey = "web" | "graphics" | "companyProfile" | "uiux";
 
 interface ServiceCardCopy {
   title: string;
@@ -77,6 +86,21 @@ const CARD_COPY: ServiceCardCopy[] = [
     Icon: Building2,
     pageRoute: "about",
   },
+  {
+    title: "UI/UX",
+    description:
+      "Interfaces and experiences designed around how people actually use your product.",
+    checklist: [
+      "User research",
+      "Wireframes & prototypes",
+      "Design systems",
+      "Interaction design",
+      "Usability testing",
+    ],
+    matchKeyword: "ui/ux",
+    accent: "uiux",
+    Icon: Layers,
+  },
 ];
 
 /* Accent tokens — soft, restrained, one per service. Used only for the icon
@@ -105,6 +129,13 @@ const ACCENTS: Record<
     icon: "#B8860B",
     tick: "#C9971F",
     ring: "#F4E8C7",
+  },
+  uiux: {
+    bg: "#FAF9FC",
+    iconBg: "#F0EBFC",
+    icon: "#7C3AED",
+    tick: "#7C3AED",
+    ring: "#E8E0F8",
   },
 };
 
@@ -211,10 +242,15 @@ function RevealBlock({
  * (mostly square / near-square) container rather than reading as a circle.
  * ------------------------------------------------------------------------- */
 const IMAGE_SRC: Record<AccentKey, string> = {
-  web: "/images/web-dev.webp",
+  web: "/images/web-dev.jpeg",
   graphics: "/images/graphics.webp",
   companyProfile: "/images/company-prof.webp",
+  uiux: "/images/graphics.webp",
 };
+
+/** Matches md:grid-cols-3 md:gap-6 — same card width as the original grid. */
+const DESKTOP_CARD_GAP_PX = 24;
+const DESKTOP_VISIBLE_CARDS = 3;
 
 /* ---------------------------------------------------------------------------
  * One shared SVG mask definition — an irregular, blurred cluster of circles
@@ -321,83 +357,84 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
   const cardContent = (
     <>
-      <RevealBlock delay={0.08}>
-        <div>
-          <div
-            className="flex h-10 w-10 items-center justify-center rounded-lg"
-            style={{ background: accent.iconBg }}
-          >
-            <span style={{ color: accent.icon }}>
-              <Icon className="h-5 w-5" strokeWidth={1.8} />
-            </span>
+      <div className="flex flex-1 flex-col">
+        <RevealBlock delay={0.08}>
+          <div>
+            <div
+              className="flex h-10 w-10 items-center justify-center rounded-lg"
+              style={{ background: accent.iconBg }}
+            >
+              <span style={{ color: accent.icon }}>
+                <Icon className="h-5 w-5" strokeWidth={1.8} />
+              </span>
+            </div>
+
+            <h3
+              className={`mt-5 text-2xl font-semibold tracking-tight text-[#111111] md:text-[26px] ${
+                uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""
+              }`}
+            >
+              {card.title}
+            </h3>
+
+            <p
+              className={`mt-2 text-sm leading-relaxed text-[#666666] md:text-[15px] ${
+                uniformMobileHeight ? "min-h-[2.75rem]" : ""
+              }`}
+            >
+              {card.description}
+            </p>
           </div>
+        </RevealBlock>
 
-          <h3
-            className={`mt-5 text-2xl font-semibold tracking-tight text-[#111111] md:text-[26px] ${
-              uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""
-            }`}
-          >
-            {card.title}
-          </h3>
-
-          <p
-            className={`mt-2 text-sm leading-relaxed text-[#666666] md:text-[15px] ${
-              uniformMobileHeight ? "min-h-[2.75rem]" : ""
-            }`}
-          >
-            {card.description}
-          </p>
-        </div>
-      </RevealBlock>
-
-      <RevealBlock delay={0.16} className="mt-7">
-        <div
-          className={`flex gap-4 ${
-            uniformMobileHeight
-              ? "min-h-0 flex-1 items-stretch"
-              : "flex-1 items-stretch"
-          }`}
-        >
-          <ul className="flex w-[46%] flex-shrink-0 flex-col justify-center gap-2.5">
-            {card.checklist.map((item) => (
-              <li
-                key={item}
-                className="flex items-start gap-2 text-[13px] leading-snug text-[#444444]"
-              >
-                <Check
-                  className="mt-[1px] h-3.5 w-3.5 flex-shrink-0"
-                  style={{ color: accent.tick }}
-                  strokeWidth={2.5}
-                />
-                {item}
-              </li>
-            ))}
-          </ul>
-
+        <RevealBlock delay={0.16} className="mt-7">
           <div
-            className={`relative w-[54%] flex-shrink-0 transition-transform duration-300 group-hover:scale-[1.03] ${
-              uniformMobileHeight ? "h-full min-h-[9.5rem]" : "aspect-square"
+            className={`flex gap-4 ${
+              uniformMobileHeight
+                ? "min-h-0 flex-1 items-stretch"
+                : "flex-1 items-stretch"
             }`}
           >
-            <ServiceImage src={imageSrc} alt={`${card.title} preview`} />
-          </div>
-        </div>
-      </RevealBlock>
+            <ul className="flex w-[46%] flex-shrink-0 flex-col justify-center gap-2.5">
+              {card.checklist.map((item) => (
+                <li
+                  key={item}
+                  className="flex items-start gap-2 text-[13px] leading-snug text-[#444444]"
+                >
+                  <Check
+                    className="mt-[1px] h-3.5 w-3.5 flex-shrink-0"
+                    style={{ color: accent.tick }}
+                    strokeWidth={2.5}
+                  />
+                  {item}
+                </li>
+              ))}
+            </ul>
 
-        <button
-          className="inline-flex items-center gap-1.5 mt-10 self-start text-sm font-medium text-[#111111]"
-          onClick={(e) => {
-            e.stopPropagation();
-            handleNavigate();
-          }}
-        >
-          Explore
-          <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-        </button>
+            <div
+              className={`relative w-[54%] flex-shrink-0 transition-transform duration-300 group-hover:scale-[1.03] ${
+                uniformMobileHeight ? "h-full min-h-[9.5rem]" : "aspect-square"
+              }`}
+            >
+              <ServiceImage src={imageSrc} alt={`${card.title} preview`} />
+            </div>
+          </div>
+        </RevealBlock>
+      </div>
+
+      <button
+        type="button"
+        className="pointer-events-auto relative z-10 mt-10 inline-flex cursor-pointer items-center gap-1.5 self-start text-sm font-medium text-[#111111]"
+        onPointerDown={(e) => e.stopPropagation()}
+        onClick={handleNavigate}
+      >
+        Explore
+        <ArrowUpRight className="h-4 w-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+      </button>
     </>
   );
 
-  const sharedClassName = `group flex h-full cursor-pointer flex-col rounded-2xl border border-[#EBEBEB] p-7 transition-colors duration-300 hover:border-[#D0D0D0] hover:shadow-[0_10px_30px_rgba(17,17,17,0.05)] md:p-8 ${
+  const sharedClassName = `group pointer-events-none flex h-full flex-col rounded-2xl border border-[#EBEBEB] p-7 transition-colors duration-300 hover:border-[#D0D0D0] hover:shadow-[0_10px_30px_rgba(17,17,17,0.05)] md:p-8 ${
     uniformMobileHeight ? "h-[500px]" : ""
   } ${className}`;
 
@@ -405,7 +442,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
     return (
       <div
         id={`service-card-${cardId}`}
-        onClick={handleNavigate}
         className={sharedClassName}
         style={{ background: accent.bg }}
       >
@@ -425,7 +461,6 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
         delay: 0.1 * idx,
         ease: viewportEase,
       }}
-      onClick={handleNavigate}
       className={sharedClassName}
       style={{ background: accent.bg }}
     >
@@ -434,65 +469,175 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   );
 };
 
+function DesktopServicesCarousel({
+  cardProps,
+}: {
+  cardProps: Omit<ServiceCardProps, "card" | "idx">;
+}) {
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const viewportRef = useRef<HTMLDivElement>(null);
+  const isDragging = useRef(false);
+  const [cardWidth, setCardWidth] = useState(0);
+  const trackX = useMotionValue(0);
+
+  const shiftPx = cardWidth > 0 ? cardWidth + DESKTOP_CARD_GAP_PX : 0;
+
+  useLayoutEffect(() => {
+    const measure = () => {
+      const viewport = viewportRef.current;
+      if (!viewport) return;
+      const gaps = DESKTOP_CARD_GAP_PX * (DESKTOP_VISIBLE_CARDS - 1);
+      setCardWidth((viewport.clientWidth - gaps) / DESKTOP_VISIBLE_CARDS);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, []);
+
+  const { scrollYProgress } = useScroll({
+    target: scrollRef,
+    offset: ["start start", "end end"],
+  });
+
+  const smoothProgress = useSpring(scrollYProgress, {
+    stiffness: 420,
+    damping: 40,
+    mass: 0.25,
+    restDelta: 0.001,
+  });
+
+  useMotionValueEvent(smoothProgress, "change", (latest) => {
+    if (!isDragging.current && shiftPx > 0) {
+      trackX.set(-latest * shiftPx);
+    }
+  });
+
+  useLayoutEffect(() => {
+    if (!isDragging.current && shiftPx > 0) {
+      trackX.set(-smoothProgress.get() * shiftPx);
+    }
+  }, [shiftPx, smoothProgress, trackX]);
+
+  const snapTrack = (offset: number, velocity = 0) => {
+    if (shiftPx <= 0) return;
+    let target = 0;
+    if (velocity < -180 || offset < -shiftPx / 2) target = -shiftPx;
+    else if (velocity > 180) target = 0;
+    else target = offset < -shiftPx / 2 ? -shiftPx : 0;
+
+    animate(trackX, target, {
+      type: "spring",
+      stiffness: 420,
+      damping: 40,
+      mass: 0.25,
+    });
+  };
+
+  return (
+    <div ref={scrollRef} className="relative" style={{ height: "100vh" }}>
+      <div className="sticky top-0 z-10 flex min-h-svh flex-col justify-center bg-white py-8">
+        <SectionHeader className="mb-14 max-w-3xl shrink-0" />
+
+        <div
+          ref={viewportRef}
+          className="w-full shrink-0 overflow-hidden touch-pan-y"
+        >
+          <motion.div
+            className="flex cursor-grab gap-6 will-change-transform active:cursor-grabbing"
+            style={{ x: trackX, translateZ: 0, backfaceVisibility: "hidden" }}
+            drag={shiftPx > 0 ? "x" : false}
+            dragConstraints={{ left: -shiftPx, right: 0 }}
+            dragElastic={0.06}
+            dragMomentum={false}
+            dragPropagation={false}
+            onDragStart={() => {
+              isDragging.current = true;
+            }}
+            onDragEnd={(_, info) => {
+              isDragging.current = false;
+              snapTrack(trackX.get(), info.velocity.x);
+            }}
+          >
+            {CARD_COPY.map((card, idx) => (
+              <div
+                key={card.title}
+                className="shrink-0"
+                style={cardWidth > 0 ? { width: cardWidth } : undefined}
+              >
+                <ServiceCard card={card} idx={idx} {...cardProps} />
+              </div>
+            ))}
+          </motion.div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export const ServicesSection: React.FC<ServicesSectionProps> = ({
   onSelectService,
   onNavigateService,
   onNavigateContact,
   onNavigatePage,
+  layout = "filmstrip",
 }) => {
+  const cardProps = {
+    onSelectService,
+    onNavigateService,
+    onNavigatePage,
+  };
+
   return (
     <section
       id="services"
-      className="w-full border-b border-[#F0F0F0] bg-white  pb-12 md:py-32"
+      className="w-full border-b border-[#F0F0F0] bg-white pb-12 md:py-24"
     >
       <CloudMaskDefs />
 
       <div className="mx-auto max-w-[90vw] px-0 md:px-12">
-        {/* Desktop header */}
-        <SectionHeader className="mb-14 hidden max-w-3xl md:block" />
+        {layout === "grid" ? (
+          <>
+            <SectionHeader className="mb-14 max-w-3xl" />
+            <div className="grid grid-cols-1 gap-5 md:grid-cols-3 md:gap-6">
+              {CARD_COPY.map((card, idx) => (
+                <ServiceCard key={card.title} card={card} idx={idx} {...cardProps} />
+              ))}
+            </div>
+          </>
+        ) : (
+          <>
+            <div className="hidden md:block">
+              <DesktopServicesCarousel cardProps={cardProps} />
+            </div>
 
-        {/* Desktop cards */}
-        <div className="hidden gap-5 md:grid md:grid-cols-3 md:gap-6">
-          {CARD_COPY.map((card, idx) => (
-            <ServiceCard
-              key={card.title}
-              card={card}
-              idx={idx}
-              onSelectService={onSelectService}
-              onNavigateService={onNavigateService}
-              onNavigatePage={onNavigatePage}
-            />
-          ))}
-        </div>
-
-        {/* Mobile: sticky heading + filmstrip cards */}
-        <div className="-mx-6 md:hidden">
-          <FilmstripScroller
-            vhPerCard={50}
-            stickyClassName="bg-white px-6 pb-6 pt-24"
-            titleClassName="max-w-3xl"
-            title={<SectionHeader />}
-            trackGutterClassName="-mx-6"
-            slideClassName="flex w-screen shrink-0 items-center justify-center px-4"
-            slideKeys={CARD_COPY.map((card) => card.title)}
-            slides={CARD_COPY.map((card, idx) => (
-              <div
-                key={card.title}
-                className="mx-auto h-[500px] w-full max-w-sm"
-              >
-                <ServiceCard
-                  card={card}
-                  idx={idx}
-                  onSelectService={onSelectService}
-                  onNavigateService={onNavigateService}
-                  onNavigatePage={onNavigatePage}
-                  uniformMobileHeight
-                  className="h-full w-full"
-                />
-              </div>
-            ))}
-          />
-        </div>
+            <div className="-mx-6 md:hidden">
+              <FilmstripScroller
+                vhPerCard={50}
+                stickyClassName="bg-white px-6 pb-6 pt-24"
+                titleClassName="max-w-3xl"
+                title={<SectionHeader />}
+                trackGutterClassName="-mx-6"
+                slideClassName="flex w-screen shrink-0 items-center justify-center px-4"
+                slideKeys={CARD_COPY.map((card) => card.title)}
+                slides={CARD_COPY.map((card, idx) => (
+                  <div
+                    key={card.title}
+                    className="mx-auto h-[500px] w-full max-w-sm"
+                  >
+                    <ServiceCard
+                      card={card}
+                      idx={idx}
+                      {...cardProps}
+                      uniformMobileHeight
+                      className="h-full w-full"
+                    />
+                  </div>
+                ))}
+              />
+            </div>
+          </>
+        )}
       </div>
     </section>
   );

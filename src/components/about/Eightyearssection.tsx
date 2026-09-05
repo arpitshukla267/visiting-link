@@ -91,7 +91,7 @@ export function EightYearsSection() {
               style={{ y: imageY, opacity: 1 }}
             >
               <Image
-                src="/images/8-years.jpg"
+                src="/images/8-years.webp"
                 alt=""
                 fill
                 priority
@@ -120,7 +120,7 @@ export function EightYearsSection() {
               style={{ y: imageY, opacity: 1 }}
             >
               <Image
-                src="/images/8-years.jpg"
+                src="/images/8-years.webp"
                 alt=""
                 fill
                 priority

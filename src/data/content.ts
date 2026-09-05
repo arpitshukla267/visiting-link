@@ -66,6 +66,28 @@ export const SERVICES_DATA: ServiceItem[] = [
       'Vector Graphics & Iconography Suite'
     ],
     focusAreas: ['Visual Consistency', 'Brand Distinction', 'Design Systems', 'Editorial Polish']
+  },
+  {
+    id: 'ui-ux',
+    number: '04',
+    title: 'UI/UX',
+    tagline: 'Product Interfaces & Experience Design',
+    description:
+      'Interfaces and experiences designed around how people actually use your product — from first research to polished, usable screens.',
+    detailedScope: [
+      'User research, journey mapping, and clarity on goals before design begins',
+      'Wireframes and interactive prototypes to validate flows early',
+      'Design systems, UI tokens, and reusable component libraries in Figma',
+      'Interaction design for navigation, forms, feedback, and micro-interactions',
+      'Usability testing and iteration based on real user behaviour'
+    ],
+    deliverables: [
+      'Research Summary & User Flows',
+      'Wireframes & Clickable Prototypes',
+      'Figma UI Kit & Design System',
+      'Handoff-Ready Screen Designs'
+    ],
+    focusAreas: ['Clarity', 'Usability', 'Consistency', 'Conversion']
   }
 ];
 

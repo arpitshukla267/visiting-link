@@ -31,7 +31,7 @@ export interface ProjectInquiry {
   email: string;
   company?: string;
   service: string;
-  budgetRange: string;
+  budgetRange?: string;
   timeframe: string;
   details: string;
 }

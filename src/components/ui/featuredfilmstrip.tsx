@@ -22,11 +22,19 @@ export type FilmstripScrollerProps = {
   title?: ReactNode;
   titleClassName?: string;
   vhPerCard?: number;
+  /** Cards visible at once; scroll reveals the rest (default 1). */
+  visibleSlides?: number;
+  /** Scroll-track height in vh units; defaults to `slides.length`. */
+  scrollSpan?: number;
   className?: string;
   stickyClassName?: string;
   slideClassName?: string;
   trackClassName?: string;
   trackGutterClassName?: string;
+  /** When false, sticky panel sizes to content instead of 100svh (default true). */
+  stickyFullHeight?: boolean;
+  /** Vertical alignment of slides in the track gutter (default center). */
+  trackAlign?: "start" | "center" | "end";
 };
 
 export function FilmstripScroller({
@@ -35,11 +43,15 @@ export function FilmstripScroller({
   title,
   titleClassName,
   vhPerCard = 45,
+  visibleSlides = 1,
+  scrollSpan,
   className,
   stickyClassName,
   slideClassName = "w-screen shrink-0 px-5 flex items-center justify-center",
   trackClassName,
   trackGutterClassName = "-mx-5 md:-mx-10",
+  stickyFullHeight = true,
+  trackAlign = "center",
 }: FilmstripScrollerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
 
@@ -55,8 +67,13 @@ export function FilmstripScroller({
     restDelta: 0.001,
   });
 
+  const effectiveVisible = Math.min(Math.max(visibleSlides, 1), slides.length);
+  const slidesBeyondViewport = Math.max(0, slides.length - effectiveVisible);
   const maxShiftPercent =
-    slides.length > 1 ? ((slides.length - 1) / slides.length) * 100 : 0;
+    slidesBeyondViewport > 0
+      ? (slidesBeyondViewport / slides.length) * 100
+      : 0;
+  const trackHeightVh = (scrollSpan ?? slides.length) * vhPerCard;
 
   const trackX = useTransform(
     smoothProgress,
@@ -68,11 +85,12 @@ export function FilmstripScroller({
     <div
       ref={containerRef}
       className={cn("relative", className)}
-      style={{ height: `${slides.length * vhPerCard}vh` }}
+      style={{ height: `${trackHeightVh}vh` }}
     >
       <div
         className={cn(
-          "sticky top-0 flex h-[100svh] flex-col",
+          "sticky top-0 flex flex-col",
+          stickyFullHeight ? "h-[100svh]" : "h-auto",
           stickyClassName ?? "bg-background px-5 pb-6 pt-20 md:px-10",
         )}
       >
@@ -82,7 +100,10 @@ export function FilmstripScroller({
 
         <div
           className={cn(
-            "flex min-h-0 flex-1 items-center overflow-hidden",
+            "flex min-h-0 flex-1 overflow-hidden",
+            trackAlign === "start" && "items-start",
+            trackAlign === "center" && "items-center",
+            trackAlign === "end" && "items-end",
             trackGutterClassName,
           )}
         >

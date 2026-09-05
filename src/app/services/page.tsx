@@ -13,8 +13,9 @@ export default function ServicesPage() {
   if (!isReady) return null;
 
   return (
-    <div className="pt-20 md:pt-4 min-h-screen bg-white">
+    <div className="mt-6 min-h-screen bg-white pt-20 md:pt-4">
       <ServicesSection
+        layout="grid"
         onSelectService={openServiceDetail}
         onNavigateService={nav.navigateToService}
         onNavigateContact={nav.navigateToContact}
