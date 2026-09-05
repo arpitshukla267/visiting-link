@@ -161,7 +161,7 @@ export function StartupLoaderProvider({
                 autoplay
                 loop={!isReady}
                 dotLottieRefCallback={setDotLottie}
-                className="h-48 w-48 md:h-64 md:w-64"
+                className="h-36 w-36 md:h-48 md:w-48"
                 aria-label="Loading VisitingLink"
               />
             </motion.div>
