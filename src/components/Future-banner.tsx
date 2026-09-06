@@ -40,7 +40,7 @@ export const VisualBreak: React.FC = () => {
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 variants={lineVariants}
-                className="text-2xl font-semibold leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[58px] pb-1"
+                className="text-2xl font-medium leading-[1.1] tracking-tight text-white sm:text-4xl md:text-5xl lg:text-[58px] pb-1"
               >
                 Ideas are just the beginning.
               </motion.h2>
@@ -52,7 +52,7 @@ export const VisualBreak: React.FC = () => {
                 initial="hidden"
                 animate={isInView ? "visible" : "hidden"}
                 variants={lineVariants}
-                className="text-2xl font-semibold leading-[1.1] tracking-tight text-[#22d3ee] sm:text-4xl md:text-5xl lg:text-[58px]"
+                className="text-2xl font-medium leading-[1.1] tracking-tight text-[#22d3ee] sm:text-4xl md:text-5xl lg:text-[58px]"
               >
                 We build what comes next.
               </motion.h2>

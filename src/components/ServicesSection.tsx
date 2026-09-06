@@ -110,7 +110,7 @@ const ACCENTS: Record<
   { bg: string; iconBg: string; icon: string; tick: string; ring: string }
 > = {
   web: {
-    bg: "#FAFAFC",
+    bg: "#000000",
     iconBg: "#EEF0FC",
     icon: "#6366F1",
     tick: "#6366F1",
@@ -131,7 +131,7 @@ const ACCENTS: Record<
     ring: "#F4E8C7",
   },
   uiux: {
-    bg: "#FAF9FC",
+    bg: "#000000",
     iconBg: "#F0EBFC",
     icon: "#7C3AED",
     tick: "#7C3AED",
@@ -336,6 +336,7 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
   const serviceId = resolveServiceId(card.matchKeyword, card.title);
   const fullServiceRecord = SERVICES_DATA.find((s) => s.id === serviceId);
   const cardId = card.pageRoute ?? serviceId;
+  const isDarkCard = card.accent === "web" || card.accent === "uiux";
 
   const handleNavigate = () => {
     if (card.accent === "companyProfile" || card.matchKeyword === "company profile") {
@@ -370,15 +371,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             </div>
 
             <h3
-              className={`mt-5 text-2xl font-semibold tracking-tight text-[#111111] md:text-[26px] ${
-                uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""
-              }`}
+              className={`mt-5 text-2xl font-semibold tracking-tight ${
+                isDarkCard ? "text-white" : "text-[#111111]"
+              } md:text-[26px]${ uniformMobileHeight ? "min-h-[3.5rem] leading-tight" : ""}`}
             >
               {card.title}
             </h3>
 
             <p
-              className={`mt-2 text-sm leading-relaxed text-[#666666] md:text-[15px] ${
+              className={`mt-2 text-sm leading-relaxed ${
+                isDarkCard ? "text-white" : "text-[#666666]"
+              } md:text-[15px] ${
                 uniformMobileHeight ? "min-h-[2.75rem]" : ""
               }`}
             >
@@ -399,7 +402,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
               {card.checklist.map((item) => (
                 <li
                   key={item}
-                  className="flex items-start gap-2 text-[13px] leading-snug text-[#444444]"
+                  className={`flex items-start gap-2 text-[13px] leading-snug ${
+                    isDarkCard ? "text-white" : "text-[#444444]"
+                  }`}
                 >
                   <Check
                     className="mt-[1px] h-3.5 w-3.5 flex-shrink-0"
@@ -424,7 +429,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
 
       <button
         type="button"
-        className="pointer-events-auto relative z-10 mt-10 inline-flex cursor-pointer items-center gap-1.5 self-start text-sm font-medium text-[#111111]"
+        className={`pointer-events-auto relative z-10 mt-10 inline-flex cursor-pointer items-center gap-1.5 self-start text-sm font-medium ${
+          isDarkCard ? "text-white" : "text-[#111111]"
+        }`}
         onPointerDown={(e) => e.stopPropagation()}
         onClick={handleNavigate}
       >

@@ -35,8 +35,8 @@ export default function HomePage() {
     />,
     <HowWeWorkSection key="how" />,
     <CompanyStatement key="promises" />,
-    <SelectedWorkSection key="work" />,
     <VisualBreak key="break" />,
+    <SelectedWorkSection key="work" />,
     // <TestimonialsSection key="testimonials" />,
   ];
 
