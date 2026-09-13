@@ -103,10 +103,10 @@ export const Navbar: React.FC<NavbarProps> = ({
       active
         ? navThemeDark
           ? 'text-white'
-          : 'text-[#111111]'
+          : 'text-white'
         : navThemeDark
           ? 'text-white/80 hover:text-white'
-          : 'text-[#666666] hover:text-black'
+          : 'text-white/80 hover:text-white'
     }`;
 
   return (
@@ -115,7 +115,7 @@ export const Navbar: React.FC<NavbarProps> = ({
         id="main-navbar"
         className={`fixed top-0 left-0 right-0 z-[60] transition-all duration-300 ${
           isScrolled || !isTransparentPage || mobileMenuOpen
-            ? 'border-b border-[#F0F0F0] bg-white/95 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-md'
+            ? 'bg-black/30 py-4 shadow-[0_1px_3px_rgba(0,0,0,0.02)] backdrop-blur-2xl'
             : 'bg-transparent py-5 md:py-6'
         }`}
       >
@@ -131,9 +131,9 @@ export const Navbar: React.FC<NavbarProps> = ({
             <div className="flex items-center justify-center  overflow-hidden transition-all duration-300 ">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={navThemeDark ? "/logo.png" : "/visitinglink-logo-black.png"}
+                src={navThemeDark ? "/logo.png" : "/logo.png"}
                 alt="VisitingLink"
-                className={`${navThemeDark ? "h-12" : "h-9"} w-auto object-contain transition-all duration-300`}
+                className={`${navThemeDark ? "h-12" : "h-12"} w-auto object-contain transition-all duration-300`}
               />
             </div>
           </button>

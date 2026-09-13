@@ -10,7 +10,7 @@ export function ScrollProgress() {
     <motion.div
       id="locomotive-scroll-line"
       style={{ scaleX }}
-      className="pointer-events-none fixed top-0 left-0 right-0 z-[100] h-[2px] origin-left bg-[#111111] will-change-transform"
+      className="pointer-events-none fixed top-0 left-0 right-0 z-[100] h-[2px] origin-left bg-white will-change-transform"
     />
   );
 }

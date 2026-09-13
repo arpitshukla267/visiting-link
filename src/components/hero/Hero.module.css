@@ -1,0 +1,224 @@
+.hero {
+    position: relative;
+    width: 100%;
+    min-height: 100vh;
+    background:
+      radial-gradient(
+        ellipse 120% 90% at 50% 28%,
+        #0b0b0c 0%,
+        #050505 55%,
+        #000 100%
+      );
+    overflow: hidden;
+  }
+  
+  /* Particle canvas */
+  .particleLayer {
+    position: absolute;
+    inset: 0;
+    z-index: 0;
+  }
+  
+  .wordmarkCanvas {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    display: block;
+  }
+  
+  /* Content above particles */
+  .content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+  }
+  
+  /*
+   * Copy is visually pushed downward without affecting
+   * the carousel's layout position.
+   */
+  .copy {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  
+    padding: 0 24px;
+  
+    /*
+     * More breathing room between the particle wordmark
+     * and the supporting typography.
+     */
+    transform: translateY(clamp(55px, 7vh, 85px));
+  
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+  }
+  
+  .eyebrow,
+  .tagline {
+    margin: 0;
+  }
+  
+  .tagline {
+    margin-top: 16px;
+  }
+  
+  /* Text reveal mask */
+  .revealMask {
+    display: block;
+    overflow: hidden;
+  }
+  
+  /*
+   * Main headline
+   *
+   * Premium neutral metallic gradient:
+   * bright white at the top,
+   * soft silver through the middle,
+   * muted silver at the bottom.
+   */
+  .revealInner {
+    display: block;
+  
+    font-size: clamp(32px, 4vw, 46px);
+    font-weight: 600;
+    letter-spacing: -0.025em;
+    line-height: 1.25;
+    
+  
+    background: linear-gradient(
+      180deg,
+      #ffffff 0%,
+      #f2f2f2 38%,
+      #d2d2d2 68%,
+      #a6a6a6 100%
+    );
+  
+    -webkit-background-clip: text;
+    background-clip: text;
+  
+    color: #d9d9d9;
+    -webkit-text-fill-color: transparent;
+  
+    transform: translateY(115%);
+    opacity: 0;
+  
+    transition:
+      transform 0.9s cubic-bezier(0.16, 1, 0.3, 1),
+      opacity 0.6s ease;
+  }
+  
+  /*
+   * Supporting tagline
+   *
+   * More restrained than the headline so the
+   * particle wordmark remains the visual focus.
+   */
+  .tagline .revealInner {
+    font-size: clamp(15px, 1.4vw, 18px);
+    font-weight: 500;
+    letter-spacing: 0.005em;
+    line-height: 1.65;
+  
+    background: linear-gradient(
+      180deg,
+      #e5e5e5 0%,
+      #c2c2c2 45%,
+      #858585 100%
+    );
+  
+    -webkit-background-clip: text;
+    background-clip: text;
+  
+    color: #a3a3a3;
+    -webkit-text-fill-color: transparent;
+  }
+  
+  /* Subtle divider */
+  .divider {
+    display: block;
+  
+    width: 42px;
+    height: 1px;
+  
+    margin: 24px auto 20px;
+  
+    background: linear-gradient(
+      90deg,
+      transparent,
+      rgba(220, 220, 220, 0.65),
+      transparent
+    );
+  
+    opacity: 0;
+    transform: scaleX(0);
+  
+    transition:
+      opacity 0.7s ease 0.35s,
+      transform 0.7s cubic-bezier(0.16, 1, 0.3, 1) 0.35s;
+  }
+  
+  .dividerShown {
+    opacity: 1;
+    transform: scaleX(1);
+  }
+  
+  .revealInnerDelayed {
+    transition-delay: 0.15s;
+  }
+  
+  .revealed {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  /* Tablet */
+  @media (max-width: 900px) {
+    .copy {
+      transform: translateY(clamp(45px, 6vh, 70px));
+      max-width: 650px;
+    }
+  }
+  
+  /* Mobile */
+  @media (max-width: 640px) {
+    .copy {
+      transform: translateY(clamp(35px, 5vh, 55px));
+      padding: 0 20px;
+      max-width: 100%;
+    }
+  
+    .revealInner {
+      font-size: 27px;
+      letter-spacing: -0.015em;
+      line-height: 1.3;
+    }
+  
+    .tagline .revealInner {
+      font-size: 15px;
+      line-height: 1.55;
+    }
+  
+    .divider {
+      margin-top: 20px;
+      margin-bottom: 16px;
+    }
+  }
+  
+  /* Accessibility */
+  @media (prefers-reduced-motion: reduce) {
+    .revealInner {
+      transition-duration: 0.01ms;
+    }
+  
+    .divider {
+      transition-duration: 0.01ms;
+    }
+  }
