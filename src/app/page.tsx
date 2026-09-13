@@ -31,13 +31,14 @@ export default function HomePage() {
   if (!isReady) return null;
 
   const sections = [
-    <WhatWeDoSection
-      key="services"
-      onSelectService={openServiceDetail}
-      onNavigateService={nav.navigateToService}
-      onNavigateContact={nav.navigateToContact}
-      onNavigatePage={nav.navigateToPage}
-    />,
+    <WhatWeDoSection key="services" />,
+    // <WhatWeDoSection
+    //   key="services"
+    //   onSelectService={openServiceDetail}
+    //   onNavigateService={nav.navigateToService}
+    //   onNavigateContact={nav.navigateToContact}
+    //   onNavigatePage={nav.navigateToPage}
+    // />,
     <HowWeWorkSection key="how" />,
     <CompanyStatement key="promises" />,
     <VisualBreak key="break" />,
