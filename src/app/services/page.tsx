@@ -14,13 +14,7 @@ export default function ServicesPage() {
 
   return (
     <div className="">
-      <WhatWeDoSection
-        layout="grid"
-        onSelectService={openServiceDetail}
-        onNavigateService={nav.navigateToService}
-        onNavigateContact={nav.navigateToContact}
-        onNavigatePage={nav.navigateToPage}
-      />
+      <WhatWeDoSection key="services" />
     </div>
   );
 }
