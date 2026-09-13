@@ -14,6 +14,7 @@ import { useStartupReady } from "@/components/StartupLoader";
 import Hero from "@/components/hero/Hero";
 import styles from "@/components/hero/Hero.module.css";
 import TechCarousel from "@/components/hero/Techcarousel";
+import Gif from "@/components/Gif";
 
 const HowWeWorkSection = dynamic(
   () => import("@/components/HowWeWorkSection"),
@@ -47,6 +48,7 @@ export default function HomePage() {
   return (
     <HeroFrameProvider>
       <Hero />
+      <Gif />
       <div className="relative z-10">
         <div className="overflow-visible bg-white">
           <StaggeredSections sections={sections} />
