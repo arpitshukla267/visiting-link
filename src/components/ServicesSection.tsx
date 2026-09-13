@@ -10,6 +10,7 @@ import {
   Plus,
   Check,
   ArrowUpRight,
+  type LucideIcon,
 } from "lucide-react";
 
 /* -----------------------------------------------------------------------
@@ -47,7 +48,7 @@ interface WhatWeDoItem {
   number: string;
   title: string;
   services: InnerService[];
-  Icon: React.FC<{ className?: string; strokeWidth?: number }>;
+  Icon: LucideIcon;
   accent: Accent;
 }
 
@@ -226,7 +227,7 @@ function InnerServiceCard({
 }: {
   service: InnerService;
   accent: Accent;
-  Icon: React.FC<{ className?: string; strokeWidth?: number }>;
+  Icon: LucideIcon;
   index: number;
 }) {
   return (
