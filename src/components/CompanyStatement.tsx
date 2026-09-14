@@ -121,7 +121,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "-40px" }}
           transition={{ duration: 0.5, delay: 0.2, ease: [0.16, 1, 0.3, 1] }}
-          className="-mx-4 mt-7 flex snap-x snap-mandatory gap-3.5 overflow-x-auto px-4 pb-2 [&::-webkit-scrollbar]:hidden"
+          className="md:-mx-4 mt-7 flex snap-x snap-mandatory gap-3.5 overflow-x-auto md:px-4 pb-2 [&::-webkit-scrollbar]:hidden"
           style={{ scrollbarWidth: "none" }}
         >
           {PROMISES.map((promise, index) => (
@@ -138,19 +138,20 @@ export const CompanyStatement: React.FC = React.memo(() => {
                 />
               </div>
 
-              <div className="p-5">
+              <div className="px-3 py-5 md:p-5">
+                <div className="flex md:flex-col items-center gap-4">
                 <span
-                  className="font-mono text-sm font-semibold tracking-[0.15em]"
+                  className="hidden md:block text-sm font-semibold tracking-[0.15em]"
                   style={{ color: CORAL }}
                 >
                   0{index + 1}
                 </span>
 
-                <h3 className="mt-2 text-base font-bold" style={{ color: INK }}>
+                <h3 className="text-base font-medium md:font-bold" style={{ color: INK }}>
                   {promise.title}
                 </h3>
-
-                <p className="mt-1.5 text-[13px] leading-relaxed" style={{ color: MUTED }}>
+                </div>
+                <p className="mt-1.5 text-xs md:text-[13px] leading-relaxed" style={{ color: MUTED }}>
                   {promise.description}
                 </p>
               </div>
@@ -227,7 +228,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
           </motion.p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5 max-w-5xl">
+        <div className="mt-10 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:mt-14 lg:grid-cols-3 lg:gap-5 md:max-w-5xl">
           {PROMISES.map((promise, index) => {
             const Icon = promise.icon;
 
@@ -239,7 +240,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
                 whileInView="visible"
                 viewport={{ once: true, margin: "-40px" }}
                 variants={cardVariants}
-                className="overflow-hidden rounded-2xl border"
+                className="overflow-hidden rounded-2xl border ml-8"
                 style={{ borderColor: BORDER, backgroundColor: SURFACE }}
               >
                 {/* Graphic */}
@@ -263,7 +264,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
                   variants={contentVariants}
                   className="p-3 md:p-5"
                 >
-                  <div className="mb-4 flex items-center gap-3">
+                  <div className=" flex items-center gap-3">
                     {/* <span
                       className="flex h-8 w-8 items-center justify-center rounded-full"
                       style={{ backgroundColor: `${CORAL}18` }}
@@ -283,7 +284,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
                     {promise.title}
                   </h3>
 
-                  <p className="mt-2 text-sm leading-relaxed" style={{ color: MUTED }}>
+                  <p className="mt-3 text-xs md:text-sm leading-relaxed" style={{ color: MUTED }}>
                     {promise.description}
                   </p>
                 </motion.div>

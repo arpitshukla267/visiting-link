@@ -233,7 +233,7 @@ export const Navbar: React.FC<NavbarProps> = ({
               animate={{ y: 0 }}
               exit={{ y: '-100%' }}
               transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
-              className="fixed inset-x-0 top-0 z-[55] flex max-h-[100dvh] flex-col bg-[#FAFAFA] pt-[4.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:hidden"
+              className="fixed inset-x-0 top-0 z-[55] flex max-h-[100dvh] flex-col bg-black pt-[4.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:hidden"
             >       
 
               <nav className="flex-1 overflow-y-auto px-6">
@@ -246,8 +246,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }}
                   className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base font-semibold transition-colors ${
                     currentPage === 'home'
-                      ? 'text-[#111111]'
-                      : 'font-medium text-[#444444] hover:text-[#111111]'
+                      ? 'text-white'
+                      : 'text-white/50 hover:text-white'
                   }`}
                 >
                   Home
@@ -269,8 +269,8 @@ export const Navbar: React.FC<NavbarProps> = ({
                     }
                     className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base transition-colors ${
                       currentPage === item.page
-                        ? 'font-semibold text-[#111111]'
-                        : 'font-medium text-[#444444] hover:text-[#111111]'
+                        ? 'font-semibold text-white'
+                        : 'font-medium text-white/50 hover:text-white'
                     }`}
                   >
                     {item.label}

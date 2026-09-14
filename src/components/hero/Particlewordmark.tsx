@@ -82,7 +82,7 @@ export default function ParticleWordmark({
 
     // ---- tunables -----------------------------------------------------
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    const DRIFT_MS = 200; // free drift before the wordmark starts gathering
+    const DRIFT_MS = 100; // free drift before the wordmark starts gathering
     const GATHER_MS = 2600; // gather duration once it starts
     const MAX_STAGGER_MS = 450; // per-particle head start/delay spread
     const TOTAL_FORM_MS = DRIFT_MS + GATHER_MS + MAX_STAGGER_MS + 250; // + settle buffer
@@ -161,7 +161,7 @@ export default function ParticleWordmark({
       const isLowPower = cores <= 4;
 
       if (isMobile) {
-        return { assigned: isLowPower ? 1100 : 1500, ambient: isLowPower ? 100 : 120 };
+        return { assigned: isLowPower ? 1500 : 1800, ambient: isLowPower ? 100 : 120 };
       }
       return { assigned: isLowPower ? 2200 : 3000, ambient: isLowPower ? 160 : 240 };
     }
