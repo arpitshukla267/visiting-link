@@ -6,6 +6,7 @@ export default function CrmShowcase() {
   const [visible, setVisible] = useState(false);
   const [isPlaying, setIsPlaying] = useState(false);
   const [isHovering, setIsHovering] = useState(false);
+  const [isMobile, setIsMobile] = useState(false);
 
   const sectionRef = useRef<HTMLDivElement | null>(null);
   const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -14,6 +15,16 @@ export default function CrmShowcase() {
   const rectRef = useRef<DOMRect | null>(null);
   const rafRef = useRef<number | null>(null);
   const pendingPos = useRef({ x: 0, y: 0 });
+
+  // Detect mobile (matches Tailwind's md breakpoint)
+  useEffect(() => {
+    const mql = window.matchMedia('(max-width: 767px)');
+    setIsMobile(mql.matches);
+
+    const handleChange = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mql.addEventListener('change', handleChange);
+    return () => mql.removeEventListener('change', handleChange);
+  }, []);
 
   useEffect(() => {
     const el = sectionRef.current;
@@ -34,11 +45,21 @@ export default function CrmShowcase() {
   }, []);
 
   useEffect(() => {
-    if (videoRef.current) {
-      videoRef.current.pause();
+    const video = videoRef.current;
+    if (!video) return;
+
+    if (isMobile) {
+      // Behaves like a silent looping GIF on mobile — no controls, no interaction.
+      if (visible) {
+        video.play().catch(() => {});
+        setIsPlaying(true);
+      }
+    } else {
+      // Desktop stays exactly as before: paused until clicked.
+      video.pause();
       setIsPlaying(false);
     }
-  }, [visible]);
+  }, [visible, isMobile]);
 
   // Cache the bounding rect instead of reading it on every mousemove.
   useEffect(() => {
@@ -59,6 +80,8 @@ export default function CrmShowcase() {
   }, []);
 
   const togglePlay = () => {
+    if (isMobile) return; // no interaction on mobile — plays like a gif
+
     const video = videoRef.current;
     if (!video) return;
 
@@ -72,13 +95,13 @@ export default function CrmShowcase() {
   };
 
   const handleMouseMove = (e: React.MouseEvent<HTMLDivElement>) => {
+    if (isMobile) return;
+
     const rect = rectRef.current;
     if (!rect) return;
 
     pendingPos.current = { x: e.clientX - rect.left, y: e.clientY - rect.top };
 
-    // Throttle DOM writes to one per animation frame — avoids layout
-    // thrashing and keeps movement smooth even right after a scroll.
     if (rafRef.current !== null) return;
     rafRef.current = requestAnimationFrame(() => {
       if (cursorRef.current) {
@@ -90,6 +113,7 @@ export default function CrmShowcase() {
   };
 
   const handleMouseEnter = () => {
+    if (isMobile) return;
     if (videoWrapperRef.current) {
       rectRef.current = videoWrapperRef.current.getBoundingClientRect();
     }
@@ -120,41 +144,43 @@ export default function CrmShowcase() {
           ref={videoWrapperRef}
           className="relative w-full"
           onMouseEnter={handleMouseEnter}
-          onMouseLeave={() => setIsHovering(false)}
+          onMouseLeave={() => !isMobile && setIsHovering(false)}
           onMouseMove={handleMouseMove}
           onClick={togglePlay}
-          style={{ cursor: isHovering ? 'none' : 'auto' }}
+          style={{ cursor: !isMobile && isHovering ? 'none' : 'auto' }}
         >
           <video
             ref={videoRef}
             src="/visitinglink_professional_crm_build.mp4"
-            className="w-full h-auto block"
+            className="w-full h-auto block pointer-events-none md:pointer-events-auto"
             muted
             playsInline
             loop
           />
 
-          {/* Custom cursor pill */}
-          <div
-            ref={cursorRef}
-            className="pointer-events-none absolute left-0 top-0 z-10 flex items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-black"
-            style={{
-              opacity: isHovering ? 1 : 0,
-              willChange: 'transform',
-            }}
-          >
-            {isPlaying ? (
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <rect x="2" y="1" width="3" height="10" fill="black" />
-                <rect x="7" y="1" width="3" height="10" fill="black" />
-              </svg>
-            ) : (
-              <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
-                <path d="M2 1l9 5-9 5V1z" fill="black" />
-              </svg>
-            )}
-            <span>{isPlaying ? 'Pause video' : 'Play video'}</span>
-          </div>
+          {/* Custom cursor pill — desktop only */}
+          {!isMobile && (
+            <div
+              ref={cursorRef}
+              className="pointer-events-none absolute left-0 top-0 z-10 flex items-center gap-2 whitespace-nowrap rounded-full bg-white px-4 py-2 text-sm font-medium text-black"
+              style={{
+                opacity: isHovering ? 1 : 0,
+                willChange: 'transform',
+              }}
+            >
+              {isPlaying ? (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <rect x="2" y="1" width="3" height="10" fill="black" />
+                  <rect x="7" y="1" width="3" height="10" fill="black" />
+                </svg>
+              ) : (
+                <svg width="12" height="12" viewBox="0 0 12 12" fill="none">
+                  <path d="M2 1l9 5-9 5V1z" fill="black" />
+                </svg>
+              )}
+              <span>{isPlaying ? 'Pause video' : 'Play video'}</span>
+            </div>
+          )}
         </div>
       </div>
     </section>
