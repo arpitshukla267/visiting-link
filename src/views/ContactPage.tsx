@@ -4,6 +4,7 @@ import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Mail } from "lucide-react";
 import { ProjectInquiry } from "../types";
+import { SERVICES_DATA } from "../data/content"; // ⚠️ apne actual path ke hisaab se adjust karlena
 
 interface ContactPageProps {
   onNavigateHome: () => void;
@@ -30,32 +31,41 @@ function WhatsAppIcon({ className }: { className?: string }) {
 
 export const ContactPage: React.FC<ContactPageProps> = ({
   onNavigateHome,
-  initialService = "VisitingLink",
+  initialService,
 }) => {
+  const defaultCategory = SERVICES_DATA[0];
+  const defaultService =
+    defaultCategory.deliverables.find((d) => d === initialService) ??
+    defaultCategory.deliverables[0];
+
   const [formData, setFormData] = useState<ProjectInquiry>({
     name: "",
     email: "",
     company: "",
-    service: initialService,
+    service: defaultService ?? "",
     budgetRange: "",
     timeframe: "1 – 2 Months",
     details: "",
   });
+  const [activeCategory, setActiveCategory] = useState(defaultCategory.title);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
+    if (!initialService) return;
+    const matchedCategory = SERVICES_DATA.find((cat) =>
+      cat.deliverables.includes(initialService)
+    );
+    if (matchedCategory) {
+      setActiveCategory(matchedCategory.title);
+    }
     setFormData((prev) => ({ ...prev, service: initialService }));
   }, [initialService]);
 
-  const servicesList = [
-    "Company Profile",
-    "VisitingLink",
-    "Web Development",
-    "Graphics",
-    "UI/UX",
-    "Combined Digital Suite",
-  ];
+  const activeDeliverables =
+    SERVICES_DATA.find((cat) => cat.title === activeCategory)?.deliverables ??
+    [];
+
   const budgetPresets = [
     "₹25,000 – ₹50,000",
     "₹50,000 – ₹1,00,000",
@@ -122,7 +132,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             />
           </svg>
         </div>
-         
+
         <div className="opacity-0 relative max-w-7xl mx-auto px-6 md:px-12">
           <button
             onClick={onNavigateHome}
@@ -177,11 +187,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 <button
                   onClick={() => {
                     setSubmitted(false);
+                    setActiveCategory(defaultCategory.title);
                     setFormData({
                       name: "",
                       email: "",
                       company: "",
-                      service: initialService,
+                      service: defaultService ?? "",
                       budgetRange: "",
                       timeframe: "1 – 2 Months",
                       details: "",
@@ -197,8 +208,8 @@ export const ContactPage: React.FC<ContactPageProps> = ({
         </section>
       ) : (
         <section className="py-16 md:py-24">
-          <div className="mx-auto max-w-7xl px-6 md:px-12">
-            <div className="grid grid-cols-1 gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
+          <div className="mx-auto max-w-7xl px-4 md:px-12">
+            <div className="md:grid flex flex-col-reverse  gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
               {/* Direct channels */}
               <motion.div
                 initial={{ opacity: 0, x: -16 }}
@@ -254,12 +265,40 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 onSubmit={handleSubmit}
                 className="space-y-8"
               >
+                {/* Category selection */}
+                <div>
+                  <p className="mb-3 text-sm text-[#777777]">Category</p>
+                  <div className="grid grid-cols-2 gap-2">
+                    {SERVICES_DATA.map((cat) => (
+                      <button
+                        type="button"
+                        key={cat.id}
+                        onClick={() => {
+                          setActiveCategory(cat.title);
+                          setFormData((prev) => ({
+                            ...prev,
+                            service: cat.deliverables[0] ?? "",
+                          }));
+                        }}
+                        className={`cursor-pointer px-4 py-3 text-left text-sm font-medium border rounded-md transition-all ${
+                          activeCategory === cat.title
+                            ? "border-[#111111] bg-[#111111] text-white"
+                            : "border-[#E5E7EB] text-[#444444] hover:border-[#111111]"
+                        }`}
+                      >
+                        {cat.title}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+
+                {/* Service selection (depends on category) */}
                 <div>
                   <p className="mb-3 text-sm text-[#777777]">
                     Service of interest
                   </p>
                   <div className="grid grid-cols-2 gap-2">
-                    {servicesList.map((svc) => (
+                    {activeDeliverables.map((svc) => (
                       <button
                         type="button"
                         key={svc}

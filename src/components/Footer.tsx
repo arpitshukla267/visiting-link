@@ -17,6 +17,20 @@ const CONTACT_PHONE_DISPLAY = "+91 92365 53585";
 const CONTACT_PHONE_E164 = "919236553585";
 const WHATSAPP_URL = `https://wa.me/${CONTACT_PHONE_E164}`;
 
+const PAGE_LINKS = [
+  { label: "Services", page: "services" },
+  { label: "About", page: "about" },
+  { label: "Work", page: "work" },
+  { label: "Contact", page: "contact" },
+];
+
+const SERVICE_LINKS = [
+  { label: "Brand & Digital Design", id: "brand-digital-design" },
+  { label: "Software Development", id: "software-development" },
+  { label: "Web Apps & Prototypes", id: "web-apps-prototypes" },
+  { label: "AI & Automation Solutions", id: "ai-automation-solutions" },
+];
+
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
     <svg
@@ -75,7 +89,113 @@ export const Footer: React.FC<FooterProps> = ({
       id="main-footer"
       className="relative z-20 w-full overflow-hidden border-t border-[#242424] bg-[#111111] text-white"
     >
-      <div className="mx-auto max-w-[95vw] px-6 pt-8 md:px-12 md:pt-12">
+      {/* ============ MOBILE ============ */}
+      <div className="px-6 pb-6 pt-10 md:hidden">
+        {/* Logo + intro */}
+        <button
+          onClick={() => onNavigatePage("home")}
+          className="mb-5 block cursor-pointer"
+          aria-label="VisitingLink Home"
+        >
+          <Image
+            src="/logo.png"
+            alt="VisitingLink"
+            width={180}
+            height={50}
+            className="h-auto w-[140px] object-contain brightness-0 invert"
+            priority
+          />
+        </button>
+
+        <p className="mb-6 max-w-sm text-sm leading-6 text-[#888888]">
+          Creative technology studio building digital experiences, web
+          platforms, and visual systems for ambitious businesses.
+        </p>
+
+        {/* CTA */}
+        <button
+          onClick={() => onNavigateContact()}
+          className="mb-8 flex w-full cursor-pointer items-center justify-center gap-3 bg-white px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#111111] active:bg-[#e8e8e8]"
+        >
+          <span>Start a Project</span>
+          <ArrowUpRight className="h-4 w-4" />
+        </button>
+
+        {/* Contact — surfaced first on mobile, it's the most-used action */}
+        <div className="flex flex-col gap-3.5 border-y border-[#242424] py-6">
+          <a
+            href={`mailto:${CONTACT_EMAIL}`}
+            className="flex items-center gap-3 text-sm text-[#cccccc]"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#333333]">
+              <Mail className="h-3.5 w-3.5 text-[#999999]" />
+            </span>
+            <span className="break-all">{CONTACT_EMAIL}</span>
+          </a>
+
+          <a
+            href={WHATSAPP_URL}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="flex items-center gap-3 text-sm text-[#cccccc]"
+          >
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full border border-[#333333]">
+              <WhatsAppIcon className="h-3.5 w-3.5 text-[#999999]" />
+            </span>
+            <span>{CONTACT_PHONE_DISPLAY}</span>
+          </a>
+        </div>
+
+        {/* Link groups — stacked, each its own row so nothing feels cramped */}
+        <div className="grid grid-cols-2 gap-x-4 gap-y-8 py-8">
+          <div>
+            <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
+              Pages
+            </h4>
+            <ul className="space-y-3">
+              {PAGE_LINKS.map((item) => (
+                <li key={item.page}>
+                  <button
+                    onClick={() => onNavigatePage(item.page)}
+                    className="cursor-pointer text-sm text-[#999999] active:text-white"
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+
+          <div>
+            <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
+              Services
+            </h4>
+            <ul className="space-y-3">
+              {SERVICE_LINKS.map((item) => (
+                <li key={item.id}>
+                  <button
+                    onClick={() => {
+                      onNavigateService(item.id);
+                      window.scrollTo({ top: 0, behavior: "smooth" });
+                    }}
+                    className="cursor-pointer text-left text-sm text-[#999999] active:text-white"
+                  >
+                    {item.label}
+                  </button>
+                </li>
+              ))}
+            </ul>
+          </div>
+        </div>
+
+        {/* Bottom meta */}
+        <div className="flex justify-center border-t border-[#242424] pt-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
+          <p>© {new Date().getFullYear()} VisitingLink</p>
+        </div>
+      </div>
+
+      {/* ============ DESKTOP — unchanged ============ */}
+      <div className="mx-auto hidden max-w-[95vw] px-6 pt-8 md:block md:px-12 md:pt-12">
         {/* TOP */}
         <div className="flex flex-col gap-8 border-b border-[#242424] pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
           {/* Logo + intro */}
@@ -120,12 +240,7 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
 
             <ul className="space-y-2.5">
-              {[
-                { label: "Services", page: "services" },
-                { label: "About", page: "about" },
-                { label: "Work", page: "work" },
-                { label: "Contact", page: "contact" },
-              ].map((item) => (
+              {PAGE_LINKS.map((item) => (
                 <li key={item.page}>
                   <button
                     onClick={() => onNavigatePage(item.page)}
@@ -145,28 +260,7 @@ export const Footer: React.FC<FooterProps> = ({
             </h4>
 
             <ul className="space-y-2.5">
-              {[
-                {
-                  label: "Visiting Link",
-                  id: "visitinglink",
-                },
-                {
-                  label: "Company Profile",
-                  id: "company-profile",
-                },
-                {
-                  label: "Web Development",
-                  id: "web-development",
-                },
-                {
-                  label: "Graphics",
-                  id: "graphics",
-                },
-                {
-                  label: "UI/UX Design",
-                  id: "uiux",
-                },
-              ].map((item) => (
+              {SERVICE_LINKS.map((item) => (
                 <li key={item.id}>
                   <button
                     onClick={() => {

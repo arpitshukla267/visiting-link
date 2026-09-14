@@ -2,92 +2,86 @@ import { ServiceItem, TimelineQuality, Testimonial } from '../types';
 
 export const SERVICES_DATA: ServiceItem[] = [
   {
-    id: 'visitinglink',
+    id: 'brand-digital-design',
     number: '01',
-    title: 'VisitingLink',
-    tagline: 'Digital Identity & Smart Presence Solutions',
+    title: 'Brand & Digital Design',
+    tagline: 'Identity, Interfaces & Visual Systems',
     description:
-      'Digital solutions designed to help businesses establish and strengthen their online presence.',
+      'Interfaces, visual identity and company collateral designed around how people actually experience your business.',
     detailedScope: [
-      'Smart centralized identity hubs connecting all brand touchpoints',
-      'Custom domain mapping with enterprise DNS and SSL provisioning',
-      'Dynamic business profile architectures with rich interaction layers',
-      'Actionable audience analytics, link telemetry, and conversion tracking',
-      'Frictionless customer contact funnels and integrated lead routing'
+      'UI/UX Design — user research, wireframes & prototypes, and reusable design systems',
+      'Graphic Design — visual systems including brand identity, social media, and marketing creatives',
+      'Company Profiles — polished overviews covering company background, leadership & team, and capabilities'
     ],
     deliverables: [
-      'Configured Identity Platform',
-      'Custom Domain Architecture',
-      'Engagement Analytics Dashboard',
-      'Interactive Contact Channels'
+      'UI/UX Design',
+      'Graphic Design',
+      'Company Profiles'
     ],
-    focusAreas: ['Brand Discoverability', 'Unified Presence', 'Digital Conversion', 'Streamlined Access']
+    focusAreas: ['User Research', 'Design Systems', 'Brand Identity', 'Capability Presentation']
   },
   {
-    id: 'web-development',
+    id: 'software-development',
     number: '02',
-    title: 'Web Development',
-    tagline: 'High-Performance Web Architecture & Engineering',
+    title: 'Software Development',
+    tagline: 'Business Systems Built to Run Your Operations',
     description:
-      'Modern, responsive and scalable websites and web applications built around real business requirements.',
+      'Custom software that tracks leads, closes sales, handles billing, and automates the way your business actually runs.',
     detailedScope: [
-      'Bespoke web applications built with TypeScript, React, and modern full-stack architectures',
-      'Ultra-responsive interfaces tuned for rapid load speeds and pristine Core Web Vitals',
-      'Scalable database design, RESTful/GraphQL API engineering, and secure infrastructure',
-      'Headless CMS integrations enabling autonomous content workflows for marketing teams',
-      'Search engine architecture optimization and strict accessibility (WCAG AA) compliance'
+      'CRM — contact management, pipeline tracking, and reporting to keep every relationship in one place',
+      'Sales Software — quotes & proposals, order management, and team dashboards to help your team close faster',
+      'Invoice & Billing Software — recurring invoices, payment tracking, and tax handling to get you paid on time',
+      'Custom Software — internal tools, workflow automation, and legacy integration built around your business'
     ],
     deliverables: [
-      'Production Web Application / Site',
-      'Modular Component System',
-      'Optimized Content Management Setup',
-      'Complete Deployment & CI/CD Pipeline'
+      'CRM',
+      'Sales Software',
+      'Invoice & Billing Software',
+      'Custom Software'
     ],
-    focusAreas: ['Speed & Performance', 'Responsive Architecture', 'Scalable Codebase', 'Accessibility']
+    focusAreas: ['Pipeline Tracking', 'Automated Billing', 'Workflow Automation', 'Legacy Integration']
   },
   {
-    id: 'graphics',
+    id: 'web-apps-prototypes',
     number: '03',
-    title: 'Graphics',
-    tagline: 'Refined Visual Systems & Digital Design',
+    title: 'Web Apps & Prototypes',
+    tagline: 'Applications, Dashboards & Product Prototypes',
     description:
-      'Professional visual assets, creative design and digital graphics that maintain a consistent brand identity.',
+      'Powerful browser-based applications and clickable prototypes that turn ideas into testable, deployable products.',
     detailedScope: [
-      'Comprehensive brand identity systems, typographic pairings, and strict design guidelines',
-      'High-impact marketing assets, digital publication collateral, and social identity kits',
-      'Precision user interface design, design system tokens, and interactive component libraries',
-      'Custom vector iconography, editorial graphic styling, and visual asset production',
-      'Presentation decks, brand pitch systems, and interactive digital style guides'
+      'Web Applications — user accounts & permissions, real-time data, and scalable architecture built around your needs',
+      'Business Dashboards — live metrics, custom charts, and role-based views that turn data into useful insights',
+      'Interactive Prototypes — interactive flows, client demos, and usability testing to validate ideas before development',
+      'Cloud Deployment — production deployment, server configuration, and performance setup for reliable online access'
     ],
     deliverables: [
-      'Brand Identity System & Guidelines',
-      'Digital Asset & Marketing Kit',
-      'Figma Component Library & UI Tokens',
-      'Vector Graphics & Iconography Suite'
+      'Web Applications',
+      'Business Dashboards',
+      'Interactive Prototypes',
+      'Cloud Deployment'
     ],
-    focusAreas: ['Visual Consistency', 'Brand Distinction', 'Design Systems', 'Editorial Polish']
+    focusAreas: ['Scalable Architecture', 'Real-Time Data', 'Usability Testing', 'Reliable Deployment']
   },
   {
-    id: 'ui-ux',
+    id: 'ai-automation',
     number: '04',
-    title: 'UI/UX',
-    tagline: 'Product Interfaces & Experience Design',
+    title: 'AI & Automation Solutions',
+    tagline: 'Intelligent Features & Automated Workflows',
     description:
-      'Interfaces and experiences designed around how people actually use your product — from first research to polished, usable screens.',
+      'AI-driven features and automation that remove manual work and connect the tools your business already relies on.',
     detailedScope: [
-      'User research, journey mapping, and clarity on goals before design begins',
-      'Wireframes and interactive prototypes to validate flows early',
-      'Design systems, UI tokens, and reusable component libraries in Figma',
-      'Interaction design for navigation, forms, feedback, and micro-interactions',
-      'Usability testing and iteration based on real user behaviour'
+      'AI Integration — LLM integration, recommendation engines, and data pipelines added into your existing product',
+      'Chatbots — support bots, lead qualification, and multi-channel deploy to handle conversations automatically',
+      'Automation — workflow triggers, task scheduling, and cross-tool syncing to remove manual work from repetitive processes',
+      'API Integrations — third-party APIs, webhooks, and data sync connecting the tools you already use'
     ],
     deliverables: [
-      'Research Summary & User Flows',
-      'Wireframes & Clickable Prototypes',
-      'Figma UI Kit & Design System',
-      'Handoff-Ready Screen Designs'
+      'AI Integration',
+      'Chatbots',
+      'Automation',
+      'API Integrations'
     ],
-    focusAreas: ['Clarity', 'Usability', 'Consistency', 'Conversion']
+    focusAreas: ['LLM Integration', 'Automated Support', 'Workflow Triggers', 'Third-Party Sync']
   }
 ];
 

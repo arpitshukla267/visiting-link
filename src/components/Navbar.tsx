@@ -201,7 +201,7 @@ export const Navbar: React.FC<NavbarProps> = ({
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileMenuOpen}
             className={`cursor-pointer p-2 transition-colors duration-200 md:hidden ${
-              navThemeDark && !mobileMenuOpen ? 'text-white' : 'text-[#111111]'
+              navThemeDark && !mobileMenuOpen ? 'text-white' : 'text-white'
             }`}
           >
             {mobileMenuOpen ? (

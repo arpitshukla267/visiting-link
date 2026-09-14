@@ -13,7 +13,7 @@ export type FeatureItem = {
   tagline: string;
   description: string;
   image: string;
-  url: string;
+  url?: string; // optional — client/case-study-only projects won't have this
 };
 
 export type FilmstripScrollerProps = {
@@ -229,15 +229,25 @@ export function FeatureFilmstrip({
               </p>
 
               <div className="pt-3">
-                <Link
-                  href={item.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="group/btn inline-flex items-center gap-2 text-xs font-semibold text-white transition-colors hover:text-accent"
-                >
-                  View Project
-                  <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
-                </Link>
+                {item.url ? (
+                  <Link
+                    href={item.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="group/btn inline-flex items-center gap-2 text-xs font-semibold text-white transition-colors hover:text-accent"
+                  >
+                    View Project
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
+                ) : (
+                  <Link
+                    href="/work"
+                    className="group/btn inline-flex items-center gap-2 text-xs font-semibold text-white transition-colors hover:text-accent"
+                  >
+                    View Case Study
+                    <ArrowRight className="h-3.5 w-3.5 transition-transform group-hover/btn:translate-x-1" />
+                  </Link>
+                )}
               </div>
             </div>
           </div>

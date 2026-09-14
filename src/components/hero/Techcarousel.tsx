@@ -107,16 +107,11 @@ interface TechCarouselProps {
    * just references the keyframe name, so the browser resolves it from
    * this inline rule same as it would from a stylesheet.
    */
-  export default function TechCarousel({ visible = false }: TechCarouselProps) {
+  export default function TechCarousel() {
     const track = [...ITEMS, ...ITEMS];
   
     return (
-      <div
-        className={`relative flex flex-shrink-0 items-center gap-7 overflow-hidden border-t border-white/[0.09] bg-gradient-to-b from-black/0 to-black/50 py-[22px] mt-auto transition-opacity duration-[1100ms] ease-out delay-200 motion-reduce:duration-[.01ms] ${
-          visible ? 'opacity-100' : 'opacity-0'
-        }`}
-      >
-  
+      <div className="relative flex flex-shrink-0 items-center gap-7 overflow-hidden border-t border-white/[0.09] bg-gradient-to-b from-black/0 to-black/50 py-[22px] mt-auto">
         <div className="flex-1 overflow-hidden [mask-image:linear-gradient(90deg,transparent_0,#000_8%,#000_92%,transparent_100%)] [-webkit-mask-image:linear-gradient(90deg,transparent_0,#000_8%,#000_92%,transparent_100%)]">
           <div className="flex w-max gap-14 animate-[techScroll_32s_linear_infinite] motion-reduce:animate-none">
             {track.map((item, i) => (

@@ -12,6 +12,7 @@ import {
   ArrowUpRight,
   type LucideIcon,
 } from "lucide-react";
+import { Montserrat } from "next/font/google";
 
 /* -----------------------------------------------------------------------
  * "What We Do" — dark editorial services overview.
@@ -60,6 +61,12 @@ const ACCENTS = {
   webapp: { color: "#E0B84D", iconBg: "rgba(224,184,77,0.14)" },
   ai: { color: "#4ADE80", iconBg: "rgba(74,222,128,0.14)" },
 } as const satisfies Record<string, Accent>;
+
+const montserrat = Montserrat({
+  subsets: ['latin'],
+  weight: ['500', '600', '700'],
+});
+
 
 const WHAT_WE_DO: WhatWeDoItem[] = [
   {
@@ -390,14 +397,25 @@ export const WhatWeDoSection: React.FC = () => {
   };
 
   return (
-    <section
-      id="what-we-do"
-      className="w-full border-b border-[#161616] bg-[#0A0A0A] py-20 md:py-32"
-    >
+<section
+  id="what-we-do"
+  className="
+    relative w-full overflow-hidden
+    border-b border-[#161616]
+    bg-[#010102]
+    py-20 md:py-32
+
+    before:absolute before:inset-0 before:pointer-events-none
+    before:bg-[radial-gradient(ellipse_55%_45%_at_100%_0%,rgba(59,130,246,0.12)_0%,rgba(124,58,237,0.10)_38%,transparent_75%)]
+
+    after:absolute after:inset-0 after:pointer-events-none
+    after:bg-[radial-gradient(ellipse_55%_45%_at_0%_100%,rgba(236,72,153,0.13)_0%,rgba(124,58,237,0.09)_38%,rgba(59,130,246,0.04)_58%,transparent_78%)]
+  "
+>
       <div className="mx-auto max-w-[90vw] px-2 md:px-12">
         <SectionIntro />
 
-        <div className="mt-14 md:mt-20">
+        <div className={`mt-14 md:mt-20 ${montserrat.className}`}>
           {WHAT_WE_DO.map((item, idx) => (
             <ServiceRow
               key={item.title}

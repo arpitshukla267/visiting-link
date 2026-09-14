@@ -16,12 +16,37 @@ interface ParticleWordmarkProps {
  * Full-bleed particle field for the hero. A faint ambient field of
  * particles drifts across the whole canvas continuously; a subset is
  * assigned to sampled points of the wordmark glyph and eases into that
- * shape once, then holds — it never dismantles. Assigned particles keep a
- * small continuous jitter after forming so the mark still feels alive.
+ * shape once, then holds — dead-centered in the viewport.
+ *
+ * Once formed, a small amount of scroll (a trigger, not a scrub) kicks
+ * off a fixed-duration (~2.8s) two-phase dismantle:
+ *
+ *  1. RELEASE (fast, ~first 28% of the duration) — assigned particles
+ *     let go of the glyph shape all at once and drop back into their
+ *     own ambient drift.
+ *  2. EXIT (spread across the full duration) — every particle that
+ *     isn't one of the ~100 survivors gets its own randomized delay and
+ *     window within the dismantle, during which it flies outward past
+ *     the edge of the canvas while fading to fully transparent. Delays
+ *     are front-loaded (a chunk vanish almost immediately, the rest
+ *     trickle out in a steady stream), so the particle count visibly
+ *     drops fast at first and then steadily thins out — never an
+ *     abrupt jump-cut.
+ *
+ * The ~100 survivors never exit — they simply release from the glyph
+ * (if they were part of it) and settle into a dim, steady glow at their
+ * own random anchor point, scattered across the whole canvas.
+ *
+ * Everything is driven by a single tweened progress value (not actual
+ * scroll distance), so the whole thing always takes the same smooth
+ * ~2.8s regardless of how fast or far the user scrolls, and reverses
+ * cleanly (particles drift back in / the mark reforms) if they scroll
+ * back up before it settles.
  *
  * Self-contained: owns its own rAF loop, resize handling, DPR cap,
- * IntersectionObserver visibility pause, and prefers-reduced-motion check.
- * No external animation/3D dependencies — plain Canvas 2D only.
+ * scroll tracking, IntersectionObserver visibility pause, and
+ * prefers-reduced-motion check. No external animation/3D dependencies —
+ * plain Canvas 2D only.
  */
 export default function ParticleWordmark({
   text = 'VisitingLink',
@@ -57,10 +82,21 @@ export default function ParticleWordmark({
 
     // ---- tunables -----------------------------------------------------
     const DPR = Math.min(window.devicePixelRatio || 1, 1.5);
-    const DRIFT_MS = 900; // free drift before the wordmark starts gathering
+    const DRIFT_MS = 200; // free drift before the wordmark starts gathering
     const GATHER_MS = 2600; // gather duration once it starts
     const MAX_STAGGER_MS = 450; // per-particle head start/delay spread
     const TOTAL_FORM_MS = DRIFT_MS + GATHER_MS + MAX_STAGGER_MS + 250; // + settle buffer
+    const SCROLL_TRIGGER_PX = 24; // how little scroll is needed to trigger dismantle
+    const DISMANTLE_TWEEN_MS = 2500; // slower overall dismantle/reform (was 2800)
+    const RELEASE_FRACTION = 0.5; // glyph release now spread over half the tween,
+                                   // instead of a fast 36% burst — feels gradual
+                                   // rather than "snap then wait"
+    const KEEP_COUNT = 100; // particles that remain visible (dim, scattered) once fully dismantled
+    const EXIT_BURST_CHANCE = 0.32; // fewer particles vanish immediately (was 0.32) —
+                                     // most now join the steady trickle instead
+    const EXIT_DELAY_MAX = 0.6; // exits spread later across the timeline (was 0.6)
+    const EXIT_WINDOW_MIN = 0.2; // each particle's own fly-out+fade takes longer (was 0.2)
+    const EXIT_WINDOW_MAX = 0.35; // (was 0.35)
 
     type Particle = {
       anchorX: number;
@@ -76,6 +112,12 @@ export default function ParticleWordmark({
       startOffset: number; // ms, staggers when this particle begins gathering
       r: number;
       alpha: number;
+      restAlpha: number; // alpha a survivor settles to once fully dismantled
+      willExit: boolean; // true if this particle flies off-screen on dismantle
+      exitDelay: number; // 0-1, tween-fraction offset before this particle starts exiting
+      exitWindow: number; // 0-1, tween-fraction duration of this particle's own fly-out+fade
+      exitX: number; // off-canvas destination
+      exitY: number;
       warm: boolean;
       assigned: boolean;
       x: number;
@@ -93,15 +135,24 @@ export default function ParticleWordmark({
     let destroyed = false;
     let announcedFormed = false;
 
+    // dismantle state: a binary target (0 = formed, 1 = dismantled) set by
+    // a small scroll trigger, plus a progress value tweened toward it at a
+    // fixed speed — this drives everything below, so the whole sequence
+    // always takes the same smooth duration no matter how the user scrolls.
+    let dismantleTarget = 0;
+    let dismantleProgress = 0;
+
     const rand = (a: number, b: number) => a + Math.random() * (b - a);
+    const clamp = (v: number, min: number, max: number) =>
+      Math.min(max, Math.max(min, v));
 
     // Assigned particles form the legible wordmark. Ambient particles
     // roam the full canvas forever, before and after formation, so the
     // field always feels like it covers the whole screen. The ambient
     // count is kept low and unobtrusive so the scene doesn't feel busy
     // before the wordmark assembles; the assigned count is a little
-    // higher so the larger glyph (matching the reference) still reads
-    // as a dense, legible mark rather than a sparse outline.
+    // higher so the larger glyph still reads as a dense, legible mark
+    // rather than a sparse outline.
     function pickCounts() {
       const isMobile = window.innerWidth < 768;
       const cores =
@@ -126,7 +177,7 @@ export default function ParticleWordmark({
 
       // Size the glyph by target width rather than a flat font-size
       // guess, so it reliably spans the same proportion of the hero
-      // as the reference (a large, confident wordmark) at any viewport.
+      // at any viewport.
       const targetWidth = W * (isMobile ? 0.84 : 0.66);
       let fontSize = isMobile ? 90 : 170;
       octx.font = `700 ${fontSize}px Manrope, sans-serif`;
@@ -138,9 +189,8 @@ export default function ParticleWordmark({
       octx.textAlign = 'center';
       octx.textBaseline = 'middle';
       octx.font = `700 ${fontSize}px Manrope, sans-serif`;
-      // sits in the upper-middle of the full hero canvas, leaving room
-      // below for the copy and tech carousel that sit on top of it
-      octx.fillText(text, W / 2, H * (isMobile ? 0.4 : 0.36));
+      // dead-center of the hero canvas
+      octx.fillText(text, W / 2, H * 0.5);
 
       const step = isMobile ? 2.4 : 1.9;
       const img = octx.getImageData(0, 0, W, H).data;
@@ -154,8 +204,8 @@ export default function ParticleWordmark({
       return pts;
     }
 
-
     function makeParticle(assigned: boolean, target?: { x: number; y: number }): Particle {
+      const alpha = assigned ? rand(0.5, 0.9) : rand(0.12, 0.3);
       return {
         anchorX: rand(0, W),
         anchorY: rand(0, H),
@@ -169,12 +219,57 @@ export default function ParticleWordmark({
         targetY: target ? target.y : 0,
         startOffset: rand(0, MAX_STAGGER_MS),
         r: assigned ? rand(0.6, 1.4) : rand(0.5, 1.2),
-        alpha: assigned ? rand(0.5, 0.9) : rand(0.12, 0.3),
+        alpha,
+        restAlpha: 0, // assigned below, after the full pool is built
+        willExit: false, // assigned below
+        exitDelay: 0,
+        exitWindow: 0.3,
+        exitX: 0,
+        exitY: 0,
         warm: Math.random() < 0.07,
         assigned,
         x: 0,
         y: 0,
       };
+    }
+
+    function assignExit(p: Particle) {
+      // Direction outward from canvas center through the particle's own
+      // resting anchor, extended well past the edge of the canvas — so
+      // exiting particles visibly fly off in a natural-looking direction
+      // rather than converging on one spot.
+      const cx = W / 2;
+      const cy = H / 2;
+      let dx = p.anchorX - cx;
+      let dy = p.anchorY - cy;
+      let len = Math.hypot(dx, dy);
+      if (len < 1) {
+        const angle = rand(0, Math.PI * 2);
+        dx = Math.cos(angle);
+        dy = Math.sin(angle);
+        len = 1;
+      }
+      // small random angular jitter so exits don't look perfectly radial
+      const jitter = rand(-0.35, 0.35);
+      const cos = Math.cos(jitter);
+      const sin = Math.sin(jitter);
+      const ux = (dx / len) * cos - (dy / len) * sin;
+      const uy = (dx / len) * sin + (dy / len) * cos;
+      const dist = Math.max(W, H) * rand(0.9, 1.35);
+      p.exitX = cx + ux * dist;
+      p.exitY = cy + uy * dist;
+
+      // Front-loaded stagger: a chunk of particles vanish almost
+      // immediately once dismantle starts, the rest trickle out in a
+      // steady stream across the remaining duration — giving a fast
+      // initial thin-out followed by a smooth, continuous drain rather
+      // than everything leaving on a fixed clock tick.
+      if (Math.random() < EXIT_BURST_CHANCE) {
+        p.exitDelay = rand(0, 0.04);
+      } else {
+        p.exitDelay = rand(0.04, EXIT_DELAY_MAX);
+      }
+      p.exitWindow = rand(EXIT_WINDOW_MIN, EXIT_WINDOW_MAX);
     }
 
     function buildParticles() {
@@ -190,6 +285,33 @@ export default function ParticleWordmark({
       for (let i = 0; i < ambientCount; i++) {
         particles.push(makeParticle(false));
       }
+
+      // Randomly select the small handful of particles that survive a
+      // full dismantle, scattered across the whole canvas — everyone
+      // else gets an exit assigned and eventually flies off-screen.
+      // Survivors that were part of the wordmark are dimmed to an
+      // ambient-level alpha so the leftover field reads as background.
+      const keepCount = Math.min(KEEP_COUNT, particles.length);
+      const idxPool = particles.map((_, i) => i);
+      for (let i = idxPool.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [idxPool[i], idxPool[j]] = [idxPool[j], idxPool[i]];
+      }
+      const keepSet = new Set(idxPool.slice(0, keepCount));
+      particles.forEach((p, i) => {
+        if (keepSet.has(i)) {
+          p.willExit = false;
+          p.restAlpha = p.assigned ? rand(0.12, 0.3) : p.alpha;
+        } else {
+          p.willExit = true;
+          p.restAlpha = 0;
+          assignExit(p);
+        }
+      });
+    }
+
+    function updateScrollTrigger() {
+      dismantleTarget = window.scrollY > SCROLL_TRIGGER_PX ? 1 : 0;
     }
 
     function resize() {
@@ -204,13 +326,14 @@ export default function ParticleWordmark({
       buildParticles();
     }
 
-    // ease in/out, used for the one-time gather transition
+    // ease in/out, used for the gather transition, the glyph release,
+    // and each particle's own exit fly-out/fade
     function ease(t: number) {
       return t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2;
     }
 
     // one-shot: 0 while drifting, eases to 1 as it gathers, then holds at
-    // 1 forever — the wordmark never dismantles once formed
+    // 1 forever once formed — release/exit are handled separately below
     function formAmountFor(p: Particle) {
       const t = (simTime - DRIFT_MS - p.startOffset) / GATHER_MS;
       if (t <= 0) return 0;
@@ -218,22 +341,23 @@ export default function ParticleWordmark({
       return ease(t);
     }
 
-    function drawParticle(p: Particle, x: number, y: number, alphaMul = 1) {
+    function drawParticle(p: Particle, x: number, y: number, alpha: number) {
+      if (alpha <= 0.002) return;
       c.beginPath();
       c.fillStyle = p.warm
-        ? `rgba(201,169,124, ${p.alpha * alphaMul})`
-        : `rgba(245,243,238, ${p.alpha * alphaMul})`;
+        ? `rgba(201,169,124, ${alpha})`
+        : `rgba(245,243,238, ${alpha})`;
       c.arc(x, y, p.r, 0, Math.PI * 2);
       c.fill();
     }
 
     function renderStatic() {
       // reduced-motion: draw the fully formed wordmark once, ambient
-      // particles at their resting anchor, no animation loop
+      // particles at their resting anchor, no animation loop, no dismantle
       c.clearRect(0, 0, W, H);
       for (const p of particles) {
-        if (p.assigned) drawParticle(p, p.targetX, p.targetY);
-        else drawParticle(p, p.anchorX, p.anchorY);
+        if (p.assigned) drawParticle(p, p.targetX, p.targetY, p.alpha);
+        else drawParticle(p, p.anchorX, p.anchorY, p.alpha);
       }
     }
 
@@ -253,6 +377,20 @@ export default function ParticleWordmark({
         onFormedRef.current?.();
       }
 
+      // advance the dismantle tween toward its target at a fixed speed —
+      // this always takes the same ~DISMANTLE_TWEEN_MS regardless of how
+      // much was scrolled, and only ever engages once fully formed.
+      if (announcedFormed) {
+        const step = dt / DISMANTLE_TWEEN_MS;
+        if (dismantleProgress < dismantleTarget) {
+          dismantleProgress = clamp(dismantleProgress + step, 0, dismantleTarget);
+        } else if (dismantleProgress > dismantleTarget) {
+          dismantleProgress = clamp(dismantleProgress - step, dismantleTarget, 1);
+        }
+      }
+      const rawProgress = dismantleProgress; // 0 (formed) -> 1 (dismantled)
+      const releaseT = ease(clamp(rawProgress / RELEASE_FRACTION, 0, 1));
+
       c.clearRect(0, 0, W, H);
       for (const p of particles) {
         const driftX =
@@ -260,32 +398,61 @@ export default function ParticleWordmark({
         const driftY =
           p.anchorY + Math.cos(simTime * p.driftFy + p.phaseY) * p.driftAmpY;
 
+        let baseX: number;
+        let baseY: number;
+        let twinkleAmt = 1;
+
         if (!p.assigned) {
-          // ambient particles roam the full screen forever, unaffected
-          // by the wordmark forming
-          p.x = driftX;
-          p.y = driftY;
+          // ambient particles' baseline is just their own drift — they
+          // never had a glyph shape to release from
+          baseX = driftX;
+          baseY = driftY;
         } else {
           const form = formAmountFor(p);
-          // once formed, particles keep a small continuous orbit + noise
-          // around their target point so the mark never looks frozen —
-          // amplitude fades in only as the particle finishes gathering
+          const effectiveForm = form * (1 - releaseT);
           const orbitX = Math.sin(simTime * 0.0009 + p.phaseX) * 1.6;
           const orbitY = Math.cos(simTime * 0.0011 + p.phaseY) * 1.6;
           const noiseX = Math.sin(simTime * 0.0021 + p.phaseX * 2) * 0.9;
           const noiseY = Math.cos(simTime * 0.0024 + p.phaseY * 2) * 0.9;
-          const wobbleX = (orbitX + noiseX) * form;
-          const wobbleY = (orbitY + noiseY) * form;
-          p.x = driftX + (p.targetX - driftX) * form + wobbleX;
-          p.y = driftY + (p.targetY - driftY) * form + wobbleY;
+          const wobbleX = (orbitX + noiseX) * effectiveForm;
+          const wobbleY = (orbitY + noiseY) * effectiveForm;
+          baseX = driftX + (p.targetX - driftX) * effectiveForm + wobbleX;
+          baseY = driftY + (p.targetY - driftY) * effectiveForm + wobbleY;
+
+          // gentle twinkle on assigned particles while still gathered,
+          // fading to a steady value as they release from the glyph
+          const twinkle =
+            0.82 + 0.18 * Math.sin(simTime * 0.0026 + p.phaseX + p.phaseY);
+          twinkleAmt = twinkle * (1 - releaseT) + releaseT;
         }
 
-        // gentle twinkle on assigned particles once formed, so the mark
-        // reads as alive rather than static
-        const twinkle = p.assigned
-          ? 0.82 + 0.18 * Math.sin(simTime * 0.0026 + p.phaseX + p.phaseY)
-          : 1;
-        drawParticle(p, p.x, p.y, twinkle);
+        let x = baseX;
+        let y = baseY;
+        let alpha: number;
+
+        if (p.willExit) {
+          // this particle's own fly-out + fade window, staggered within
+          // the overall dismantle so particles leave in a continuous,
+          // front-loaded stream rather than all together
+          const localT = clamp(
+            (rawProgress - p.exitDelay) / p.exitWindow,
+            0,
+            1
+          );
+          const exitEase = ease(localT);
+          x = baseX + (p.exitX - baseX) * exitEase;
+          y = baseY + (p.exitY - baseY) * exitEase;
+          const baseAlpha = p.alpha * twinkleAmt;
+          alpha = baseAlpha * (1 - exitEase);
+        } else {
+          // survivor: releases from the glyph (if it was part of one)
+          // and settles into a dim, steady glow at its own anchor point
+          alpha = (p.alpha + (p.restAlpha - p.alpha) * releaseT) * twinkleAmt;
+        }
+
+        p.x = x;
+        p.y = y;
+        drawParticle(p, x, y, alpha);
       }
 
       rafId = requestAnimationFrame(frame);
@@ -298,6 +465,7 @@ export default function ParticleWordmark({
     }
 
     resize();
+    updateScrollTrigger();
 
     if (prefersReduced) {
       renderStatic();
@@ -326,11 +494,17 @@ export default function ParticleWordmark({
     };
     window.addEventListener('resize', onResize);
 
+    const onScroll = () => {
+      updateScrollTrigger();
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+
     return () => {
       destroyed = true;
       if (rafId !== null) cancelAnimationFrame(rafId);
       io.disconnect();
       window.removeEventListener('resize', onResize);
+      window.removeEventListener('scroll', onScroll);
       clearTimeout(resizeTimer);
     };
   }, [text]);

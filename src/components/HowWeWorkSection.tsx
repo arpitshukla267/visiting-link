@@ -4,6 +4,9 @@ import React, { useEffect, useMemo, useRef } from "react";
 import { motion, useInView } from "motion/react";
 
 const CORAL = "#FF6B58";
+const INK = "#0A0A0A";
+const MUTED = "#6E6E6E";
+const HAIRLINE = "#EAEAEA";
 
 interface StepLabelPosition {
   leftOffset?: number;
@@ -49,7 +52,7 @@ const STEPS: Step[] = [
       top: "-3rem",
       right: "5%",
       fontSize: "7rem",
-      opacity: 0.15,
+      opacity: 0.12,
     },
   },
   {
@@ -69,13 +72,13 @@ const STEPS: Step[] = [
       top: "-4rem",
       right: "0",
       fontSize: "7rem",
-      opacity: 0.12,
+      opacity: 0.1,
     },
   },
   {
     id: "build",
     number: "3",
-    title: "Engineering & Development",
+    title: ["Engineering & ","Development"],
     desc: "Clean, high-performance code with interface design systems built to scale.",
     pathAt: 0.654,
     label: {
@@ -89,7 +92,7 @@ const STEPS: Step[] = [
       top: "-4rem",
       right: "5%",
       fontSize: "7rem",
-      opacity: 0.15,
+      opacity: 0.12,
     },
   },
   {
@@ -109,7 +112,7 @@ const STEPS: Step[] = [
       top: "-4rem",
       right: "5%",
       fontSize: "7rem",
-      opacity: 0.15,
+      opacity: 0.12,
     },
   },
 ];
@@ -183,6 +186,13 @@ export default function HowWeWorkSection() {
     margin: "0px 0px -10% 0px",
   });
 
+  const mobileTimelineRef = useRef<HTMLDivElement>(null);
+  const isMobileTimelineInView = useInView(mobileTimelineRef, {
+    once: true,
+    amount: 0.3,
+    margin: "0px 0px -10% 0px",
+  });
+
   const fractions = useMemo(() => STEPS.map((s) => s.pathAt), []);
   const { pathRef, points, pathLength } = usePathPoints(CURVE_PATH, fractions);
   const dashLength = pathLength || 1400;
@@ -200,50 +210,101 @@ export default function HowWeWorkSection() {
       className="relative w-full overflow-hidden bg-white py-16 md:min-h-screen md:py-32 [content-visibility:auto]"
     >
       <div className="mx-auto max-w-[95vw] md:max-w-[90vw] px-4 md:px-12">
-        {/* Mobile — simple step cards */}
+        {/* Mobile — vertical process timeline */}
         <div className="md:hidden">
           <p
-            className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em]"
+            className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
             style={{ color: CORAL }}
           >
             Studio operation across the world
           </p>
-          <h2 className="mb-3 text-2xl font-medium tracking-tight text-[#111111]">
+          <h2
+            className="mb-3 text-2xl font-semibold leading-[1.15] tracking-[-0.02em]"
+            style={{ color: INK }}
+          >
             We have best team and best process
           </h2>
-          <p className="mb-8 text-sm leading-relaxed text-[#666666]">
+          <p className="mb-10 text-sm leading-relaxed" style={{ color: MUTED }}>
             We combine clear thinking, thoughtful design and precise technology
             to turn ambitious ideas into digital experiences that work.
           </p>
 
-          <div className="space-y-3">
-            {STEPS.map((step) => (
-              <article
-                key={`mob-${step.id}`}
-                className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-5"
-              >
-                <div className="mb-2 flex items-center gap-3">
-                  <span
-                    className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full text-xs font-bold text-white"
-                    style={{ backgroundColor: CORAL }}
-                  >
-                    {step.number}
-                  </span>
-                  <h4 className="text-sm font-bold leading-snug text-[#111111]">
-                    {renderStepTitle(step.title)}
-                  </h4>
+          <div ref={mobileTimelineRef} className="relative">
+            {STEPS.map((step, index) => {
+              const isLast = index === STEPS.length - 1;
+              return (
+                <div key={`mob-${step.id}`} className="relative flex gap-4">
+                  {/* Rail: numbered marker + connecting segment */}
+                  <div className="flex flex-shrink-0 flex-col items-center">
+                    <motion.span
+                      initial={{ scale: 0.6, opacity: 0 }}
+                      animate={
+                        isMobileTimelineInView
+                          ? { scale: 1, opacity: 1 }
+                          : { scale: 0.6, opacity: 0 }
+                      }
+                      transition={{
+                        duration: 0.4,
+                        delay: index * 0.22,
+                        ease: [0.22, 1, 0.36, 1],
+                      }}
+                      className="flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white text-[13px] font-bold"
+                      style={{ borderColor: CORAL, color: CORAL }}
+                    >
+                      {step.number}
+                    </motion.span>
+                    {!isLast && (
+                      <span
+                        className="mt-1 w-px flex-1 overflow-hidden"
+                        style={{ minHeight: 64, backgroundColor: HAIRLINE }}
+                      >
+                        <motion.span
+                          className="block w-full origin-top"
+                          style={{ height: "100%", backgroundColor: CORAL }}
+                          initial={{ scaleY: 0 }}
+                          animate={
+                            isMobileTimelineInView
+                              ? { scaleY: 1 }
+                              : { scaleY: 0 }
+                          }
+                          transition={{
+                            duration: 0.5,
+                            delay: index * 0.22 + 0.25,
+                            ease: [0.22, 1, 0.36, 1],
+                          }}
+                        />
+                      </span>
+                    )}
+                  </div>
+
+                  {/* Content */}
+                  <div className={`relative min-w-0 flex-1 ${isLast ? "pb-0" : "pb-9"}`}>
+                    <span
+                      className="pointer-events-none absolute -top-3 right-0 select-none font-semibold leading-none"
+                      style={{ fontSize: "3.75rem", opacity: 0.06, color: INK }}
+                      aria-hidden
+                    >
+                      {step.number}
+                    </span>
+                    <h4
+                      className="relative mb-1.5 pt-1 text-[15px] font-semibold leading-snug tracking-[-0.01em]"
+                      style={{ color: INK }}
+                    >
+                      {renderStepTitle(step.title)}
+                    </h4>
+                    <p className="relative max-w-[85%] text-[13px] leading-relaxed" style={{ color: MUTED }}>
+                      {step.desc}
+                    </p>
+                  </div>
                 </div>
-                <p className="text-xs leading-relaxed text-[#666666]">
-                  {step.desc}
-                </p>
-              </article>
-            ))}
+              );
+            })}
           </div>
 
           <button
             type="button"
             onClick={handleContactClick}
-            className="mt-8 inline-flex w-full cursor-pointer items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:brightness-95 active:scale-[0.98]"
+            className="mt-4 inline-flex w-full cursor-pointer items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:brightness-95 active:scale-[0.98]"
             style={{
               backgroundColor: CORAL,
               boxShadow: `0 8px 24px ${CORAL}40`,
@@ -257,17 +318,20 @@ export default function HowWeWorkSection() {
         <div className="relative hidden min-h-[480px] w-full sm:min-h-[520px] md:block">
           <div className="relative z-20 mb-10 max-w-md lg:absolute lg:-top-16 lg:left-0 lg:mb-0">
             <p
-              className="mb-3 text-[11px] font-semibold uppercase tracking-[0.2em]"
+              className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em]"
               style={{ color: CORAL }}
             >
               Studio operation across the world
             </p>
-            <h2 className="mb-5 text-3xl font-medium leading-[1.12] tracking-tight text-[#111111] md:text-4xl lg:text-[42px]">
+            <h2
+              className="mb-5 text-3xl font-semibold leading-[1.1] tracking-[-0.025em] md:text-4xl lg:text-[42px]"
+              style={{ color: INK }}
+            >
               We have best team
               <br />
               and best process
             </h2>
-            <p className="mb-8 text-sm leading-relaxed text-[#666666] md:text-[15px]">
+            <p className="mb-8 text-sm leading-relaxed md:text-[15px]" style={{ color: MUTED }}>
               We combine clear thinking, thoughtful design and precise technology
               to turn ambitious ideas into digital experiences that work.
             </p>
@@ -338,12 +402,7 @@ export default function HowWeWorkSection() {
                 {points.map((point, index) => (
                   <g key={STEPS[index].id}>
                     <circle cx={point.x} cy={point.y} r="14" fill="white" />
-                    <circle
-                      cx={point.x}
-                      cy={point.y}
-                      r="5"
-                      fill="#A1A1AA"
-                    />
+                    <circle cx={point.x} cy={point.y} r="5" fill="#A1A1AA" />
                   </g>
                 ))}
               </svg>
@@ -366,13 +425,14 @@ export default function HowWeWorkSection() {
                     }}
                   >
                     <span
-                      className="pointer-events-none absolute select-none font-extrabold leading-none text-[#111111]"
+                      className="pointer-events-none absolute select-none font-semibold leading-none"
                       style={{
                         top: watermark.top ?? "-4rem",
                         left: watermark.left,
                         right: watermark.right ?? "0",
                         fontSize: watermark.fontSize ?? "7rem",
-                        opacity: watermark.opacity ?? 0.15,
+                        opacity: watermark.opacity ?? 0.12,
+                        color: INK,
                       }}
                       aria-hidden
                     >
@@ -380,10 +440,13 @@ export default function HowWeWorkSection() {
                     </span>
 
                     <div className="relative text-left">
-                      <h4 className="mb-2 text-sm font-bold leading-snug text-[#111] sm:text-[15px]">
+                      <h4
+                        className="mb-2 text-sm font-semibold leading-snug tracking-[-0.01em] sm:text-[15px]"
+                        style={{ color: INK }}
+                      >
                         {renderStepTitle(step.title)}
                       </h4>
-                      <p className="text-[11px] leading-relaxed text-[#666] sm:text-xs">
+                      <p className="text-[11px] leading-relaxed sm:text-xs" style={{ color: MUTED }}>
                         {step.desc}
                       </p>
                     </div>

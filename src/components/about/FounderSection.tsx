@@ -278,12 +278,12 @@ const defaultMembers: TeamMember[] = [
     photoUrl:
       "/images/sameera.webp",
   },
-  {
-    name: "Aastha",
-    role: " Sales Executive",
-    photoUrl:
-      "/images/aastha.webp",
-  },
+  // {
+  //   name: "Aastha",
+  //   role: " Sales Executive",
+  //   photoUrl:
+  //     "/images/aastha.webp",
+  // },
   {
     name: "Tanya Tiwari",
     role: " Sales Executive",
@@ -294,7 +294,7 @@ const defaultMembers: TeamMember[] = [
     name: "Manav",
     role: "Video Editor",
     photoUrl:
-      "/images/manav.webp",
+      "/images/manav.jpeg",
   },
 ];
 
@@ -310,13 +310,13 @@ function TeamMemberCard({
       delay={Math.min(index, 6) * 0.05}
       className="w-[200px] shrink-0 snap-start sm:w-[220px]"
     >
-      <div className="aspect-[3/4] w-full overflow-hidden rounded-md bg-[#F5F5F3]">
+      <div className="aspect-square overflow-hidden rounded-full bg-[#F5F5F3]">
         {member.photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={member.photoUrl}
             alt={member.name}
-            className="h-full w-full object-cover "
+            className="h-full w-full object-cover object-top grayscale transition-all duration-300 hover:grayscale-0"
           />
         ) : (
           <div className="flex h-full w-full items-center justify-center text-sm text-[#9A9A96]">
@@ -324,10 +324,23 @@ function TeamMemberCard({
           </div>
         )}
       </div>
-
-      <p className="mt-3 text-base font-normal text-[#111111]">{member.name}</p>
-      <p className="mt-0.5 text-sm text-[#9A9A96]">{member.role}</p>
-
+  
+      <p className="mt-3 text-base font-normal text-[#111111] text-center">{member.name}</p>
+      <p className="mt-1 text-sm text-[#9A9A96] text-center leading-tight">
+        {(() => {
+          const words = member.role.split(" ");
+          if (words.length > 2) {
+            return (
+              <>
+                {words.slice(0, 2).join(" ")}
+                <br />
+                {words.slice(2).join(" ")}
+              </>
+            );
+          }
+          return member.role;
+        })()}
+      </p>  
       {member.socials && (
         <div className="mt-2 flex items-center gap-3">
           {member.socials.linkedin && (
