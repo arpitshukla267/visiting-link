@@ -161,7 +161,7 @@ export default function ParticleWordmark({
       const isLowPower = cores <= 4;
 
       if (isMobile) {
-        return { assigned: isLowPower ? 850 : 1050, ambient: isLowPower ? 60 : 60 };
+        return { assigned: isLowPower ? 1100 : 1500, ambient: isLowPower ? 100 : 120 };
       }
       return { assigned: isLowPower ? 2200 : 3000, ambient: isLowPower ? 160 : 240 };
     }
