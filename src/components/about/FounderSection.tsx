@@ -227,34 +227,22 @@ export type TeamSectionProps = {
 
 const defaultMembers: TeamMember[] = [
   {
+    name: "Sandeep Soni",
+    role: "Customer Relation Manager",
+    photoUrl:
+    "/images/sandeep.jpeg",
+  },
+  {
     name: "Geetanjali Shakya",
     role: "CFO",
     photoUrl:
       "/images/geet.webp",
   },
   {
-    name: "Sandeep Soni",
-    role: "Customer Relation Manager",
-    photoUrl:
-      "/images/sandeep.jpeg",
-  },
-  {
-    name: "Ansh Katariya",
-    role: "Graphic Designer",
-    photoUrl:
-      "/images/ansh.jpeg",
-  },
-  {
     name: "Arpit Shukla",
     role: "Full Stack Developer",
     photoUrl:
-      "/images/arpit.jpg",
-  },
-  {
-    name: "Chitranshi",
-    role: "Brand Ambassador",
-    photoUrl:
-      "/images/chitranshi.webp",
+    "/images/arpit.jpg",
   },
   {
     name: "Hargun",
@@ -267,6 +255,18 @@ const defaultMembers: TeamMember[] = [
     role: "Graphic Designer",
     photoUrl:
       "/images/nipurn.webp",
+  },
+  {
+    name: "Ansh Katariya",
+    role: "Graphic Designer",
+    photoUrl:
+      "/images/ansh.jpeg",
+  },
+  {
+    name: "Chitranshi",
+    role: "Brand Ambassador",
+    photoUrl:
+      "/images/chitranshi.webp",
   },
   {
     name: "Sameera",
