@@ -224,7 +224,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                   <div className="space-y-3">
                     <a
                       href={`mailto:${CONTACT_EMAIL}`}
-                      className="group flex items-center gap-3 text-lg text-[#666666] transition-colors hover:text-[#111111]"
+                      className="group flex items-center gap-3 md:text-lg text-base text-[#666666] transition-colors hover:text-[#111111]"
                     >
                       <Mail className="h-5 w-5 shrink-0 text-[#888888] transition-colors group-hover:text-[#111111]" />
                       <span>{CONTACT_EMAIL}</span>
@@ -233,7 +233,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                       href={WHATSAPP_URL}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="group flex items-center gap-3 text-lg text-[#666666] transition-colors hover:text-[#111111]"
+                      className="group flex items-center gap-3 md:text-lg text-base text-[#666666] transition-colors hover:text-[#111111]"
                     >
                       <WhatsAppIcon className="h-5 w-5 shrink-0 text-[#888888] transition-colors group-hover:text-[#111111]" />
                       <span>{CONTACT_PHONE_DISPLAY}</span>

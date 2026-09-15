@@ -26,14 +26,15 @@ export const VisualBreak: React.FC = () => {
     >
       <div className="relative w-full overflow-hidden">
         <div
-          className="relative aspect-[16/12] w-full bg-cover bg-center md:aspect-[2.6/1]"
+          className="relative aspect-[16/12] w-full bg-cover bg-right md:bg-center md:aspect-[2.6/1]"
           style={{
             backgroundImage: "url('/images/future-banner.webp')",
           }}
         >
           <div className="absolute inset-0 bg-gradient-to-r from-black/45 via-black/15 to-transparent" />
+          <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
 
-          <div className="absolute top-1/2 left-2 z-10 w-[88%] -translate-y-1/2 sm:w-[70%] md:left-[6%] md:w-[50%] lg:w-[50%] -ml-10">
+          <div className="block absolute bottom-8 left-8 md:top-1/2 md:left-2 z-10 w-[88%] md:-translate-y-1/2 sm:w-[70%] md:left-[6%] md:w-[50%] lg:w-[50%] md:-ml-10">
             <div className="overflow-hidden">
               <motion.h2
                 custom={0.05}
@@ -62,7 +63,7 @@ export const VisualBreak: React.FC = () => {
               initial={{ opacity: 0, y: 16 }}
               animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: 16 }}
               transition={{ duration: 0.7, delay: 0.38, ease: revealEase }}
-              className="mt-5 max-w-md text-sm leading-relaxed text-white/70 md:mt-6 md:text-base"
+              className="hidden md:block mt-5 max-w-md text-sm leading-relaxed text-white/70 md:mt-6 md:text-base"
             >
               From concept to launch, we turn ambitious ideas into products
               people actually use — thoughtfully designed, carefully built.

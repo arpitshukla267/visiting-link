@@ -87,7 +87,7 @@ export function FounderSection({
   founderName = "Jitesh Singh",
   founderTitle = "Founder, VisitingLink",
   yearsLabel,
-  photoUrl = "/images/founder.webp",
+  photoUrl = "/images/founder.jpeg",
   words = "I started this doing logo work out of a spare room, mostly for people I already knew. Eight years on, the team's bigger and the work has changed shape a few times, but the reason hasn't — I still want the things we build to keep working long after anyone's paying attention to them.",
   ctaLabel = "Get in touch",
   onNavigateContact = () => {},
@@ -155,7 +155,7 @@ export function FounderSection({
               style={{ y: contentY, opacity: contentOpacity }}
               className="mt-8 max-w-[60ch] transform-gpu md:mt-4"
             >
-              <p className="text-lg text-center md:text-left font-normal leading-relaxed text-[#333333]">
+              <p className="text-base md:text-lg text-center md:text-left font-normal leading-relaxed text-[#333333]">
                 {words}
               </p>
               <div className="flex flex-col items-center md:items-start gap-1 mt-4 md:mt-6">
@@ -165,7 +165,7 @@ export function FounderSection({
                 <p className="text-sm md:text-base font-medium uppercase tracking-wide text-[#FF5A1F]">
                   {founderTitle}
                 </p>
-                  {yearsLabel ? `  ${yearsLabel}` : ""}
+                  {/* {yearsLabel ? `  ${yearsLabel}` : ""} */}
               </div>
 
             </motion.div>
@@ -275,7 +275,7 @@ const defaultMembers: TeamMember[] = [
       "/images/sameera.webp",
     },
     {
-      name: "Manav",
+      name: "Manav Jha",
       role: "Video Editor",
       photoUrl:
         "/images/manav.jpeg",
