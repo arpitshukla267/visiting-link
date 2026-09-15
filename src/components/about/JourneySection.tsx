@@ -34,6 +34,9 @@ export type JourneySectionProps = {
 /* ------------------------------------------------------------------ */
 
 const CORAL = "#FF6B58";
+const INK = "#111111";
+const MUTED = "#666666";
+const HAIRLINE = "#EAEAEA";
 
 interface StepLabelPosition {
   leftOffset?: number;
@@ -183,6 +186,13 @@ function JourneyProcessCurve({
     margin: "0px 0px -10% 0px",
   });
 
+  const mobileTimelineRef = useRef<HTMLDivElement>(null);
+  const isMobileTimelineInView = useInView(mobileTimelineRef, {
+    once: true,
+    amount: 0.3,
+    margin: "0px 0px -10% 0px",
+  });
+
   const fractions = useMemo(() => steps.map((s) => s.pathAt), [steps]);
   const { pathRef, points, pathLength } = usePathPoints(CURVE_PATH, fractions);
   const dashLength = pathLength || 1400;
@@ -195,7 +205,7 @@ function JourneyProcessCurve({
 
   return (
     <div className="mx-auto max-w-[95vw] px-4 md:max-w-[90vw] md:px-12">
-      {/* Mobile — simple step cards */}
+      {/* Mobile — vertical rail timeline (same pattern as HowWeWorkSection) */}
       <div className="md:hidden">
         <p
           className="mb-2 text-[11px] font-semibold uppercase tracking-[0.2em]"
@@ -206,34 +216,89 @@ function JourneyProcessCurve({
         <h2 className="mb-3 text-2xl font-bold leading-tight tracking-tight text-[#111111]">
           {headline}
         </h2>
-        <p className="mb-8 text-sm leading-relaxed text-[#666666]">{intro}</p>
+        <p className="mb-10 text-sm leading-relaxed" style={{ color: MUTED }}>
+          {intro}
+        </p>
 
-        <div className="space-y-3">
-          {steps.map((step) => (
-            <article
-              key={`mob-${step.id}`}
-              className="rounded-2xl border border-[#F0F0F0] bg-[#FAFAFA] p-5"
-            >
-              <p
-                className="mb-1 text-[10px] font-semibold uppercase tracking-[0.18em]"
-                style={{ color: CORAL }}
-              >
-                {step.number}
-              </p>
-              <h4 className="text-sm font-bold leading-snug text-[#111111]">
-                {renderStepTitle(step.title)}
-              </h4>
-              <p className="mt-2 text-xs leading-relaxed text-[#666666]">
-                {step.desc}
-              </p>
-            </article>
-          ))}
+        <div ref={mobileTimelineRef} className="relative">
+          {steps.map((step, index) => {
+            const isLast = index === steps.length - 1;
+            return (
+              <div key={`mob-${step.id}`} className="relative flex gap-4">
+                {/* Rail: numbered marker + connecting segment */}
+                <div className="flex flex-shrink-0 flex-col items-center">
+                  <motion.span
+                    initial={{ scale: 0.6, opacity: 0 }}
+                    animate={
+                      isMobileTimelineInView
+                        ? { scale: 1, opacity: 1 }
+                        : { scale: 0.6, opacity: 0 }
+                    }
+                    transition={{
+                      duration: 0.4,
+                      delay: index * 0.22,
+                      ease: [0.22, 1, 0.36, 1],
+                    }}
+                    className="flex h-9 w-9 items-center justify-center rounded-full border-2 bg-white text-[13px] font-bold"
+                    style={{ borderColor: CORAL, color: CORAL }}
+                  >
+                    {index + 1}
+                  </motion.span>
+                  {!isLast && (
+                    <span
+                      className="mt-1 w-px flex-1 overflow-hidden"
+                      style={{ minHeight: 64, backgroundColor: HAIRLINE }}
+                    >
+                      <motion.span
+                        className="block w-full origin-top"
+                        style={{ height: "100%", backgroundColor: CORAL }}
+                        initial={{ scaleY: 0 }}
+                        animate={
+                          isMobileTimelineInView
+                            ? { scaleY: 1 }
+                            : { scaleY: 0 }
+                        }
+                        transition={{
+                          duration: 0.5,
+                          delay: index * 0.22 + 0.25,
+                          ease: [0.22, 1, 0.36, 1],
+                        }}
+                      />
+                    </span>
+                  )}
+                </div>
+
+                {/* Content */}
+                <div className={`relative min-w-0 flex-1 ${isLast ? "pb-0" : "pb-9"}`}>
+                  <span
+                    className="pointer-events-none absolute -top-3 right-0 select-none font-semibold leading-none"
+                    style={{ fontSize: "3.75rem", opacity: 0.06, color: INK }}
+                    aria-hidden
+                  >
+                    {step.number}
+                  </span>
+                  <p
+                    className="relative mb-1 pt-1 text-[10px] font-semibold uppercase tracking-[0.18em]"
+                    style={{ color: CORAL }}
+                  >
+                    {step.number}
+                  </p>
+                  <h4 className="relative mb-1.5 text-[15px] font-semibold leading-snug tracking-[-0.01em] text-[#111111]">
+                    {renderStepTitle(step.title)}
+                  </h4>
+                  <p className="relative max-w-[85%] text-[13px] leading-relaxed" style={{ color: MUTED }}>
+                    {step.desc}
+                  </p>
+                </div>
+              </div>
+            );
+          })}
         </div>
 
         <button
           type="button"
           onClick={handleContactClick}
-          className="mt-8 inline-flex w-full cursor-pointer items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:brightness-95 active:scale-[0.98]"
+          className="mt-4 inline-flex w-full cursor-pointer items-center justify-center rounded-full px-7 py-3.5 text-sm font-medium text-white shadow-md transition-all duration-200 hover:brightness-95 active:scale-[0.98]"
           style={{
             backgroundColor: CORAL,
             boxShadow: `0 8px 24px ${CORAL}40`,
@@ -243,7 +308,7 @@ function JourneyProcessCurve({
         </button>
       </div>
 
-      {/* Desktop — curve layout */}
+      {/* Desktop — curve layout, unchanged */}
       <div className="relative hidden min-h-[480px] w-full sm:min-h-[520px] md:block">
         <div className="relative z-20 mb-10 max-w-md lg:absolute lg:-top-16 lg:left-0 lg:mb-0">
           <p

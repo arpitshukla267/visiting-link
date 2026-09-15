@@ -4,8 +4,6 @@ import { type ReactNode, useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
 import {
   ArrowUpRight,
-  ArrowLeft,
-  ArrowRight,
   Linkedin,
   Github,
   Twitter,
@@ -89,7 +87,7 @@ export function FounderSection({
   founderName = "Jitesh Singh",
   founderTitle = "Founder, VisitingLink",
   yearsLabel,
-  photoUrl = "/images/founder.PNG",
+  photoUrl = "/images/founder.webp",
   words = "I started this doing logo work out of a spare room, mostly for people I already knew. Eight years on, the team's bigger and the work has changed shape a few times, but the reason hasn't — I still want the things we build to keep working long after anyone's paying attention to them.",
   ctaLabel = "Get in touch",
   onNavigateContact = () => {},
@@ -121,10 +119,6 @@ export function FounderSection({
       <div className="mx-auto grid w-full max-w-[90vw] md:max-w-[85vw] grid-cols-1 items-center gap-12 px-0 md:px-6 lg:grid-cols-12 lg:gap-16">
         <div className="text-left lg:col-span-7">
           <div className="relative">
-            {/* {eyebrow ? (
-              <p className="text-base font-normal text-[#6B6B68]">{eyebrow}</p>
-            ) : null} */}
-
             <motion.h2
               style={{ y: headlineY, opacity: headlineOpacity }}
               className="mt-4 flex max-w-3xl flex-wrap items-baseline justify-center bg-gradient-to-t from-white via-[#A8A8A8] to-[#111111]/40 bg-clip-text text-center text-4xl font-bold leading-none text-transparent transform-gpu md:justify-start md:text-left md:text-6xl"
@@ -212,7 +206,7 @@ export function FounderSection({
 }
 
 /* ------------------------------------------------------------------ */
-/*  02 — Meet the Team — unchanged (same carousel as before)          */
+/*  02 — Meet the Team — infinite auto-scrolling carousel              */
 /* ------------------------------------------------------------------ */
 
 export type TeamMember = {
@@ -227,14 +221,22 @@ export type TeamSectionProps = {
   headline?: string;
   intro?: string;
   members?: TeamMember[];
+  /** Seconds for one full loop of the marquee. Lower = faster. */
+  speedSeconds?: number;
 };
 
 const defaultMembers: TeamMember[] = [
   {
     name: "Geetanjali Shakya",
-    role: "Co-Founder & CEO",
+    role: "CFO",
     photoUrl:
-      "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=800&q=85",
+      "/images/geet.webp",
+  },
+  {
+    name: "Sandeep Soni",
+    role: "Customer Relation Manager",
+    photoUrl:
+      "/images/sandeep.jpeg",
   },
   {
     name: "Ansh Katariya",
@@ -249,18 +251,6 @@ const defaultMembers: TeamMember[] = [
       "/images/arpit.jpg",
   },
   {
-    name: "Nipurn Patel",
-    role: "Graphic Designer",
-    photoUrl:
-      "/images/nipurn.webp",
-  },
-  {
-    name: "Sandeep Soni",
-    role: "Customer Relation Manager",
-    photoUrl:
-      "/images/sandeep.jpeg",
-  },
-  {
     name: "Chitranshi",
     role: "Brand Ambassador",
     photoUrl:
@@ -273,49 +263,51 @@ const defaultMembers: TeamMember[] = [
       "/images/hargun.webp",
   },
   {
+    name: "Nipurn Patel",
+    role: "Graphic Designer",
+    photoUrl:
+      "/images/nipurn.webp",
+  },
+  {
     name: "Sameera",
     role: "Marketing",
     photoUrl:
       "/images/sameera.webp",
-  },
-  // {
-  //   name: "Aastha",
-  //   role: " Sales Executive",
-  //   photoUrl:
-  //     "/images/aastha.webp",
-  // },
-  {
-    name: "Tanya Tiwari",
-    role: " Sales Executive",
-    photoUrl:
-      "/images/tanya.jpeg",
-  },
-  {
-    name: "Manav",
-    role: "Video Editor",
-    photoUrl:
-      "/images/manav.jpeg",
-  },
+    },
+    {
+      name: "Manav",
+      role: "Video Editor",
+      photoUrl:
+        "/images/manav.jpeg",
+    },
+    {
+      name: "Abhiuday Verma",
+      role: "Video Editor",
+      photoUrl:
+        "/images/abhiuday.jpeg",
+    },
+    {
+      name: "Tanya Tiwari",
+      role: " Sales Executive",
+      photoUrl:
+        "/images/tanya.jpeg",
+    },
 ];
 
 function TeamMemberCard({
   member,
-  index,
 }: {
   member: TeamMember;
-  index: number;
 }) {
   return (
-    <FadeIn
-      delay={Math.min(index, 6) * 0.05}
-      className="w-[200px] shrink-0 snap-start sm:w-[220px]"
-    >
+    <div className="w-[200px] shrink-0 sm:w-[220px]">
       <div className="aspect-square overflow-hidden rounded-full bg-[#F5F5F3]">
         {member.photoUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img
             src={member.photoUrl}
             alt={member.name}
+            draggable={false}
             className="h-full w-full object-cover object-top grayscale transition-all duration-300 hover:grayscale-0"
           />
         ) : (
@@ -324,7 +316,7 @@ function TeamMemberCard({
           </div>
         )}
       </div>
-  
+
       <p className="mt-3 text-base font-normal text-[#111111] text-center">{member.name}</p>
       <p className="mt-1 text-sm text-[#9A9A96] text-center leading-tight">
         {(() => {
@@ -340,9 +332,9 @@ function TeamMemberCard({
           }
           return member.role;
         })()}
-      </p>  
+      </p>
       {member.socials && (
-        <div className="mt-2 flex items-center gap-3">
+        <div className="mt-2 flex items-center justify-center gap-3">
           {member.socials.linkedin && (
             <a
               href={member.socials.linkedin}
@@ -378,7 +370,7 @@ function TeamMemberCard({
           )}
         </div>
       )}
-    </FadeIn>
+    </div>
   );
 }
 
@@ -387,79 +379,60 @@ export function TeamSection({
   headline = "Meet the team",
   intro = "Developers, designers, and creators working together behind every project we ship.",
   members = defaultMembers,
+  speedSeconds = 40,
 }: TeamSectionProps) {
-  const scrollerRef = useRef<HTMLDivElement>(null);
-
-  const scrollByCard = (direction: 1 | -1) => {
-    const el = scrollerRef.current;
-    if (!el) return;
-    const cardWidth = el.firstElementChild
-      ? (el.firstElementChild as HTMLElement).offsetWidth + 20
-      : 220;
-    el.scrollBy({ left: direction * cardWidth * 2, behavior: "smooth" });
-  };
+  // Duplicate the list once so translateX(-50%) loops seamlessly.
+  const trackMembers = [...members, ...members];
 
   return (
-    <section className=" bg-white py-12 md:pb-22" aria-label="Meet the team">
-      <div className="mx-auto w-full max-w-[90vw] md:max-w-[85vw]">
-        <div className="flex flex-col items-start justify-between gap-6 sm:flex-row sm:items-end">
-          <FadeIn>
-            <p className="text-base font-normal text-[#6B6B68]">{eyebrow}</p>
-            <h2 className="mt-2 text-2xl font-medium text-[#111111] md:text-3xl">
-              {headline}
-            </h2>
-            <p className="mt-2 max-w-[46ch] text-base text-[#5D5D5A]">
-              {intro}
-            </p>
-          </FadeIn>
+    <section className="bg-white py-12 md:pb-22" aria-label="Meet the team">
+      <style>{`
+        @keyframes team-marquee-scroll {
+          from { transform: translateX(0); }
+          to { transform: translateX(-50%); }
+        }
+        .team-marquee-track {
+          animation: team-marquee-scroll var(--team-marquee-duration, 40s) linear infinite;
+        }
+        .team-marquee-wrapper:hover .team-marquee-track,
+        .team-marquee-wrapper:focus-within .team-marquee-track {
+          animation-play-state: paused;
+        }
+        @media (prefers-reduced-motion: reduce) {
+          .team-marquee-track {
+            animation: none;
+          }
+        }
+      `}</style>
 
-          <FadeIn delay={0.1} className="hidden items-center gap-2 sm:flex">
-            <button
-              onClick={() => scrollByCard(-1)}
-              aria-label="Scroll left"
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#E5E5E5] transition-colors hover:border-[#111111]"
-            >
-              <ArrowLeft className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => scrollByCard(1)}
-              aria-label="Scroll right"
-              className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#E5E5E5] transition-colors hover:border-[#111111]"
-            >
-              <ArrowRight className="h-4 w-4" />
-            </button>
-          </FadeIn>
-        </div>
+      <div className="mx-auto w-full max-w-[95vw] md:max-w-[90vw]">
+        <FadeIn>
+          {/* <p className="text-base font-normal pl-4 text-[#6B6B68]">{eyebrow}</p> */}
+          <h2 className="md:mt-2 text-2xl font-medium pl-4 md:pl-0 text-[#111111] md:text-3xl">
+            {headline}
+          </h2>
+          <p className="md:mt-2 mt-1 md:max-w-[46ch] max-w-[80vw] text-base pl-4 md:pl-0 text-[#5D5D5A]">
+            {intro}
+          </p>
+        </FadeIn>
 
-        <div
-          ref={scrollerRef}
-          className="mt-12 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
-        >
-          {members.map((member, index) => (
-            <TeamMemberCard
-              key={`${member.name}-${member.role}`}
-              member={member}
-              index={index}
-            />
-          ))}
-        </div>
-
-        <div className="mt-6 flex items-center gap-2 sm:hidden">
-          <button
-            onClick={() => scrollByCard(-1)}
-            aria-label="Scroll left"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#E5E5E5] transition-colors hover:border-[#111111]"
+        <FadeIn delay={0.1}>
+          <div
+            className="team-marquee-wrapper relative mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
           >
-            <ArrowLeft className="h-4 w-4" />
-          </button>
-          <button
-            onClick={() => scrollByCard(1)}
-            aria-label="Scroll right"
-            className="flex h-9 w-9 cursor-pointer items-center justify-center rounded-full border border-[#E5E5E5] transition-colors hover:border-[#111111]"
-          >
-            <ArrowRight className="h-4 w-4" />
-          </button>
-        </div>
+            <div
+              className="team-marquee-track flex w-max gap-5"
+              style={{ ["--team-marquee-duration" as string]: `${speedSeconds}s` }}
+            >
+              {trackMembers.map((member, index) => (
+                <TeamMemberCard
+                  key={`${member.name}-${member.role}-${index}`}
+                  member={member}
+                />
+              ))}
+            </div>
+          </div>
+        </FadeIn>
       </div>
     </section>
   );

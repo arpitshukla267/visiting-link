@@ -184,10 +184,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 }) => {
   return (
     <div className="overflow-x-hidden bg-white text-[#111111] selection:bg-black selection:text-white max-w-[100vw]">
+     
+     
       {/* ─────────────────────────────────────────────────────────
           SECTION 01 — HERO / OUR EXPERIENCE
       ───────────────────────────────────────────────────────── */}
       {/* ================= DESKTOP HERO ================= */}
+      
       <section className="relative hidden min-h-screen overflow-hidden bg-[#050506] text-white md:block">
         {/* Background artwork */}
         <Image
@@ -198,70 +201,162 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           sizes="100vw"
           className="object-cover object-center"
         />
-
+        
+        {/* Uniform overlay across the whole image — knocks down overall brightness a touch */}
+        <div className="absolute inset-0 bg-black/40" />
+        
+        {/* Broad, smooth wash across the left ~40% — much stronger now so it actually cuts through the bright sky */}
+        <div
+          className="
+            absolute inset-0
+            bg-[linear-gradient(
+              90deg,
+              rgba(0,0,0,0.85)_0%,
+              rgba(0,0,0,0.82)_12%,
+              rgba(0,0,0,0.75)_24%,
+              rgba(0,0,0,0.6)_34%,
+              rgba(0,0,0,0.38)_42%,
+              rgba(0,0,0,0.16)_52%,
+              rgba(0,0,0,0)_65%
+            )]
+          "
+        />
+        
+        {/* Slight bottom fade for stats */}
+        <div
+          className="
+            absolute inset-x-0 bottom-0 h-[35%]
+            bg-gradient-to-t
+            from-black/45
+            to-transparent
+          "
+        />
+        
         {/* Content */}
         <div className="relative z-10 mx-auto flex min-h-screen max-w-[95vw] items-center px-6">
+        
           <div className="w-full max-w-[50vw]">
+        
+            {/* Heading */}
             <FadeIn delay={0.1}>
-              <h1 className="text-6xl font-semibold tracking-[0.03em]">
+              <h1
+                className="
+                  text-6xl
+                  font-semibold
+                  leading-[1.02]
+                  tracking-[0.01em]
+                  text-white
+                "
+              >
                 We build
                 <br />
-                <span className="text-white/65">digital</span>
+        
+                <span className="text-white/90">
+                  digital
+                </span>
+        
                 <br />
+        
                 experiences.
               </h1>
             </FadeIn>
-
+        
+            {/* Description */}
             <FadeIn delay={0.2}>
-              <p className="mt-8 max-w-[510px] text-sm font-normal leading-7 text-white/65 md:text-base">
+              <p
+                className="
+                  mt-8
+                  max-w-[510px]
+                  text-sm
+                  font-normal
+                  leading-7
+                  text-white/90
+                  md:text-base
+                "
+              >
                 For over 8 years, we’ve been designing brands, building digital
-                experiences and engineering technology that helps ambitious
-                ideas move forward.
+                experiences and engineering technology that helps ambitious ideas
+                move forward.
               </p>
             </FadeIn>
-
+        
             {/* Stats */}
-            <FadeIn delay={0.3} className="mt-10">
-              <div className="w-[80%] border-t border-white/20 pt-6">
-                <div className="grid w-full grid-cols-2 gap-x-12 gap-y-7 md:grid-cols-4 md:gap-x-10">
+            <FadeIn
+              delay={0.3}
+              className="mt-10"
+            >
+              <div
+                className="
+                  w-[80%]
+                  border-t
+                  border-white/30
+                  pt-6
+                "
+              >
+                <div
+                  className="
+                    grid
+                    w-full
+                    grid-cols-2
+                    gap-x-12
+                    gap-y-7
+                    md:grid-cols-4
+                    md:gap-x-10
+                  "
+                >
+        
+                  {/* Years */}
                   <div>
-                    <div className="text-2xl font-medium tracking-tight md:text-3xl">
-                      08<span className="text-white/40">+</span>
+                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      08
+                      <span className="text-white/55">+</span>
                     </div>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+        
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Years
                     </p>
                   </div>
-
+        
+                  {/* Clients */}
                   <div>
-                    <div className="text-2xl font-medium tracking-tight md:text-3xl">
-                      900<span className="text-white/40">+</span>
+                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      900
+                      <span className="text-white/55">+</span>
                     </div>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+        
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Clients
                     </p>
                   </div>
-
+        
+                  {/* Creators */}
                   <div>
-                    <div className="text-2xl font-medium tracking-tight md:text-3xl">
-                      100<span className="text-white/40">+</span>
+                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      100
+                      <span className="text-white/55">+</span>
                     </div>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+        
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Creators
                     </p>
                   </div>
-
+        
+                  {/* Brands */}
                   <div>
-                    <div className="text-2xl font-medium tracking-tight md:text-3xl">
-                      120<span className="text-white/40">+</span>
+                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
+                      120
+                      <span className="text-white/55">+</span>
                     </div>
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/45">
+        
+                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Brands
                     </p>
                   </div>
+        
                 </div>
               </div>
             </FadeIn>
+        
           </div>
         </div>
       </section>
@@ -285,7 +380,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
 
         {/* Content */}
-        <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-10">
+        <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-6">
           <FadeIn delay={0.15}>
             <div className="flex items-start gap-3">
               {/* small accent line */}
@@ -319,9 +414,15 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           </FadeIn>
         </div>
       </section>
+        
+      {/* ─────────────────────────────────────────────────────────
+         SECTION 02 — OUR STORY (8 years)
+      ───────────────────────────────────────────────────────── */}
+      <EightYearsSection />
+
 
       {/* ─────────────────────────────────────────────────────────
-          SECTION 02 — PEOPLE / FOUNDER
+          SECTION 03 — PEOPLE / FOUNDER
       ───────────────────────────────────────────────────────── */}
       <FounderSection
         eyebrow="Built by People"
@@ -333,10 +434,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         onNavigateContact={() => onNavigateContact()}
       />
 
-      {/* ─────────────────────────────────────────────────────────
-         SECTION 03 — OUR STORY (8 years)
-      ───────────────────────────────────────────────────────── */}
-      <EightYearsSection />
 
       {/* ─────────────────────────────────────────────────────────
           SECTION 04 — OUR JOURNEY
