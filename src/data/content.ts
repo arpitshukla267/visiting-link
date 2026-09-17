@@ -7,16 +7,17 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Brand & Digital Design',
     tagline: 'Identity, Interfaces & Visual Systems',
     description:
-      'Interfaces, visual identity and company collateral designed around how people actually experience your business.',
+      'Research-driven design for interfaces, visual identity, and corporate collateral — crafted around how people actually experience your business.',
     detailedScope: [
-      'UI/UX Design — user research, wireframes & prototypes, and reusable design systems',
-      'Graphic Design — visual systems including brand identity, social media, and marketing creatives',
-      'Company Profiles — polished overviews covering company background, leadership & team, and capabilities'
+      'UI/UX Design — user research and personas, wireframes and interactive prototypes, and scalable design systems',
+      'Graphic Design — logo and brand identity design, social media creative packages, and print-ready marketing collateral',
+      'Company Profiles — professional documents covering company overview, leadership and team profiles, and service capabilities'
     ],
     deliverables: [
       'UI/UX Design',
       'Graphic Design',
-      'Company Profiles'
+      'Company Profiles',
+      'Website Design'
     ],
     focusAreas: ['User Research', 'Design Systems', 'Brand Identity', 'Capability Presentation']
   },
@@ -26,18 +27,18 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Software Development',
     tagline: 'Business Systems Built to Run Your Operations',
     description:
-      'Custom software that tracks leads, closes sales, handles billing, and automates the way your business actually runs.',
+      'Custom business software — CRM platforms, sales tools, billing systems, and workflow engines — engineered to streamline the way your business operates.',
     detailedScope: [
-      'CRM — contact management, pipeline tracking, and reporting to keep every relationship in one place',
-      'Sales Software — quotes & proposals, order management, and team dashboards to help your team close faster',
-      'Invoice & Billing Software — recurring invoices, payment tracking, and tax handling to get you paid on time',
-      'Custom Software — internal tools, workflow automation, and legacy integration built around your business'
+      'CRM Development — contact and pipeline management, quotation building, and role-based access control for centralised customer relationships',
+      'Sales Software — automated quotes and proposals, order lifecycle management, and team performance dashboards',
+      'Invoice & Billing Software — recurring and scheduled invoices, multi-currency tax automation, and payment tracking with audit trails',
+      'Custom Software — internal operations tools, process and workflow automation, and custom database architecture'
     ],
     deliverables: [
-      'CRM',
+      'CRM Development',
       'Sales Software',
       'Invoice & Billing Software',
-      'Custom Software'
+      'Custom Software Development'
     ],
     focusAreas: ['Pipeline Tracking', 'Automated Billing', 'Workflow Automation', 'Legacy Integration']
   },
@@ -47,18 +48,18 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'Web Apps & Prototypes',
     tagline: 'Applications, Dashboards & Product Prototypes',
     description:
-      'Powerful browser-based applications and clickable prototypes that turn ideas into testable, deployable products.',
+      'High-performance web applications, interactive dashboards, and clickable prototypes — built to turn ideas into testable, deployable products.',
     detailedScope: [
-      'Web Applications — user accounts & permissions, real-time data, and scalable architecture built around your needs',
-      'Business Dashboards — live metrics, custom charts, and role-based views that turn data into useful insights',
-      'Interactive Prototypes — interactive flows, client demos, and usability testing to validate ideas before development',
-      'Cloud Deployment — production deployment, server configuration, and performance setup for reliable online access'
+      'Web Applications — secure user authentication, real-time data synchronisation, and scalable RESTful and GraphQL API architecture',
+      'Business Dashboards — live KPI and metrics tracking, custom data visualisation charts, and role-based dashboard views',
+      'Interactive Prototypes — clickable user flows, stakeholder demos, and usability testing to validate ideas before full development',
+      'Cloud Deployment — production-grade infrastructure setup, server configuration, and uptime and performance monitoring'
     ],
     deliverables: [
+      'Custom Web Development',
       'Web Applications',
       'Business Dashboards',
-      'Interactive Prototypes',
-      'Cloud Deployment'
+      'Cloud Deployment & Prototyping'
     ],
     focusAreas: ['Scalable Architecture', 'Real-Time Data', 'Usability Testing', 'Reliable Deployment']
   },
@@ -68,12 +69,12 @@ export const SERVICES_DATA: ServiceItem[] = [
     title: 'AI & Automation Solutions',
     tagline: 'Intelligent Features & Automated Workflows',
     description:
-      'AI-driven features and automation that remove manual work and connect the tools your business already relies on.',
+      'AI-powered features and workflow automation — from language model integration and chatbots to API connections — that eliminate manual work across your business.',
     detailedScope: [
-      'AI Integration — LLM integration, recommendation engines, and data pipelines added into your existing product',
-      'Chatbots — support bots, lead qualification, and multi-channel deploy to handle conversations automatically',
-      'Automation — workflow triggers, task scheduling, and cross-tool syncing to remove manual work from repetitive processes',
-      'API Integrations — third-party APIs, webhooks, and data sync connecting the tools you already use'
+      'AI Integration — LLM and language model integration, recommendation engine development, and automated data pipelines added into your existing product',
+      'Chatbots — customer support automation, lead qualification chatbots, and multi-channel deployment across web and WhatsApp',
+      'Automation — event-driven workflow triggers, recurring task scheduling, and cross-platform data syncing to remove manual repetitive processes',
+      'API Integrations — third-party API development, webhook configuration, and bi-directional data synchronisation connecting your tech stack'
     ],
     deliverables: [
       'AI Integration',

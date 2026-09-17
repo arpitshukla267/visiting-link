@@ -12,14 +12,19 @@ export interface Work_Project {
 }
 
 export const WORK_PROJECTS = [
-  // {
-  //   id: "videha-overseas-crm",
-  //   name: "Videha Overseas CRM",
-  //   category: "Enterprise CRM & Business Operations",
-  //   image: "/images/videha-crm.png", // cover/thumbnail image
-  //   discipline: "software-development", // ya jo bhi tumhara category id hai
-  //   // url: mat daalna — na hone se hi case study modal trigger hoga
-  // },
+  {
+    id: "videha-overseas-crm",
+    name: "Videha Overseas CRM",
+    category: "Enterprise CRM & Business Operations",
+    description:
+      "A full-stack enterprise CRM and business operations platform managing leads, quotation building, multi-currency billing, inventory, and role-based access.",
+    outcome: "Built centralized CRM and business operations system",
+    year: "2026",
+    discipline: "web" as const,
+    accent: "#0284C7",
+    image: "/images/videha-crm.png",
+    url: "",
+  },
   {
     id: "himvarsha",
     name: "Himvarsha Foods",

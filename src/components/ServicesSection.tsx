@@ -13,6 +13,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { Montserrat } from "next/font/google";
+import Link from "next/link";
 
 /* -----------------------------------------------------------------------
  * "What We Do" — dark editorial services overview.
@@ -77,84 +78,79 @@ const WHAT_WE_DO: WhatWeDoItem[] = [
     services: [
       {
         title: "UI/UX Design",
-        description: "Interfaces designed around how people actually use your product.",
-        checklist: ["User research", "Wireframes & prototypes", "Design systems"],
+        description: "Research-driven interface design that improves usability, reduces bounce rates, and guides users toward conversion.",
+        checklist: ["User research & personas", "Wireframes & interactive prototypes", "Scalable design systems"],
       },
       {
         title: "Graphic Design",
-        description: "Visual systems that make your business recognizable.",
-        checklist: ["Brand identity", "Social media", "Marketing creatives"],
+        description: "Brand-aligned visual design — from logos and social media graphics to print-ready marketing materials.",
+        checklist: ["Logo & brand identity design", "Social media creative packages", "Marketing collateral & print design"],
       },
       {
         title: "Company Profiles",
-        description: "A polished overview of who you are and what you deliver.",
-        checklist: ["Company overview", "Leadership & team", "Capabilities"],
+        description: "Professional company profile documents that communicate leadership, capabilities, and brand credibility.",
+        checklist: ["Company overview & history", "Leadership & team profiles", "Service capabilities portfolio"],
       },
-      // {
-      //   title: "Website Design",
-      //   description: "Marketing sites built to convert, not just look good.",
-      //   checklist: ["Landing pages", "Responsive layouts", "CMS integration"],
-      // },
+      {
+        title: "Website & UI Design",
+        description: "Responsive website design focused on visual clarity, fast load times, and measurable lead generation.",
+        checklist: ["Responsive & mobile-first layouts", "Interactive UI components", "Pixel-perfect design-to-code handoff"],
+      },
     ],
   },
   {
     number: "02",
-    title: "Software Development",
+    title: "Software & CRM Development",
     Icon: Code2,
     accent: ACCENTS.software,
     services: [
       {
-        title: "CRM",
-        description: "Track leads, deals and customer relationships in one place.",
-        checklist: ["Contact management", "Pipeline tracking", "Reporting"],
+        title: "CRM Development",
+        description: "Custom CRM software that centralises contacts, tracks sales pipelines, and generates actionable reports.",
+        checklist: ["Contact & pipeline management", "Quotation & proposal builder", "Role-based access control (RBAC)"],
       },
       {
         title: "Sales Software",
-        description: "Tools that help your team close faster.",
-        checklist: ["Quotes & proposals", "Order management", "Team dashboards"],
+        description: "Sales management tools built to accelerate quoting, order processing, and team performance tracking.",
+        checklist: ["Automated quotes & proposals", "Order lifecycle management", "Sales team performance dashboards"],
       },
       {
         title: "Invoice & Billing Software",
-        description: "Get paid on time with automated billing.",
-        checklist: ["Recurring invoices", "Payment tracking", "Tax handling"],
+        description: "Billing software that automates invoicing, manages recurring payments, and handles multi-currency tax compliance.",
+        checklist: ["Recurring & scheduled invoices", "Multi-currency & tax automation", "Payment tracking & audit trails"],
       },
       {
-        title: "Custom Software",
-        description: "Bespoke systems built around how your business actually runs.",
-        checklist: ["Internal tools", "Workflow automation", "Legacy integration"],
+        title: "Custom Software Development",
+        description: "Bespoke business software — internal tools, workflow engines, and integrations designed around your operations.",
+        checklist: ["Internal operations tools", "Process & workflow automation", "Custom database architecture"],
       },
     ],
   },
   {
     number: "03",
-    title: "Web Apps & Prototypes",
+    title: "Web Development & Applications",
     Icon: LayoutDashboard,
     accent: ACCENTS.webapp,
     services: [
       {
+        title: "Custom Web Development",
+        description: "High-performance business websites built with Next.js and TypeScript, optimised for Core Web Vitals and SEO.",
+        checklist: ["Core Web Vitals optimisation", "SEO-first architecture", "Fully responsive layouts"],
+      },
+      {
         title: "Web Applications",
-        description: "Powerful browser-based applications built around your business needs.",
-        checklist: ["User accounts & permissions", "Real-time data", "Scalable architecture"],
+        description: "Full-stack web applications with secure user authentication, real-time data, and scalable cloud architecture.",
+        checklist: ["User roles & access permissions", "Real-time data synchronisation", "RESTful & GraphQL API architecture"],
       },
       {
         title: "Business Dashboards",
-        description: "Clear, interactive dashboards that turn your data into useful insights.",
-        checklist: ["Live metrics", "Custom charts", "Role-based views"],
-      },
-      // {
-      //   title: "Working Products",
-      //   description: "Turn your idea into a working product that you can test and showcase.",
-      //   checklist: ["Core features", "Rapid development", "User feedback"],
-      // },
-      {
-        title: "Interactive Prototypes",
-        description: "Clickable product concepts to test ideas before full development.",
-        checklist: ["Interactive flows", "Client demos", "Usability testing"],
+        description: "Interactive analytics dashboards that turn raw data into clear, role-based business intelligence.",
+        checklist: ["Live KPI & metrics tracking", "Custom data visualisation charts", "Role-based dashboard views"],
       },
       {
-        title: "Cloud Deployment",
-        description: "Deploy and configure your web applications for reliable online access.",
-        checklist: ["Production deployment", "Server configuration", "Performance setup"],
+        title: "Cloud Deployment & Prototyping",
+        description: "Clickable prototypes for stakeholder validation, plus production-grade cloud deployment and monitoring.",
+        checklist: ["Interactive prototype flows", "Cloud infrastructure setup", "Uptime & performance monitoring"],
       },
     ],
   },
@@ -166,23 +162,23 @@ const WHAT_WE_DO: WhatWeDoItem[] = [
     services: [
       {
         title: "AI Integration",
-        description: "Bring intelligent features into your existing product.",
-        checklist: ["LLM integration", "Recommendation engines", "Data pipelines"],
+        description: "Embed AI-powered features — language models, recommendation engines, and smart data pipelines — into your existing product.",
+        checklist: ["LLM & language model integration", "Recommendation engine development", "Automated data pipelines"],
       },
       {
         title: "Chatbots",
-        description: "Handle support and sales conversations automatically.",
-        checklist: ["Support bots", "Lead qualification", "Multi-channel deploy"],
+        description: "Conversational AI chatbots for customer support, lead qualification, and multi-channel engagement.",
+        checklist: ["Customer support automation", "Lead qualification chatbots", "Multi-channel deployment (web, WhatsApp)"],
       },
       {
         title: "Automation",
-        description: "Remove the manual work from repetitive processes.",
-        checklist: ["Workflow triggers", "Task scheduling", "Cross-tool syncing"],
+        description: "Workflow automation that eliminates repetitive tasks through triggers, scheduling, and cross-platform syncing.",
+        checklist: ["Event-driven workflow triggers", "Recurring task scheduling", "Cross-platform data syncing"],
       },
       {
         title: "API Integrations",
-        description: "Connect the tools you already use.",
-        checklist: ["Third-party APIs", "Webhooks", "Data sync"],
+        description: "Connect your tech stack — payment gateways, CRMs, ERPs, and SaaS tools — through secure API integrations.",
+        checklist: ["Third-party API development", "Webhook configuration", "Bi-directional data synchronisation"],
       },
     ],
   },
@@ -277,12 +273,14 @@ function InnerServiceCard({
         ))}
       </ul>
 
-      {/* <span
-        className="mt-5 inline-flex items-center gap-1 self-start text-xs font-medium text-[#F5F5F2] transition-colors duration-300 group-hover:text-[color:var(--card-accent)]"
+      <Link
+        href={`/contact?service=${encodeURIComponent(service.title)}`}
+        className="mt-5 inline-flex items-center gap-1 self-start text-xs font-medium text-[#F5F5F2] transition-colors duration-300 group-hover:text-[color:var(--card-accent)] hover:underline"
+        aria-label={`Start a project for ${service.title}`}
       >
-        Explore
+        <span>Inquire</span>
         <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-      </span> */}
+      </Link>
     </motion.div>
   );
 }

@@ -3,7 +3,6 @@
 import React from "react";
 import { motion } from "motion/react";
 import { ShieldCheck, Route, Headphones } from "lucide-react";
-import { image } from "motion/react-m";
 
 const CORAL = "#FF6B58";
 const BG = "#0A0A0A";
@@ -133,7 +132,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
               <div className="aspect-square w-full overflow-hidden">
                 <img
                   src={promise.image}
-                  alt=""
+                  alt={promise.title}
                   className="block h-full w-full object-cover"
                 />
               </div>
@@ -250,7 +249,7 @@ export const CompanyStatement: React.FC = React.memo(() => {
                 >
                   <img
                     src={promise.image}
-                    alt=""
+                    alt={promise.title}
                     className="h-[350px] w-[350px] object-cover transition-transform duration-700 ease-out hover:scale-[1.02]"
                   />
                 </div>

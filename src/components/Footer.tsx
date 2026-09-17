@@ -2,7 +2,7 @@
 
 import React, { useRef } from "react";
 import Image from "next/image";
-import { motion, useInView } from "motion/react";
+import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { ArrowUpRight, Mail } from "lucide-react";
 
@@ -18,17 +18,19 @@ const CONTACT_PHONE_E164 = "919236553585";
 const WHATSAPP_URL = `https://wa.me/${CONTACT_PHONE_E164}`;
 
 const PAGE_LINKS = [
-  { label: "Services", page: "services" },
-  { label: "About", page: "about" },
-  { label: "Work", page: "work" },
-  { label: "Contact", page: "contact" },
+  { label: "Home", href: "/" },
+  { label: "Services", href: "/services" },
+  { label: "Work", href: "/work" },
+  { label: "About", href: "/about" },
+  // { label: "Founders", href: "/about#founders" },
+  { label: "Contact", href: "/contact" },
 ];
 
 const SERVICE_LINKS = [
-  { label: "Brand & Digital Design", id: "brand-digital-design" },
-  { label: "Software Development", id: "software-development" },
-  { label: "Web Apps & Prototypes", id: "web-apps-prototypes" },
-  { label: "AI & Automation Solutions", id: "ai-automation-solutions" },
+  { label: "Brand & Digital Design", href: "/services" },
+  { label: "Software Development", href: "/services" },
+  { label: "Web Apps & Prototypes", href: "/services" },
+  { label: "AI & Automation Solutions", href: "/services" },
 ];
 
 function WhatsAppIcon({ className }: { className?: string }) {
@@ -44,44 +46,8 @@ function WhatsAppIcon({ className }: { className?: string }) {
   );
 }
 
-const FooterWordmark: React.FC<{
-  play: boolean;
-  routeKey: string;
-}> = ({ play, routeKey }) => (
-  <div className="flex w-full justify-center overflow-hidden px-4 py-6 md:px-8 md:py-8">
-    <motion.p
-      key={routeKey}
-      initial={{ y: "100%", opacity: 0 }}
-      animate={play ? { y: 0, opacity: 1 } : { y: "100%", opacity: 0 }}
-      transition={{
-        y: {
-          duration: 1.5,
-          ease: [0.22, 1, 0.36, 1],
-        },
-        opacity: {
-          duration: 1.2,
-          ease: [0.22, 1, 0.36, 1],
-        },
-      }}
-      className="pointer-events-none select-none whitespace-nowrap text-center text-[clamp(2.75rem,13.5vw,8.5rem)] font-semibold leading-[0.85] tracking-[-0.065em] text-[#3a3a3a]"
-    >
-      VisitingLink
-    </motion.p>
-  </div>
-);
-
-export const Footer: React.FC<FooterProps> = ({
-  onNavigateContact,
-  onNavigateService,
-  onNavigatePage,
-}) => {
-  const pathname = usePathname();
+export const Footer: React.FC<FooterProps> = () => {
   const footerRef = useRef<HTMLElement>(null);
-
-  const isFooterInView = useInView(footerRef, {
-    amount: 1,
-    once: true,
-  });
 
   return (
     <footer
@@ -92,36 +58,36 @@ export const Footer: React.FC<FooterProps> = ({
       {/* ============ MOBILE ============ */}
       <div className="px-6 pb-6 pt-10 md:hidden">
         {/* Logo + intro */}
-        <button
-          onClick={() => onNavigatePage("home")}
+        <Link
+          href="/"
           className="mb-5 block cursor-pointer"
           aria-label="VisitingLink Home"
         >
           <Image
             src="/logo.png"
-            alt="VisitingLink"
+            alt="VisitingLink Logo"
             width={180}
             height={50}
             className="h-auto w-[140px] object-contain brightness-0 invert"
             priority
           />
-        </button>
+        </Link>
 
         <p className="mb-6 max-w-sm text-sm leading-6 text-[#888888]">
-          Creative technology studio building digital experiences, web
-          platforms, and visual systems for ambitious businesses.
+          Creative technology company building digital experiences, web
+          platforms, and software systems for ambitious businesses.
         </p>
 
         {/* CTA */}
-        <button
-          onClick={() => onNavigateContact()}
+        <Link
+          href="/contact"
           className="mb-8 flex w-full cursor-pointer items-center justify-center gap-3 bg-white px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#111111] active:bg-[#e8e8e8]"
         >
           <span>Start a Project</span>
           <ArrowUpRight className="h-4 w-4" />
-        </button>
+        </Link>
 
-        {/* Contact — surfaced first on mobile, it's the most-used action */}
+        {/* Contact */}
         <div className="flex flex-col gap-3.5 border-y border-[#242424] py-6">
           <a
             href={`mailto:${CONTACT_EMAIL}`}
@@ -146,74 +112,83 @@ export const Footer: React.FC<FooterProps> = ({
           </a>
         </div>
 
-        {/* Link groups — stacked, each its own row so nothing feels cramped */}
+        {/* Link groups */}
         <div className="grid grid-cols-2 gap-x-4 gap-y-8 py-8">
-          <div>
+          <nav aria-label="Footer Pages Navigation">
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Pages
             </h4>
             <ul className="space-y-3">
               {PAGE_LINKS.map((item) => (
-                <li key={item.page}>
-                  <button
-                    onClick={() => onNavigatePage(item.page)}
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
                     className="cursor-pointer text-sm text-[#999999] active:text-white"
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
-          <div>
+          <nav aria-label="Footer Services Navigation">
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Services
             </h4>
             <ul className="space-y-3">
               {SERVICE_LINKS.map((item) => (
-                <li key={item.id}>
-                  <button
-                    onClick={() => {
-                      onNavigateService(item.id);
-                      window.scrollTo({ top: 0, behavior: "smooth" });
-                    }}
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
                     className="cursor-pointer text-left text-sm text-[#999999] active:text-white"
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
+        </div>
+
+        {/* Mobile Studio Location */}
+        <div className="border-t border-[#242424] py-6">
+          <h4 className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
+            Studio Location
+          </h4>
+          <p className="text-sm leading-6 text-[#999999]">
+            Rise, Jhansi, Uttar Pradesh, India
+            <br />
+            <span className="text-[#666666]">Global Delivery & Digital Services</span>
+          </p>
         </div>
 
         {/* Bottom meta */}
         <div className="flex justify-center border-t border-[#242424] pt-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
-          <p>© {new Date().getFullYear()} VisitingLink</p>
+          <p>© {new Date().getFullYear()} VisitingLink. All rights reserved.</p>
         </div>
       </div>
 
-      {/* ============ DESKTOP — unchanged ============ */}
+      {/* ============ DESKTOP ============ */}
       <div className="mx-auto hidden max-w-[95vw] px-6 pt-8 md:block md:px-12 md:pt-12">
         {/* TOP */}
         <div className="flex flex-col gap-8 border-b border-[#242424] pb-8 md:flex-row md:items-end md:justify-between md:pb-10">
           {/* Logo + intro */}
           <div className="max-w-md">
-            <button
-              onClick={() => onNavigatePage("home")}
+            <Link
+              href="/"
               className="mb-5 block cursor-pointer"
               aria-label="VisitingLink Home"
             >
               <Image
                 src="/logo.png"
-                alt="VisitingLink"
+                alt="VisitingLink Logo"
                 width={180}
                 height={50}
                 className="h-auto w-[150px] object-contain brightness-0 invert md:w-[175px]"
                 priority
               />
-            </button>
+            </Link>
 
             <p className="max-w-sm text-sm leading-6 text-[#888888]">
               Creative technology studio building digital experiences, web
@@ -222,66 +197,60 @@ export const Footer: React.FC<FooterProps> = ({
           </div>
 
           {/* CTA */}
-          <button
-            onClick={() => onNavigateContact()}
+          <Link
+            href="/contact"
             className="group inline-flex w-fit cursor-pointer items-center gap-5 bg-white px-6 py-3.5 text-[11px] font-semibold uppercase tracking-[0.16em] text-[#111111] transition-all duration-300 hover:bg-[#e8e8e8]"
           >
             <span>Start a Project</span>
             <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-          </button>
+          </Link>
         </div>
 
         {/* LINKS */}
         <div className="grid grid-cols-2 md:flex justify-between gap-x-8 gap-y-8 border-b border-[#242424] py-8 sm:grid-cols-2 md:grid-cols-4 md:gap-10 md:py-10">
           {/* Pages */}
-          <div>
+          <nav aria-label="Desktop Footer Pages">
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Pages
             </h4>
 
             <ul className="space-y-2.5">
               {PAGE_LINKS.map((item) => (
-                <li key={item.page}>
-                  <button
-                    onClick={() => onNavigatePage(item.page)}
+                <li key={item.href}>
+                  <Link
+                    href={item.href}
                     className="cursor-pointer text-sm text-[#999999] transition-colors duration-200 hover:text-white"
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Services */}
-          <div>
+          <nav aria-label="Desktop Footer Services">
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Services
             </h4>
 
             <ul className="space-y-2.5">
               {SERVICE_LINKS.map((item) => (
-                <li key={item.id}>
-                  <button
-                    onClick={() => {
-                      onNavigateService(item.id);
-                      window.scrollTo({
-                        top: 0,
-                        behavior: "smooth",
-                      });
-                    }}
+                <li key={item.label}>
+                  <Link
+                    href={item.href}
                     className="group inline-flex cursor-pointer items-center gap-1.5 text-sm text-[#999999] transition-colors duration-200 hover:text-white"
                   >
                     <span>{item.label}</span>
                     <ArrowUpRight className="h-3 w-3 text-[#555555] transition-transform duration-200 group-hover:-translate-y-0.5 group-hover:translate-x-0.5" />
-                  </button>
+                  </Link>
                 </li>
               ))}
             </ul>
-          </div>
+          </nav>
 
           {/* Studio */}
-          {/* <div>
+          <div>
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Studio
             </h4>
@@ -293,7 +262,7 @@ export const Footer: React.FC<FooterProps> = ({
               <br />
               <span className="text-[#666666]">Global delivery</span>
             </p>
-          </div> */}
+          </div>
 
           {/* Contact */}
           <div>
@@ -322,31 +291,14 @@ export const Footer: React.FC<FooterProps> = ({
                 <span>{CONTACT_PHONE_DISPLAY}</span>
               </a>
             </div>
-
-            {/* <div className="mt-4 flex items-center gap-4 text-xs text-[#666666]">
-              {["X", "LinkedIn", "GitHub"].map((social) => (
-                <a
-                  key={social}
-                  href="#"
-                  className="transition-colors duration-200 hover:text-white"
-                >
-                  {social}
-                </a>
-              ))}
-            </div> */}
           </div>
         </div>
 
         {/* BOTTOM META */}
-        <div className="flex flex-row items-center justify-center gap-3 py-5 text-[10px] uppercase tracking-[0.14em] text-[#555555] ">
-          <p>© {new Date().getFullYear()} VisitingLink</p>
-
-          {/* <p>Creative Technology Studio</p> */}
+        <div className="flex flex-row items-center justify-center gap-3 py-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
+          <p>© {new Date().getFullYear()} VisitingLink. Creative Technology Company.</p>
         </div>
       </div>
-
-      {/* LARGE WORDMARK */}
-      {/* <FooterWordmark play={isFooterInView} routeKey={pathname} /> */}
     </footer>
   );
 };

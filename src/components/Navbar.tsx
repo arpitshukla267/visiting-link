@@ -1,8 +1,9 @@
 "use client";
 
 import React, { useState, useEffect } from 'react';
+import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ArrowUpRight, ChevronDown } from 'lucide-react';
+import { Menu, X, ArrowUpRight } from 'lucide-react';
 import { getScrollY } from '@/components/SmoothScroll';
 
 interface NavbarProps {
@@ -12,12 +13,6 @@ interface NavbarProps {
   onNavigatePage: (page: string) => void;
   onNavigateContact: (preselectedService?: string) => void;
 }
-
-const MOBILE_SERVICES = [
-  { id: 'visitinglink', label: 'VisitingLink' },
-  { id: 'web-development', label: 'Web Development' },
-  { id: 'graphics', label: 'Graphics & Identity' },
-] as const;
 
 function isPastHeroSection() {
   const track = document.getElementById('hero-scroll-track');
@@ -29,22 +24,14 @@ function isPastHeroSection() {
 
 export const Navbar: React.FC<NavbarProps> = ({
   currentPage,
-  onNavigateHome,
-  onNavigateService,
-  onNavigatePage,
-  onNavigateContact,
 }) => {
   const [isScrolled, setIsScrolled] = useState(false);
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [servicesDropdownOpen, setServicesDropdownOpen] = useState(false);
-  const [mobileServicesOpen, setMobileServicesOpen] = useState(false);
 
   const isHomePage = currentPage === 'home';
 
   useEffect(() => {
     const handleScroll = () => {
-      // Home: stay transparent for the full hero; scrolled style only after hero ends.
-      // Other pages: unchanged — bg after a small scroll threshold.
       if (isHomePage) {
         setIsScrolled(isPastHeroSection());
         return;
@@ -80,19 +67,6 @@ export const Navbar: React.FC<NavbarProps> = ({
 
   const closeMobileMenu = () => {
     setMobileMenuOpen(false);
-    setMobileServicesOpen(false);
-  };
-
-  const handlePageNav = (page: string) => {
-    closeMobileMenu();
-    setServicesDropdownOpen(false);
-    onNavigatePage(page);
-  };
-
-  const handleServiceNav = (serviceId: string) => {
-    closeMobileMenu();
-    setServicesDropdownOpen(false);
-    onNavigateService(serviceId);
   };
 
   const isTransparentPage = isHomePage || currentPage === 'about';
@@ -120,62 +94,61 @@ export const Navbar: React.FC<NavbarProps> = ({
         }`}
       >
         <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 md:px-12">
-          <button
-            onClick={() => {
-              onNavigateHome();
-              window.scrollTo({ top: 0, behavior: 'smooth' });
-            }}
+          <Link
+            href="/"
             id="brand-logo-link"
             className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none"
+            aria-label="VisitingLink Home"
           >
-            <div className="flex items-center justify-center  overflow-hidden transition-all duration-300 ">
+            <div className="flex items-center justify-center overflow-hidden transition-all duration-300">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
-                src={navThemeDark ? "/logo.png" : "/logo.png"}
-                alt="VisitingLink"
-                className={`${navThemeDark ? "h-12" : "h-12"} w-auto object-contain transition-all duration-300`}
+                src="/logo.png"
+                alt="VisitingLink Logo"
+                className="h-12 w-auto object-contain transition-all duration-300"
               />
             </div>
-          </button>
+          </Link>
 
           <nav
             id="desktop-nav-menu"
+            aria-label="Main Navigation"
             className="hidden items-center space-x-8 md:flex"
           >
-            <button
-              onClick={() => handlePageNav('/')}
+            <Link
+              href="/"
               className={navLinkClass(currentPage === 'home')}
             >
               Home
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handlePageNav('services')}
+            <Link
+              href="/services"
               className={navLinkClass(currentPage === 'services')}
             >
               Services
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handlePageNav('work')}
+            <Link
+              href="/work"
               className={navLinkClass(currentPage === 'work')}
             >
               Work
-            </button>
+            </Link>
 
-            <button
-              onClick={() => handlePageNav('about')}
+            <Link
+              href="/about"
               className={navLinkClass(currentPage === 'about')}
             >
               About
-            </button>
+            </Link>
 
-            <button
-              onClick={() => onNavigateContact()}
+            <Link
+              href="/contact"
               className={navLinkClass(currentPage === 'contact')}
             >
               Contact
-            </button>
+            </Link>
           </nav>
 
           <div className="hidden items-center md:flex">
@@ -235,15 +208,10 @@ export const Navbar: React.FC<NavbarProps> = ({
               transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
               className="fixed inset-x-0 top-0 z-[55] flex max-h-[100dvh] flex-col bg-black pt-[4.5rem] shadow-[0_8px_32px_rgba(0,0,0,0.1)] md:hidden"
             >       
-
-              <nav className="flex-1 overflow-y-auto px-6">
-                <button
-                  type="button"
-                  onClick={() => {
-                    closeMobileMenu();
-                    onNavigateHome();
-                    window.scrollTo({ top: 0, behavior: 'smooth' });
-                  }}
+              <nav aria-label="Mobile Navigation" className="flex-1 overflow-y-auto px-6">
+                <Link
+                  href="/"
+                  onClick={closeMobileMenu}
                   className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base font-semibold transition-colors ${
                     currentPage === 'home'
                       ? 'text-white'
@@ -251,30 +219,26 @@ export const Navbar: React.FC<NavbarProps> = ({
                   }`}
                 >
                   Home
-                </button>
+                </Link>
 
                 {[
-                  { label: 'Services', page: 'services' },
-                  { label: 'Work', page: 'work' },
-                  { label: 'About', page: 'about' },
-                  { label: 'Contact', page: 'contact' },
+                  { label: 'Services', href: '/services', key: 'services' },
+                  { label: 'Work', href: '/work', key: 'work' },
+                  { label: 'About', href: '/about', key: 'about' },
+                  { label: 'Contact', href: '/contact', key: 'contact' },
                 ].map((item) => (
-                  <button
-                    key={item.page}
-                    type="button"
-                    onClick={() =>
-                      item.page === 'contact'
-                        ? (closeMobileMenu(), onNavigateContact())
-                        : handlePageNav(item.page)
-                    }
+                  <Link
+                    key={item.key}
+                    href={item.href}
+                    onClick={closeMobileMenu}
                     className={`flex w-full cursor-pointer items-center border-b border-[#E8E8E8] py-4 text-left text-base transition-colors ${
-                      currentPage === item.page
+                      currentPage === item.key
                         ? 'font-semibold text-white'
                         : 'font-medium text-white/50 hover:text-white'
                     }`}
                   >
                     {item.label}
-                  </button>
+                  </Link>
                 ))}
               </nav>
 

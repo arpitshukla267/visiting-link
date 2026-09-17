@@ -195,7 +195,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         {/* Background artwork */}
         <Image
           src="/images/about.webp"
-          alt=""
+          alt="VisitingLink Digital Services and Technology Studio"
           fill
           priority
           sizes="100vw"
@@ -366,7 +366,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
         {/* Background */}
         <Image
           src="/images/about-mobile.webp"
-          alt=""
+          alt="VisitingLink Digital Services — 8+ Years of Craft and Engineering"
           fill
           priority
           sizes="100vw"

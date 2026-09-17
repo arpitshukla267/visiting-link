@@ -112,10 +112,27 @@ export function FounderSection({
 
   return (
     <section
+      id="founders"
       ref={sectionRef}
       className="relative overflow-hidden bg-white py-10 md:py-14"
       aria-label="Meet the founder"
     >
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "Person",
+            name: founderName,
+            jobTitle: founderTitle,
+            worksFor: {
+              "@type": "Organization",
+              name: "VisitingLink",
+              url: "https://visitinglink.com",
+            },
+          }),
+        }}
+      />
       <div className="mx-auto grid w-full max-w-[90vw] md:max-w-[85vw] grid-cols-1 items-center gap-12 px-0 md:px-6 lg:grid-cols-12 lg:gap-16">
         <div className="text-left lg:col-span-7">
           <div className="relative">
@@ -375,9 +392,9 @@ function TeamMemberCard({
 }
 
 export function TeamSection({
-  eyebrow = "The people behind it",
-  headline = "Meet the team",
-  intro = "Developers, designers, and creators working together behind every project we ship.",
+  eyebrow = "The people behind VisitingLink",
+  headline = "Meet the people who built VisitingLink",
+  intro = "A small team of creators, developers, and designers bringing VisitingLink to life — with care, precision, and attention to every detail.",
   members = defaultMembers,
   speedSeconds = 40,
 }: TeamSectionProps) {
