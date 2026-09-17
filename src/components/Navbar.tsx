@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ArrowUpRight } from 'lucide-react';
+import { Menu, X, ArrowUpRight, MessageSquareWarning } from 'lucide-react';
 import { getScrollY } from '@/components/SmoothScroll';
 
 interface NavbarProps {
@@ -93,11 +93,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             : 'bg-transparent py-5 md:py-6'
         }`}
       >
-        <div className="mx-auto flex h-12 max-w-7xl items-center justify-between px-4 md:px-12">
+        <div className="mx-auto grid h-12 max-w-8xl grid-cols-2 items-center px-4 md:grid-cols-3 md:px-12">
+          {/* Logo — left */}
           <Link
             href="/"
             id="brand-logo-link"
-            className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none"
+            className="group flex cursor-pointer items-center gap-3 text-left focus:outline-none justify-self-start"
             aria-label="VisitingLink Home"
           >
             <div className="flex items-center justify-center overflow-hidden transition-all duration-300">
@@ -110,10 +111,11 @@ export const Navbar: React.FC<NavbarProps> = ({
             </div>
           </Link>
 
+          {/* Nav links — center */}
           <nav
             id="desktop-nav-menu"
             aria-label="Main Navigation"
-            className="hidden items-center space-x-8 md:flex"
+            className="hidden items-center justify-self-center space-x-8 md:flex"
           >
             <Link
               href="/"
@@ -151,13 +153,12 @@ export const Navbar: React.FC<NavbarProps> = ({
             </Link>
           </nav>
 
-          <div className="hidden items-center md:flex">
-            <a
-              id="navbar-cta-button"
-              href="https://social-offer.vercel.app/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className={`group flex cursor-pointer items-center gap-2 px-6 py-3 text-xs font-semibold uppercase tracking-wider rounded-lg transition-all duration-200 ${
+          {/* Buttons — right */}
+          <div className="hidden items-center justify-self-end gap-3 md:flex">
+            <Link
+              id="navbar-company-profile-button"
+              href="/company-profile"
+              className={`group flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
                 navThemeDark
                   ? 'bg-white text-[#111111] hover:bg-[#F0F0F0]'
                   : 'bg-[#111111] text-white hover:bg-[#333333]'
@@ -165,15 +166,28 @@ export const Navbar: React.FC<NavbarProps> = ({
             >
               <span>Company Profile</span>
               <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </a>
+            </Link>
+
+            <Link
+              href="/complaint"
+              className={`group flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg border px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+                navThemeDark
+                  ? 'border-white/30 text-white hover:bg-[#333333] hover:text-[#ffffff]'
+                  : 'border-[#111111]/20 bg-white text-[#111111] hover:bg-[#F0F0F0] hover:text-[#111111]'
+              }`}
+            >
+              <MessageSquareWarning className="h-3.5 w-3.5" />
+              <span>Complaint Box</span>
+            </Link>
           </div>
 
+          {/* Mobile toggle — right */}
           <button
             id="mobile-menu-toggle-button"
             onClick={() => setMobileMenuOpen((open) => !open)}
             aria-label="Toggle Navigation Menu"
             aria-expanded={mobileMenuOpen}
-            className={`cursor-pointer p-2 transition-colors duration-200 md:hidden ${
+            className={`justify-self-end cursor-pointer p-2 transition-colors duration-200 md:hidden ${
               navThemeDark && !mobileMenuOpen ? 'text-white' : 'text-white'
             }`}
           >
@@ -242,18 +256,27 @@ export const Navbar: React.FC<NavbarProps> = ({
                 ))}
               </nav>
 
-              <div className="border-t border-[#E8E8E8] p-6">
+              <div className="space-y-3 border-t border-[#E8E8E8] p-6">
                 <a
                   id="mobile-menu-cta-button"
                   href="https://social-offer.vercel.app/"
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={closeMobileMenu}
-                  className="flex w-full cursor-pointer items-center justify-center gap-2 bg-[#111111] py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#333333]"
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#111111] py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#333333]"
                 >
                   <span>Company Profile</span>
                   <ArrowUpRight className="h-4 w-4" />
                 </a>
+
+                <Link
+                  href="/complaint"
+                  onClick={closeMobileMenu}
+                  className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/30 py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-white hover:text-[#111111]"
+                >
+                  <MessageSquareWarning className="h-4 w-4" />
+                  <span>Complaint Box</span>
+                </Link>
               </div>
             </motion.aside>
           </>

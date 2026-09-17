@@ -11,6 +11,7 @@ import { ServiceItem } from "@/types";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { StartupLoaderProvider } from "@/components/StartupLoader";
 import { SmoothScroll } from "@/components/SmoothScroll";
+import FloatingContactButtons from "@/components/FloatingContactButtons";
 
 interface ServiceModalContextValue {
   openServiceDetail: (service: ServiceItem) => void;
@@ -66,6 +67,7 @@ export function AppShell({ children }: { children: React.ReactNode }) {
               onClose={() => setSelectedServiceDetail(null)}
               onInquireService={handleInquireFromDetailModal}
             />
+            <FloatingContactButtons />
           </div>
         </ServiceModalContext.Provider>
       </StartupLoaderProvider>

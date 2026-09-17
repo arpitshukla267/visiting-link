@@ -154,7 +154,7 @@ export const Footer: React.FC<FooterProps> = () => {
         {/* Mobile Studio Location */}
         <div className="border-t border-[#242424] py-6">
           <h4 className="mb-2 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
-            Studio Location
+            Location
           </h4>
           <p className="text-sm leading-6 text-[#999999]">
             Rise, Jhansi, Uttar Pradesh, India

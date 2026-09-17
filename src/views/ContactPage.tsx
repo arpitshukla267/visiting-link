@@ -15,6 +15,7 @@ const CONTACT_EMAIL = "info.visitinglink@gmail.com";
 const CONTACT_PHONE_DISPLAY = "+91 92365 53585";
 const CONTACT_PHONE_E164 = "919236553585";
 const WHATSAPP_URL = `https://wa.me/${CONTACT_PHONE_E164}`;
+const CONTACT_API_ROUTE = "/api/contact"; // route.ts jo tumne banaya hai usse match karta hai
 
 function WhatsAppIcon({ className }: { className?: string }) {
   return (
@@ -50,6 +51,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
   const [activeCategory, setActiveCategory] = useState(defaultCategory.title);
   const [submitted, setSubmitted] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
     if (!initialService) return;
@@ -79,14 +81,42 @@ export const ContactPage: React.FC<ContactPageProps> = ({
     "Flexible",
   ];
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    setErrorMsg(null);
     setIsSubmitting(true);
-    setTimeout(() => {
-      setIsSubmitting(false);
+
+    try {
+      const res = await fetch(CONTACT_API_ROUTE, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(formData),
+      });
+
+      let payload: { success?: boolean; error?: string; id?: string } = {};
+      try {
+        payload = await res.json();
+      } catch {
+        // body wasn't JSON — fall through to generic error below
+      }
+
+      if (!res.ok || !payload.success) {
+        throw new Error(
+          payload.error || "Something went wrong. Please try again."
+        );
+      }
+
       setSubmitted(true);
       window.scrollTo({ top: 0, behavior: "smooth" });
-    }, 600);
+    } catch (err) {
+      const message =
+        err instanceof Error
+          ? err.message
+          : "Network error — please check your connection and try again.";
+      setErrorMsg(message);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -170,13 +200,40 @@ export const ContactPage: React.FC<ContactPageProps> = ({
               transition={{ duration: 0.5 }}
               className="space-y-8"
             >
-              <div className="mx-auto flex h-16 w-16 items-center justify-center border-2 border-[#111111]">
-                <div className="h-3 w-3 bg-[#111111]" />
+              <motion.div
+                initial={{ scale: 0.6, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ duration: 0.4, ease: "easeOut" }}
+                className="mx-auto flex h-16 w-16 items-center justify-center rounded-full border-2 border-[#111111]"
+              >
+                <svg
+                  viewBox="0 0 24 24"
+                  fill="none"
+                  className="h-7 w-7"
+                >
+                  <motion.path
+                    d="M4 12.5L9.5 18L20 6"
+                    stroke="#111111"
+                    strokeWidth={2}
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    initial={{ pathLength: 0 }}
+                    animate={{ pathLength: 1 }}
+                    transition={{ duration: 0.5, delay: 0.3, ease: "easeInOut" }}
+                  />
+                </svg>
+              </motion.div>
+
+              <div className="space-y-3">
+                <h2 className="text-2xl font-medium text-[#111111] md:text-3xl">
+                  Thank you for reaching out
+                </h2>
+                <p className="mx-auto max-w-md leading-relaxed text-[#666666]">
+                  Your inquiry has been received. A member of our team will review the
+                  details and respond within 24 hours.
+                </p>
               </div>
-              <p className="mx-auto max-w-md leading-relaxed text-[#666666]">
-                A principal at VisitingLink will review your brief and follow up
-                with next steps. In the meantime, feel free to explore our work.
-              </p>
+
               <div className="flex flex-col items-center justify-center gap-4 pt-4 sm:flex-row">
                 <button
                   onClick={onNavigateHome}
@@ -187,6 +244,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 <button
                   onClick={() => {
                     setSubmitted(false);
+                    setErrorMsg(null);
                     setActiveCategory(defaultCategory.title);
                     setFormData({
                       name: "",
@@ -206,7 +264,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
             </motion.div>
           </div>
         </section>
-      ) : (
+      ): (
         <section className="py-16 md:py-24">
           <div className="mx-auto max-w-7xl px-4 md:px-12">
             <div className="md:grid flex flex-col-reverse  gap-16 lg:grid-cols-[1fr_1.4fr] lg:gap-24">
@@ -424,6 +482,12 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                     className="w-full resize-none border-0 border-b border-[#E5E7EB] bg-transparent px-0 py-3 text-[#111111] placeholder:text-[#BBBBBB] transition-colors focus:border-black focus:outline-none"
                   />
                 </div>
+
+                {errorMsg && (
+                  <div className="border border-red-200 bg-red-50 px-4 py-3 text-sm text-red-700">
+                    {errorMsg}
+                  </div>
+                )}
 
                 <div className="pt-4">
                   <button
