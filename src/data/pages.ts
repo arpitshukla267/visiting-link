@@ -38,6 +38,24 @@ export const WORK_PROJECTS: WorkProject[] = [
   },
 
   {
+    id: "conbell-cms",
+    name: "Conbell Engineering CMS & HR Portal",
+    category: "CMS & hiring management platform",
+    description:
+      "A custom CMS for Conbell with a built-in HR module to manage job hiring and interview hiring from one place. HR can send emails directly from the dashboard, attach offer letters, and add other files to any mail.",
+    summary:
+      "CMS with an HR module for job and interview hiring, plus email sending with offer letter and file attachments.",
+    outcome: "Built a CMS that also runs the company's hiring workflow",
+    year: "2026",
+    discipline: "web",
+    accent: "#1F3A5F",
+    image: "/images/conbell-hr.png",
+    imageBg: "#FFFFFF",
+    imageFit: "contain",
+    url: "",
+  },
+
+  {
     id: "loomstone",
     name: "Loomstone",
     category: "Rugs, carpets & flooring export platform",
