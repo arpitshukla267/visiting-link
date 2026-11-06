@@ -184,13 +184,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
 }) => {
   return (
     <div className="overflow-x-hidden bg-white text-[#111111] selection:bg-black selection:text-white max-w-[100vw]">
-     
-     
       {/* ─────────────────────────────────────────────────────────
           SECTION 01 — HERO / OUR EXPERIENCE
       ───────────────────────────────────────────────────────── */}
       {/* ================= DESKTOP HERO ================= */}
-      
+
       <section className="relative hidden min-h-screen overflow-hidden bg-[#050506] text-white md:block">
         {/* Background artwork */}
         <Image
@@ -201,10 +199,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           sizes="100vw"
           className="object-cover object-center"
         />
-        
+
         {/* Uniform overlay across the whole image — knocks down overall brightness a touch */}
         <div className="absolute inset-0 bg-black/40" />
-        
+
         {/* Broad, smooth wash across the left ~40% — much stronger now so it actually cuts through the bright sky */}
         <div
           className="
@@ -221,7 +219,7 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             )]
           "
         />
-        
+
         {/* Slight bottom fade for stats */}
         <div
           className="
@@ -231,12 +229,10 @@ export const AboutPage: React.FC<AboutPageProps> = ({
             to-transparent
           "
         />
-        
+
         {/* Content */}
         <div className="relative z-10 mx-auto flex min-h-screen max-w-[95vw] items-center px-6">
-        
           <div className="w-full max-w-[50vw]">
-        
             {/* Heading */}
             <FadeIn delay={0.1}>
               <h1
@@ -250,17 +246,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({
               >
                 We build
                 <br />
-        
-                <span className="text-white/90">
-                  digital
-                </span>
-        
+                <span className="text-white/90">digital</span>
                 <br />
-        
                 experiences.
               </h1>
             </FadeIn>
-        
+
             {/* Description */}
             <FadeIn delay={0.2}>
               <p
@@ -275,16 +266,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                 "
               >
                 For over 8 years, we’ve been designing brands, building digital
-                experiences and engineering technology that helps ambitious ideas
-                move forward.
+                experiences and engineering technology that helps ambitious
+                ideas move forward.
               </p>
             </FadeIn>
-        
+
             {/* Stats */}
-            <FadeIn
-              delay={0.3}
-              className="mt-10"
-            >
+            <FadeIn delay={0.3} className="mt-10">
               <div
                 className="
                   w-[80%]
@@ -304,59 +292,56 @@ export const AboutPage: React.FC<AboutPageProps> = ({
                     md:gap-x-10
                   "
                 >
-        
                   {/* Years */}
                   <div>
                     <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
                       08
                       <span className="text-white/55">+</span>
                     </div>
-        
+
                     <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Years
                     </p>
                   </div>
-        
+
                   {/* Clients */}
                   <div>
                     <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
                       900
                       <span className="text-white/55">+</span>
                     </div>
-        
+
                     <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Clients
                     </p>
                   </div>
-        
+
                   {/* Creators */}
                   <div>
                     <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
                       100
                       <span className="text-white/55">+</span>
                     </div>
-        
+
                     <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Creators
                     </p>
                   </div>
-        
+
                   {/* Brands */}
                   <div>
                     <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
                       120
                       <span className="text-white/55">+</span>
                     </div>
-        
+
                     <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
                       Brands
                     </p>
                   </div>
-        
                 </div>
               </div>
             </FadeIn>
-        
           </div>
         </div>
       </section>
@@ -414,12 +399,11 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           </FadeIn>
         </div>
       </section>
-        
+
       {/* ─────────────────────────────────────────────────────────
          SECTION 02 — OUR STORY (8 years)
       ───────────────────────────────────────────────────────── */}
       <EightYearsSection />
-
 
       {/* ─────────────────────────────────────────────────────────
           SECTION 03 — PEOPLE / FOUNDER
@@ -427,13 +411,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       <FounderSection
         eyebrow="Built by People"
         headline="Meet Our Founder"
-        founderName="Mr. Jitesh Singh"
+        founderName="Mrs. Geetanjali Shakya"
         founderTitle="CEO & Founder"
         yearsLabel="8 Years of Digital Innovation"
         words="VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity."
         onNavigateContact={() => onNavigateContact()}
       />
-
 
       {/* ─────────────────────────────────────────────────────────
           SECTION 04 — OUR JOURNEY
@@ -457,7 +440,6 @@ export const AboutPage: React.FC<AboutPageProps> = ({
           SECTION 06 — TEAM
       ───────────────────────────────────────────────────────── */}
       <TeamSection />
-
     </div>
   );
 };

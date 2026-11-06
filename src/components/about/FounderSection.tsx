@@ -2,12 +2,7 @@
 
 import { type ReactNode, useRef } from "react";
 import { motion, useScroll, useTransform } from "motion/react";
-import {
-  ArrowUpRight,
-  Linkedin,
-  Github,
-  Twitter,
-} from "lucide-react";
+import { ArrowUpRight, Linkedin, Github, Twitter } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
 /*  Shared fade-in wrapper (still used for Team section)               */
@@ -84,10 +79,10 @@ export type FounderSectionProps = {
 export function FounderSection({
   eyebrow = "Built by people",
   headline = "Meet our founder",
-  founderName = "Jitesh Singh",
-  founderTitle = "Founder, VisitingLink",
+  founderName = "Geetanjali Shakya",
+  founderTitle = "Founder & CEO, VisitingLink",
   yearsLabel,
-  photoUrl = "/images/founder.jpeg",
+  photoUrl = "/images/geet.webp",
   words = "I started this doing logo work out of a spare room, mostly for people I already knew. Eight years on, the team's bigger and the work has changed shape a few times, but the reason hasn't — I still want the things we build to keep working long after anyone's paying attention to them.",
   ctaLabel = "Get in touch",
   onNavigateContact = () => {},
@@ -151,63 +146,12 @@ export function FounderSection({
             </motion.h2>
           </div>
 
-            {/* Mobile image — medium speed */}
-            <motion.div
-              style={{ y: imageY, opacity: imageOpacity }}
-              className="block transform-gpu md:hidden w-full lg:col-span-5"
-            >
-              <div className="mx-auto mt-6 aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-md lg:ml-auto">
-                {/* eslint-disable-next-line @next/next/no-img-element */}
-                <img
-                  src={photoUrl}
-                  alt={founderName}
-                  decoding="async"
-                  className="h-full w-full object-cover"
-                />
-              </div>
-            </motion.div>
-
-            {/* Name + words — slowest */}
-            <motion.div
-              style={{ y: contentY, opacity: contentOpacity }}
-              className="mt-8 max-w-[60ch] transform-gpu md:mt-4"
-            >
-              <p className="text-base md:text-lg text-center md:text-left font-normal leading-relaxed text-[#333333]">
-                {words}
-              </p>
-              <div className="flex flex-col items-center md:items-start gap-1 mt-4 md:mt-6">
-                <p className="text-2xl md:text-3xl font-bold text-[#111111] tracking-tight">
-                  {founderName}
-                </p>
-                <p className="text-sm md:text-base font-medium uppercase tracking-wide text-[#FF5A1F]">
-                  {founderTitle}
-                </p>
-                  {/* {yearsLabel ? `  ${yearsLabel}` : ""} */}
-              </div>
-
-            </motion.div>
-
-            {/* CTA — same slow speed as content */}
-            <motion.div
-              style={{ y: contentY, opacity: contentOpacity }}
-              className="mt-4 transform-gpu md:mt-8"
-            >
-              <button
-                onClick={() => onNavigateContact()}
-                className="group  md:inline-flex flex flex-nowrap cursor-pointer items-center gap-2 rounded-md border border-[#111111] px-6 py-3 text-sm font-normal text-[#111111] transition-colors hover:bg-[#111111] hover:text-white mx-auto md:mx-0"
-              >
-                <span>{ctaLabel}</span>
-                <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-1" />
-              </button>
-            </motion.div>
-          </div>
-
-          {/* Desktop image — medium speed */}
+          {/* Mobile image — medium speed */}
           <motion.div
             style={{ y: imageY, opacity: imageOpacity }}
-            className="hidden w-full transform-gpu lg:col-span-5 md:block"
+            className="block transform-gpu md:hidden w-full lg:col-span-5"
           >
-            <div className="mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-md lg:ml-auto">
+            <div className="mx-auto mt-6 aspect-[4/5] w-full max-w-[300px] overflow-hidden rounded-md lg:ml-auto">
               {/* eslint-disable-next-line @next/next/no-img-element */}
               <img
                 src={photoUrl}
@@ -217,6 +161,56 @@ export function FounderSection({
               />
             </div>
           </motion.div>
+
+          {/* Name + words — slowest */}
+          <motion.div
+            style={{ y: contentY, opacity: contentOpacity }}
+            className="mt-8 max-w-[60ch] transform-gpu md:mt-4"
+          >
+            <p className="text-base md:text-lg text-center md:text-left font-normal leading-relaxed text-[#333333]">
+              {words}
+            </p>
+            <div className="flex flex-col items-center md:items-start gap-1 mt-4 md:mt-6">
+              <p className="text-2xl md:text-3xl font-bold text-[#111111] tracking-tight">
+                {founderName}
+              </p>
+              <p className="text-sm md:text-base font-medium uppercase tracking-wide text-[#FF5A1F]">
+                {founderTitle}
+              </p>
+              {/* {yearsLabel ? `  ${yearsLabel}` : ""} */}
+            </div>
+          </motion.div>
+
+          {/* CTA — same slow speed as content */}
+          <motion.div
+            style={{ y: contentY, opacity: contentOpacity }}
+            className="mt-4 transform-gpu md:mt-8"
+          >
+            <button
+              onClick={() => onNavigateContact()}
+              className="group  md:inline-flex flex flex-nowrap cursor-pointer items-center gap-2 rounded-md border border-[#111111] px-6 py-3 text-sm font-normal text-[#111111] transition-colors hover:bg-[#111111] hover:text-white mx-auto md:mx-0"
+            >
+              <span>{ctaLabel}</span>
+              <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-1" />
+            </button>
+          </motion.div>
+        </div>
+
+        {/* Desktop image — medium speed */}
+        <motion.div
+          style={{ y: imageY, opacity: imageOpacity }}
+          className="hidden w-full transform-gpu lg:col-span-5 md:block"
+        >
+          <div className="mx-auto aspect-[4/5] w-full max-w-[420px] overflow-hidden rounded-md lg:ml-auto">
+            {/* eslint-disable-next-line @next/next/no-img-element */}
+            <img
+              src={photoUrl}
+              alt={founderName}
+              decoding="async"
+              className="h-full w-full object-cover"
+            />
+          </div>
+        </motion.div>
       </div>
     </section>
   );
@@ -246,76 +240,61 @@ const defaultMembers: TeamMember[] = [
   {
     name: "Sandeep Soni",
     role: "Customer Relation Manager",
-    photoUrl:
-    "/images/sandeep.jpeg",
-  },
-  {
-    name: "Geetanjali Shakya",
-    role: "CFO",
-    photoUrl:
-      "/images/geet.webp",
+    photoUrl: "/images/sandeep.jpeg",
   },
   {
     name: "Arpit Shukla",
     role: "Full Stack Developer",
-    photoUrl:
-    "/images/arpit.jpg",
+    photoUrl: "/images/arpit.jpg",
   },
   {
     name: "Hargun",
     role: "Social Media Manager",
-    photoUrl:
-      "/images/hargun.webp",
+    photoUrl: "/images/hargun.webp",
   },
   {
     name: "Nipurn Patel",
     role: "Graphic Designer",
-    photoUrl:
-      "/images/nipurn.webp",
+    photoUrl: "/images/nipurn.webp",
   },
   {
     name: "Ansh Katariya",
     role: "Graphic Designer",
-    photoUrl:
-      "/images/ansh.jpeg",
+    photoUrl: "/images/ansh.jpeg",
   },
   {
     name: "Chitranshi",
     role: "Brand Ambassador",
-    photoUrl:
-      "/images/chitranshi.webp",
+    photoUrl: "/images/chitranshi.webp",
   },
   {
     name: "Sameera",
     role: "Marketing",
-    photoUrl:
-      "/images/sameera.webp",
-    },
-    {
-      name: "Manav Jha",
-      role: "Video Editor",
-      photoUrl:
-        "/images/manav.jpeg",
-    },
-    {
-      name: "Abhiuday Verma",
-      role: "Video Editor",
-      photoUrl:
-        "/images/abhiuday.jpeg",
-    },
-    {
-      name: "Tanya Tiwari",
-      role: " Sales Executive",
-      photoUrl:
-        "/images/tanya.jpeg",
-    },
+    photoUrl: "/images/sameera.webp",
+  },
+  {
+    name: "Manav Jha",
+    role: "Video Editor",
+    photoUrl: "/images/manav.jpeg",
+  },
+  {
+    name: "Abhiuday Verma",
+    role: "Video Editor",
+    photoUrl: "/images/abhiuday.jpeg",
+  },
+  {
+    name: "Tanya Tiwari",
+    role: " Sales Executive",
+    photoUrl: "/images/tanya.jpeg",
+  },
+  {
+    name: "Jitesh Singh",
+    role: "Sales Executive",
+    photoUrl: "/images/founder.jpeg",
+  },
 ];
 
-function TeamMemberCard({
-  member,
-}: {
-  member: TeamMember;
-}) {
+function TeamMemberCard({ member }: { member: TeamMember }) {
   return (
     <div className="w-[200px] shrink-0 sm:w-[220px]">
       <div className="aspect-square overflow-hidden rounded-full bg-[#F5F5F3]">
@@ -334,7 +313,9 @@ function TeamMemberCard({
         )}
       </div>
 
-      <p className="mt-3 text-base font-normal text-[#111111] text-center">{member.name}</p>
+      <p className="mt-3 text-base font-normal text-[#111111] text-center">
+        {member.name}
+      </p>
       <p className="mt-1 text-sm text-[#9A9A96] text-center leading-tight">
         {(() => {
           const words = member.role.split(" ");
@@ -434,12 +415,12 @@ export function TeamSection({
         </FadeIn>
 
         <FadeIn delay={0.1}>
-          <div
-            className="team-marquee-wrapper relative mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]"
-          >
+          <div className="team-marquee-wrapper relative mt-12 overflow-hidden [mask-image:linear-gradient(to_right,transparent,black_5%,black_95%,transparent)]">
             <div
               className="team-marquee-track flex w-max gap-5"
-              style={{ ["--team-marquee-duration" as string]: `${speedSeconds}s` }}
+              style={{
+                ["--team-marquee-duration" as string]: `${speedSeconds}s`,
+              }}
             >
               {trackMembers.map((member, index) => (
                 <TeamMemberCard

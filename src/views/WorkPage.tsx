@@ -43,7 +43,7 @@ const FILTER_OPTIONS: { key: FilterKey; label: string }[] = [
 /* -----------------------------------------------------------------------
  * Case study data — for client projects where a public URL can't be
  * shared. Keyed by project.id from WORK_PROJECTS. If a project's id has
- * a matching entry here, clicking it opens the modal instead of the url.
+ * a matching entry here, clicking it opens the modal.
  * --------------------------------------------------------------------- */
 interface CaseStudySection {
   heading: string;
@@ -69,7 +69,8 @@ const CASE_STUDIES: CaseStudy[] = [
     tagline: "Enterprise CRM & Business Operations Platform",
     projectType: "Internal Enterprise CRM",
     role: "Full-Stack Development",
-    technology: "Next.js, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, Mongoose",
+    technology:
+      "Next.js, TypeScript, Tailwind CSS, Node.js, Express, MongoDB, Mongoose",
     overview:
       "A full-stack CRM and business operations platform managing the complete customer lifecycle — from leads and quotations to orders, billing, finance, suppliers and shipments. Built around backend reliability, data integrity, role-based access control, scalable MongoDB usage and real-world business workflows.",
     sections: [
@@ -636,17 +637,16 @@ export const WorkPage: React.FC<WorkPageProps> = ({
           return true;
         });
 
+  // Live URL removed — only projects with a case study are clickable.
   const handleProjectClick = (project: (typeof WORK_PROJECTS)[number]) => {
     const caseStudy = getCaseStudy(project.id);
-    if (caseStudy) {
-      setActiveCaseStudy({
-        caseStudy,
-        projectName: project.name,
-        coverImage: project.image,
-      });
-      return;
-    }
-    window.open(project.url, "_blank", "noopener,noreferrer");
+    if (!caseStudy) return;
+
+    setActiveCaseStudy({
+      caseStudy,
+      projectName: project.name,
+      coverImage: project.image,
+    });
   };
 
   return (
@@ -709,51 +709,50 @@ export const WorkPage: React.FC<WorkPageProps> = ({
       <section className="md:py-14 py-8">
         <div className="max-w-[95vw] md:max-w-[90vw] mx-auto md:px-12">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {filtered.map((project, idx) => (
-              <motion.article
-                key={project.id}
-                layout
-                initial={{ opacity: 0, y: 24 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{
-                  duration: 0.45,
-                  delay: idx * 0.06,
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-                className="group cursor-pointer"
-                onClick={() => handleProjectClick(project)}
-              >
-                {/* Image section - rounded top */}
-                <div className="relative h-80 overflow-hidden rounded-t-2xl bg-[#f3f3f3]">
-                  <Image
-                    src={project.image}
-                    alt={project.name}
-                    fill
-                    sizes="(max-width: 768px) 100vw, 33vw"
-                    className="object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                  />
+            {filtered.map((project, idx) => {
+              return (
+                <motion.article
+                  key={project.id}
+                  layout
+                  initial={{ opacity: 0, y: 24 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{
+                    duration: 0.45,
+                    delay: idx * 0.06,
+                    ease: [0.16, 1, 0.3, 1],
+                  }}
+                  className="group"
+                >
+                  {/* Image section - rounded top */}
+                  <div
+                    className="relative h-80 overflow-hidden rounded-t-2xl border border-[#EFEFEF]"
+                    style={{ backgroundColor: project.imageBg ?? "#FFFFFF" }}
+                  >
+                    <Image
+                      src={project.image}
+                      alt={project.name}
+                      fill
+                      sizes="(max-width: 768px) 100vw, 33vw"
+                      className={`transition-transform duration-700 ease-out group-hover:scale-[1.03] ${
+                        project.imageFit === "cover"
+                          ? "object-cover"
+                          : "object-contain"
+                      }`}
+                    />
+                  </div>
 
-                  {/* subtle overlay */}
-                  <div className="absolute inset-0 bg-black/[0.03] transition-colors duration-500 group-hover:bg-black-0" />
-                </div>
-
-                {/* Content section - rounded bottom */}
-                <div className="rounded-b-2xl border border-t-0 border-[#EFEFEF] md:px-6 px-4 md:py-5 py-3 flex items-center justify-between bg-white group-hover:bg-[#FAFAFA] transition-colors">
-                  <div>
+                  {/* Content section - rounded bottom */}
+                  <div className="rounded-b-2xl border border-t-0 border-[#EFEFEF] md:px-6 px-4 md:py-5 py-4 bg-white group-hover:bg-[#FAFAFA] transition-colors">
                     <p className="text-[15px] font-medium text-[#111111]">
                       {project.name}
                     </p>
-                    <p className="text-sm text-[#999999] mt-0.5">
-                      {project.category}
+                    <p className="mt-1.5 text-sm leading-relaxed text-[#999999] line-clamp-3">
+                      {project.summary}
                     </p>
                   </div>
-                  <span className="inline-flex items-center gap-1.5 text-sm font-medium text-[#111111] shrink-0 ml-4">
-                    {getCaseStudy(project.id) ? "View Case Study" : "View Project"}
-                    <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
-                  </span>
-                </div>
-              </motion.article>
-            ))}
+                </motion.article>
+              );
+            })}
           </div>
         </div>
       </section>
