@@ -83,6 +83,29 @@ export const SERVICES_DATA: ServiceItem[] = [
       'API Integrations'
     ],
     focusAreas: ['LLM Integration', 'Automated Support', 'Workflow Triggers', 'Third-Party Sync']
+  },
+  {
+    id: 'online-store',
+    number: '05',
+    title: 'Get Your Online Store',
+    tagline: 'Own Your eCommerce Store & Admin Panel',
+    description:
+      'Launch your ready-to-sell eCommerce store on your own server with no monthly platform fees and zero commission on sales.',
+    detailedScope: [
+      'Self-hosted online store with complete source code handover',
+      'Custom admin panel to manage products, inventory, orders, and coupons',
+      'Fast checkout with UPI, Cards, NetBanking and COD support',
+      'Automated customer alerts with SMS and WhatsApp business notifications'
+    ],
+    deliverables: [
+      'Online Store Launch Package',
+      'Online Store - Starter',
+      'Online Store - Growth',
+      'Online Store - Enterprise',
+      'Online Store Planning',
+      'Custom Store Development'
+    ],
+    focusAreas: ['Self-Hosted eCommerce', 'Admin Dashboard', 'Payment Gateway', 'Order Management']
   }
 ];
 

@@ -29,14 +29,12 @@ export function useAppNavigation() {
         router.push(targetPath);
       }
     },
-    navigateToContact: (serviceName?: string) => {
-      if (serviceName) {
-        router.push(
-          `${ROUTES.contact}?service=${encodeURIComponent(serviceName)}`,
-        );
-      } else {
-        router.push(ROUTES.contact);
-      }
+    navigateToContact: (serviceName?: string, category?: string) => {
+      const params = new URLSearchParams();
+      if (serviceName) params.set("service", serviceName);
+      if (category) params.set("category", category);
+      const query = params.toString();
+      router.push(query ? `${ROUTES.contact}?${query}` : ROUTES.contact);
     },
   };
 }

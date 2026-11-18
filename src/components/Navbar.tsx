@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import { motion, AnimatePresence } from 'motion/react';
-import { Menu, X, ArrowUpRight, MessageSquareWarning } from 'lucide-react';
+import { Menu, X, ArrowUpRight, MessageSquareWarning, ShoppingBag } from 'lucide-react';
 import { getScrollY } from '@/components/SmoothScroll';
 
 interface NavbarProps {
@@ -156,16 +156,16 @@ export const Navbar: React.FC<NavbarProps> = ({
           {/* Buttons — right */}
           <div className="hidden items-center justify-self-end gap-3 md:flex">
             <Link
-              id="navbar-company-profile-button"
-              href="/company-profile"
-              className={`group flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg px-5 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 ${
+              id="navbar-online-store-button"
+              href="/online-store"
+              className={`group flex cursor-pointer items-center gap-1.5 whitespace-nowrap rounded-lg px-4 py-2.5 text-xs font-semibold uppercase tracking-wider transition-all duration-200 shadow-sm ${
                 navThemeDark
                   ? 'bg-white text-[#111111] hover:bg-[#F0F0F0]'
-                  : 'bg-[#111111] text-white hover:bg-[#333333]'
+                  : 'bg-[#111111] text-white hover:bg-[#333333] border border-white/10'
               }`}
             >
-              <span>Company Profile</span>
-              <ArrowUpRight className="h-3.5 w-3.5 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+              <ShoppingBag className="h-3.5 w-3.5 transition-transform duration-200 group-hover:scale-110" />
+              <span>Get Your Online Store</span>
             </Link>
 
             <Link
@@ -257,17 +257,16 @@ export const Navbar: React.FC<NavbarProps> = ({
               </nav>
 
               <div className="space-y-3 border-t border-[#E8E8E8] p-6">
-                <a
+                <Link
                   id="mobile-menu-cta-button"
-                  href="https://social-offer.vercel.app/"
-                  target="_blank"
-                  rel="noopener noreferrer"
+                  href="/online-store"
                   onClick={closeMobileMenu}
                   className="flex w-full cursor-pointer items-center justify-center gap-2 rounded-lg bg-[#111111] py-4 text-sm font-semibold uppercase tracking-wider text-white transition-colors hover:bg-[#333333]"
                 >
-                  <span>Company Profile</span>
+                  <ShoppingBag className="h-4 w-4" />
+                  <span>Get Your Online Store</span>
                   <ArrowUpRight className="h-4 w-4" />
-                </a>
+                </Link>
 
                 <Link
                   href="/complaint"

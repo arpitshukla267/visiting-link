@@ -20,6 +20,7 @@ const WHATSAPP_URL = `https://wa.me/${CONTACT_PHONE_E164}`;
 const PAGE_LINKS = [
   { label: "Home", href: "/" },
   { label: "Services", href: "/services" },
+  { label: "Online Store", href: "/online-store" },
   { label: "Work", href: "/work" },
   { label: "About", href: "/about" },
   // { label: "Founders", href: "/about#founders" },

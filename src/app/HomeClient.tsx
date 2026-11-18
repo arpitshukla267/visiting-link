@@ -10,6 +10,7 @@ import { StaggeredSections } from "@/components/StaggeredSections";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useServiceModal } from "@/components/AppShell";
 import { useStartupReady } from "@/components/StartupLoader";
+import LaunchStore from "@/components/LaunchStore";
 import Hero from "@/components/hero/Hero";
 import TechCarousel from "@/components/hero/Techcarousel";
 import Gif from "@/components/Gif";
@@ -32,6 +33,7 @@ export default function HomeClient() {
   const sections = [
     <WhatWeDoSection key="services" />,
     <HowWeWorkSection key="how" />,
+    <LaunchStore  />,
     <CompanyStatement key="promises" />,
     <SelectedWorkSection key="work" />,
     <VisualBreak key="break" />,

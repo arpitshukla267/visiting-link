@@ -3,12 +3,62 @@
 import React, { useState, useEffect } from "react";
 import { motion } from "motion/react";
 import { ArrowRight, Mail } from "lucide-react";
-import { ProjectInquiry } from "../types";
-import { SERVICES_DATA } from "../data/content"; // ⚠️ apne actual path ke hisaab se adjust karlena
+import { ProjectInquiry, ServiceItem } from "../types";
+import { SERVICES_DATA } from "../data/content";
+
+export const ONLINE_STORE_CATEGORY: ServiceItem = {
+  id: "online-store",
+  number: "05",
+  title: "Get Your Online Store",
+  tagline: "Own Your eCommerce Store & Admin Panel",
+  description:
+    "Launch your ready-to-sell eCommerce store on your own server with no monthly platform fees and zero commission on sales.",
+  detailedScope: [
+    "Self-hosted online store with complete source code handover",
+    "Custom admin panel to manage products, inventory, orders, and coupons",
+    "Fast checkout with UPI, Cards, NetBanking and COD support",
+    "Automated customer alerts with SMS and WhatsApp business notifications",
+  ],
+  deliverables: [
+    "Online Store Launch Package",
+    "Online Store - Starter",
+    "Online Store - Growth",
+    "Online Store - Enterprise",
+    "Online Store Planning",
+    "Custom Store Development",
+  ],
+  focusAreas: [
+    "Self-Hosted eCommerce",
+    "Admin Dashboard",
+    "Payment Gateway",
+    "Order Management",
+  ],
+};
+
+export const ALL_CATEGORIES: ServiceItem[] = SERVICES_DATA.some(
+  (s) => s.id === "online-store"
+)
+  ? SERVICES_DATA
+  : [...SERVICES_DATA, ONLINE_STORE_CATEGORY];
+
+export const isOnlineStoreText = (text?: string | null): boolean => {
+  if (!text) return false;
+  const t = text.toLowerCase().replace(/[\s\-_]+/g, " ").trim();
+  return (
+    t === "get your online store" ||
+    t === "online store" ||
+    t === "store" ||
+    t === "online-store" ||
+    t.includes("online store") ||
+    t.includes("store launch") ||
+    t.includes("store planning")
+  );
+};
 
 interface ContactPageProps {
   onNavigateHome: () => void;
   initialService?: string;
+  initialCategory?: string;
 }
 
 const CONTACT_EMAIL = "info.visitinglink@gmail.com";
@@ -33,11 +83,36 @@ function WhatsAppIcon({ className }: { className?: string }) {
 export const ContactPage: React.FC<ContactPageProps> = ({
   onNavigateHome,
   initialService,
+  initialCategory,
 }) => {
-  const defaultCategory = SERVICES_DATA[0];
+  const isOnlineStoreRequested =
+    isOnlineStoreText(initialCategory) || isOnlineStoreText(initialService);
+
+  const matchedCategory = isOnlineStoreRequested
+    ? (ALL_CATEGORIES.find((c) => c.id === "online-store") ?? ONLINE_STORE_CATEGORY)
+    : initialCategory
+    ? ALL_CATEGORIES.find(
+        (cat) =>
+          cat.title.toLowerCase() === initialCategory.toLowerCase() ||
+          cat.id.toLowerCase() === initialCategory.toLowerCase()
+      )
+    : initialService
+    ? ALL_CATEGORIES.find((cat) =>
+        cat.deliverables.some(
+          (d) => d.toLowerCase() === initialService.toLowerCase()
+        )
+      )
+    : undefined;
+
+  const defaultCategory = matchedCategory ?? ALL_CATEGORIES[0];
   const defaultService =
-    defaultCategory.deliverables.find((d) => d === initialService) ??
-    defaultCategory.deliverables[0];
+    initialService &&
+    (defaultCategory.deliverables.find(
+      (d) => d.toLowerCase() === initialService.toLowerCase()
+    ) ??
+      initialService)
+      ? initialService
+      : defaultCategory.deliverables[0];
 
   const [formData, setFormData] = useState<ProjectInquiry>({
     name: "",
@@ -54,18 +129,68 @@ export const ContactPage: React.FC<ContactPageProps> = ({
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
 
   useEffect(() => {
-    if (!initialService) return;
-    const matchedCategory = SERVICES_DATA.find((cat) =>
-      cat.deliverables.includes(initialService)
-    );
-    if (matchedCategory) {
-      setActiveCategory(matchedCategory.title);
+    if (isOnlineStoreText(initialCategory) || isOnlineStoreText(initialService)) {
+      const storeCat =
+        ALL_CATEGORIES.find((c) => c.id === "online-store") ??
+        ONLINE_STORE_CATEGORY;
+      setActiveCategory(storeCat.title);
+      setFormData((prev) => ({
+        ...prev,
+        service: initialService || storeCat.deliverables[0],
+      }));
+      return;
     }
-    setFormData((prev) => ({ ...prev, service: initialService }));
+
+    if (initialCategory) {
+      const matched = ALL_CATEGORIES.find(
+        (cat) =>
+          cat.title.toLowerCase() === initialCategory.toLowerCase() ||
+          cat.id.toLowerCase() === initialCategory.toLowerCase()
+      );
+      if (matched) {
+        setActiveCategory(matched.title);
+      }
+    }
+
+    if (initialService) {
+      const matched = ALL_CATEGORIES.find((cat) =>
+        cat.deliverables.some(
+          (d) => d.toLowerCase() === initialService.toLowerCase()
+        )
+      );
+      if (matched) {
+        setActiveCategory(matched.title);
+      }
+      setFormData((prev) => ({ ...prev, service: initialService }));
+    }
+  }, [initialService, initialCategory]);
+
+  // Automatically select Get Your Online Store when opened from OnlineStorePage
+  useEffect(() => {
+    try {
+      const fromOnlineStore =
+        sessionStorage.getItem("last_source_page") === "online-store" ||
+        (typeof document !== "undefined" &&
+          document.referrer.toLowerCase().includes("online-store"));
+
+      if (fromOnlineStore) {
+        sessionStorage.removeItem("last_source_page");
+        if (!initialService || isOnlineStoreText(initialService)) {
+          const storeCat =
+            ALL_CATEGORIES.find((c) => c.id === "online-store") ??
+            ONLINE_STORE_CATEGORY;
+          setActiveCategory(storeCat.title);
+          setFormData((prev) => ({
+            ...prev,
+            service: initialService || storeCat.deliverables[0],
+          }));
+        }
+      }
+    } catch {}
   }, [initialService]);
 
   const activeDeliverables =
-    SERVICES_DATA.find((cat) => cat.title === activeCategory)?.deliverables ??
+    ALL_CATEGORIES.find((cat) => cat.title === activeCategory)?.deliverables ??
     [];
 
   const budgetPresets = [
@@ -327,7 +452,7 @@ export const ContactPage: React.FC<ContactPageProps> = ({
                 <div>
                   <p className="mb-3 text-sm text-[#777777]">Category</p>
                   <div className="grid grid-cols-2 gap-2">
-                    {SERVICES_DATA.map((cat) => (
+                    {ALL_CATEGORIES.map((cat) => (
                       <button
                         type="button"
                         key={cat.id}

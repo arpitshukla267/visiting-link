@@ -45,6 +45,25 @@
   }
 }
 
+@keyframes marquee {
+  0% {
+    transform: translateX(0%);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  display: flex;
+  width: max-content;
+  animation: marquee 35s linear infinite;
+}
+
+.animate-marquee:hover {
+  animation-play-state: paused;
+}
+
 ::-webkit-scrollbar {
   width: 6px;
 }
@@ -57,4 +76,28 @@
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #a1a1aa;
+}
+
+@keyframes vl-logo-scroll {
+  from {
+    transform: translate3d(0, 0, 0);
+  }
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+
+.vl-logo-track {
+  animation: vl-logo-scroll 40s linear infinite;
+  will-change: transform;
+}
+
+.vl-logo-marquee.is-paused .vl-logo-track {
+  animation-play-state: paused;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .vl-logo-track {
+    animation: none;
+  }
 }
