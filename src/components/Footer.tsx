@@ -32,6 +32,7 @@ const SERVICE_LINKS = [
   { label: "Software Development", href: "/services" },
   { label: "Web Apps & Prototypes", href: "/services" },
   { label: "AI & Automation Solutions", href: "/services" },
+  { label: "Get Your Online Store", href: "/online-store" },
 ];
 
 function WhatsAppIcon({ className }: { className?: string }) {
