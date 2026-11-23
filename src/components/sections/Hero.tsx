@@ -211,7 +211,7 @@ export const Hero: React.FC = () => {
             initial={{ opacity: 0, y: 24 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.8, ease: EASE, delay: 0.12 }}
-            style={{ fontFamily: COOPER_FONT }}
+            style={{ fontFamily: "'Poppins', sans-serif" }}
             className="mt-6 max-w-[900px] text-[clamp(0.95rem,1.4vw,1.5rem)] font-normal leading-snug text-white"
           >
             From professional websites to online stores and custom software, we
