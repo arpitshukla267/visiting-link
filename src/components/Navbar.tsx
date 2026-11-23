@@ -6,6 +6,7 @@ import { usePathname } from "next/navigation";
 import { motion, AnimatePresence } from "motion/react";
 import { ChevronDown, Globe, Menu, ShoppingBag, Users, X } from "lucide-react";
 import { getScrollY } from "@/components/SmoothScroll";
+import Image from "next/image";
 
 interface NavbarProps {
   currentPage: string;
@@ -293,15 +294,22 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
           </nav>
 
           {/* Button — right */}
-          <div className="hidden items-center justify-self-end gap-3 md:flex">
+          <div className="hidden items-center justify-self-end gap-1 md:flex">
             <a
               id="navbar-pay-now-button"
               href={PAY_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className={payButtonClass}
+              className="flex items-center justify-center gap-1 -ml-0.5 rounded-full bg-white px-6 py-0.5 text-base font-bold text-black shadow-[0_2px_10px_rgba(0,0,0,0.15)] ring-1 ring-black/10 transition-all duration-300 ease-out hover:scale-105 active:scale-95"
             >
-              Pay Now
+              <Image
+                src="/rzp_icon.png"
+                alt=""
+                width={26}
+                height={26}
+                className="h-10 w-10 object-cover -ml-0.5"
+              />
+              Pay Our Fees
             </a>
           </div>
 
@@ -427,8 +435,15 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={closeMobileMenu}
-                  className={`${payButtonClass} w-full py-3.5`}
+                  className="flex w-full items-center justify-center rounded-full bg-white px-6 py-2.5 text-base font-bold text-black shadow-[0_2px_10px_rgba(0,0,0,0.15)] ring-1 ring-black/10 transition-all duration-300 ease-out hover:scale-[1.02] active:scale-95"
                 >
+                  <Image
+                    src="/rzp_icon.png"
+                    alt=""
+                    width={26}
+                    height={26}
+                    className="h-10 w-10 object-contain"
+                  />
                   Pay Now
                 </a>
               </div>

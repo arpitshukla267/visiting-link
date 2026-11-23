@@ -99,10 +99,10 @@ export const NoWebsite: React.FC = () => {
             playsInline
             preload="auto"
             draggable={false}
-            className="block"
+            className="relative -left-5 block"
             style={{
               // crop: 5px off the right edge, 10px off the bottom
-              width: "calc(100% + 5px)",
+              width: "calc(100% + 10px)",
               maxWidth: "none",
               marginBottom: "-10px",
               height: "auto",

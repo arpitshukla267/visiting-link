@@ -205,7 +205,7 @@ export const Hero: React.FC = () => {
             style={{ fontFamily: COOPER_FONT }}
             className="max-w-[860px] text-[clamp(2rem,4.4vw,4.5rem)] font-normal leading-[1.08] tracking-tight"
           >
-            We Build Custom Software Solutions for your business...
+            We Build Custom<br/> Software Solutions for<br/> your business...
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 24 }}
@@ -214,7 +214,7 @@ export const Hero: React.FC = () => {
             style={{ fontFamily: "'Poppins', sans-serif" }}
             className="mt-6 max-w-[900px] text-[clamp(0.95rem,1.4vw,1.5rem)] font-normal leading-snug text-white"
           >
-            From professional websites to online stores and custom software, we
+            From professional websites to online stores and custom software,<br/> we
             build digital solutions around your vision.
           </motion.p>
         </div>

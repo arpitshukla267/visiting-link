@@ -2,7 +2,6 @@
 
 import React from "react";
 import { motion } from "motion/react";
-import Image from "next/image";
 import { Quote } from "lucide-react";
 
 /* ------------------------------------------------------------------ */
@@ -53,15 +52,9 @@ function EyebrowDivider({ label }: { label: string }) {
 
 type Accent = "orange" | "amber";
 
-const accentStyles: Record<Accent, { text: string; halo: string }> = {
-  orange: {
-    text: "text-orange-500",
-    halo: "bg-orange-500/30",
-  },
-  amber: {
-    text: "text-amber-500",
-    halo: "bg-amber-500/30",
-  },
+const accentStyles: Record<Accent, { text: string }> = {
+  orange: { text: "text-orange-500" },
+  amber: { text: "text-amber-500" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -74,18 +67,15 @@ function VisionMissionCard({
   headingLines,
   description,
   quote,
-  imageSrc,
-  imageAlt,
   delay = 0,
 }: {
   accent: Accent;
+  /** Main heading, e.g. "Our Vision" */
   label: string;
-  /** Exactly the lines you want rendered — keep this to 2 entries max. */
+  /** Subheading lines — keep this to 2 entries max. */
   headingLines: string[];
   description: string;
   quote: string;
-  imageSrc: string;
-  imageAlt: string;
   delay?: number;
 }) {
   const styles = accentStyles[accent];
@@ -95,45 +85,26 @@ function VisionMissionCard({
       delay={delay}
       className="relative flex w-full min-w-0 flex-col rounded-3xl border border-white/10 bg-gradient-to-b from-[#161616] to-[#0B0B0B] p-6 text-left shadow-[0_20px_45px_-25px_rgba(0,0,0,0.9)] sm:p-8 md:p-10"
     >
-      {/* Top row: image on left, label + heading on right */}
-      <div className="flex items-center gap-5 sm:gap-7">
-        <div className="relative shrink-0">
-          <div
-            className={`absolute -inset-3 rounded-full ${styles.halo} blur-xl`}
-          />
-          <div className="relative h-24 w-24 overflow-hidden rounded-full ring-4 ring-white/90 sm:h-28 sm:w-28 md:h-32 md:w-32">
-            <Image
-              src={imageSrc}
-              alt={imageAlt}
-              fill
-              sizes="128px"
-              className="object-cover"
-            />
-          </div>
-        </div>
+      {/* Heading + subheading */}
+      <div className="min-w-0">
+        <h3
+          className={`text-[30px] font-semibold leading-tight tracking-tight sm:text-[34px] md:text-[40px] ${styles.text}`}
+        >
+          {label}
+        </h3>
 
-        <div className="min-w-0">
-          {/* Label with leading dash */}
-          <div className={`flex items-center gap-2 ${styles.text}`}>
-            <span className="h-px w-4 bg-current" />
-            <span className="text-[11px] font-semibold uppercase tracking-[0.25em] sm:text-[12px]">
-              {label}
-            </span>
-          </div>
-
-          <h3 className="mt-2 text-[22px] font-medium leading-tight tracking-tight text-white sm:text-[26px] md:text-[30px]">
-            {headingLines.map((line, i) => (
-              <React.Fragment key={i}>
-                {line}
-                {i < headingLines.length - 1 && <br />}
-              </React.Fragment>
-            ))}
-          </h3>
-        </div>
+        <p className="mt-2 text-[18px] font-medium leading-snug text-white sm:text-[20px] md:text-[22px]">
+          {headingLines.map((line, i) => (
+            <React.Fragment key={i}>
+              {line}
+              {i < headingLines.length - 1 && <br />}
+            </React.Fragment>
+          ))}
+        </p>
       </div>
 
       {/* Description */}
-      <p className="mt-7 max-w-full text-[15px] leading-7 text-white/60 md:text-[16px]">
+      <p className="mt-6 max-w-full text-[15px] leading-7 text-white/60 md:text-[16px]">
         {description}
       </p>
 
@@ -200,22 +171,18 @@ export const VisionMissionSection: React.FC = () => {
           <VisionMissionCard
             accent="orange"
             label="Our Vision"
-            headingLines={["A More Connected", "Tomorrow"]}
+            headingLines={["A More Connected Tomorrow"]}
             description="To be a global technology partner, empowering businesses and people with innovative digital solutions that create meaningful opportunities and a more connected, inclusive future."
             quote="We envision a world where technology bridges gaps and creates new possibilities for everyone."
-            imageSrc="/images/vision.webp"
-            imageAlt="A person standing on a mountain peak, representing our vision"
             delay={0}
           />
 
           <VisionMissionCard
             accent="orange"
             label="Our Mission"
-            headingLines={["Build, Solve,", "Scale"]}
+            headingLines={["Build, Solve, Scale"]}
             description="To deliver innovative, reliable, and user-centric digital solutions that solve real-world challenges, help businesses grow, and create lasting value through technology, collaboration, and continuous improvement."
             quote="We are on a mission to turn ideas into impact — one solution, one partner, one success story at a time."
-            imageSrc="/images/mission.webp"
-            imageAlt="A rocket launching, representing our mission"
             delay={0.1}
           />
         </div>

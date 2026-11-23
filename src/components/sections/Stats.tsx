@@ -14,9 +14,10 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 
 /* Edit the numbers / labels here */
 const STATS = [
-  { value: 900, suffix: "+", label: "Custom Projects Delivered" },
-  { value: 200, suffix: "+", label: "Brands Served" },
+  { value: 200, suffix: "+", label: "Custom Projects Delivered" },
+  { value: 900, suffix: "+", label: "Brand Identity & Company Profile" },
   { value: 2, suffix: "M+", label: "People Reached" },
+  { value: 350, suffix: "+", label: "Business Consultation" },
 ];
 
 /* Counts from 0 to `to` the first time it scrolls into view */
@@ -62,14 +63,14 @@ export const Stats: React.FC = () => {
   return (
     <section
       id="stats"
-      className={`${poppins.className} bg-black px-4 py-14 text-white md:py-20`}
+      className={`${poppins.className} bg-black px-4 py-14 text-white md:py-32`}
     >
       <motion.h2
         initial={{ opacity: 0, y: 20 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px 0px -10% 0px" }}
         transition={{ duration: 0.7, ease: EASE }}
-        className="mb-7 text-center text-[clamp(1.5rem,2.1vw,1.75rem)] font-normal"
+        className="text-center text-[clamp(1.5rem,2.5vw,4.75rem)] font-normal mb-16"
       >
         Trusted by Businesses Across Industries.
       </motion.h2>
@@ -79,14 +80,17 @@ export const Stats: React.FC = () => {
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px 0px -10% 0px" }}
         transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-        className="mx-auto flex max-w-[845px] justify-between gap-4  px-5 py-6 md:pl-[18px] md:pr-[30px]"
+        className="mx-auto grid max-w-[70vw] grid-cols-2 gap-x-6 gap-y-10 px-5 py-6 md:grid-cols-4 md:gap-x-8"
       >
         {STATS.map((stat) => (
-          <div key={stat.label} className="min-w-0">
-            <div className="text-[clamp(1.5rem,2.6vw,2rem)] font-semibold leading-none">
+          <div
+            key={stat.label}
+            className="flex min-w-0 flex-col items-center text-center"
+          >
+            <div className="text-[clamp(1.5rem,2.6vw,3rem)] font-semibold leading-none">
               <CountUp to={stat.value} suffix={stat.suffix} />
             </div>
-            <p className="mt-5 text-[clamp(0.7rem,1.1vw,0.95rem)] font-normal text-[#b9b9b9]">
+            <p className="mt-5 max-w-[20ch] text-balance text-[clamp(0.7rem,1.1vw,0.95rem)] font-normal leading-snug text-[#b9b9b9]">
               {stat.label}
             </p>
           </div>

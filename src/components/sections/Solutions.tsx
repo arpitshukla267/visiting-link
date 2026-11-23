@@ -95,7 +95,7 @@ export const Solutions: React.FC = () => {
   return (
     <section
       id="solutions"
-      className={`${poppins.className} relative isolate overflow-hidden bg-white px-4 py-8 text-[#111] md:py-12`}
+      className={`${poppins.className} relative isolate overflow-hidden bg-white px-4 py-16 text-[#111] md:py-24`}
     >
       <style>{CAROUSEL_CSS}</style>
 
@@ -106,7 +106,7 @@ export const Solutions: React.FC = () => {
       >
         {/* Top-left: soft pink / violet */}
         <motion.div
-          className="absolute -top-[260px] left-[-25%] h-[620px] w-[min(760px,90vw)] will-change-transform"
+          className="absolute -top-[260px] left-[-50%] md:left-[-25%] h-[620px] w-[min(760px,90vw)] will-change-transform"
           style={{
             background:
               "radial-gradient(ellipse closest-side, rgba(236,72,153,0.20) 0%, rgba(168,85,247,0.10) 48%, rgba(168,85,247,0.03) 72%, transparent 100%)",

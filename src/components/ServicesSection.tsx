@@ -196,12 +196,6 @@ function SectionIntro() {
       transition={{ duration: 0.6, ease: EASE }}
       className="max-w-3xl"
     >
-      <div className="flex items-center gap-3">
-        <span className="h-px w-6 bg-white/40" />
-        <span className="text-xs font-medium uppercase tracking-[0.18em] text-[#8F8F8F]">
-          What we do
-        </span>
-      </div>
 
       <h2 className="mt-5 text-3xl font-medium leading-[1.1] tracking-tight text-[#F5F5F2] md:text-5xl lg:text-[56px]">
         We turn business ideas into digital products that work.

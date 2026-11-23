@@ -111,7 +111,7 @@ export const Footer: React.FC<FooterProps> = () => {
             alt="VisitingLink Logo"
             width={180}
             height={50}
-            className="h-auto w-[140px] object-contain brightness-0 invert"
+            className="h-auto w-[140px] object-contain brightness-0 invert -ml-4"
             priority
           />
         </Link>
@@ -222,7 +222,7 @@ export const Footer: React.FC<FooterProps> = () => {
                 alt="VisitingLink Logo"
                 width={180}
                 height={50}
-                className="h-auto w-[150px] object-contain brightness-0 invert md:w-[175px]"
+                className="h-auto w-[150px] object-contain brightness-0 invert md:w-[175px] -ml-8 lg:-ml-4"
                 priority
               />
             </Link>
