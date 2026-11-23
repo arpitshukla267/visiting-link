@@ -212,17 +212,17 @@ export default function HowWeWorkSection() {
       <div className="mx-auto max-w-[95vw] md:max-w-[90vw] px-4 md:px-12">
         {/* Mobile — vertical process timeline */}
         <div className="md:hidden">
-          <p
+          {/* <p
             className="mb-2 text-[11px] font-semibold uppercase tracking-[0.24em]"
             style={{ color: CORAL }}
           >
             Studio operation across the world
-          </p>
+          </p> */}
           <h2
             className="mb-3 text-2xl font-semibold leading-[1.15] tracking-[-0.02em]"
             style={{ color: INK }}
           >
-            We have best team and best process
+            We have the best process
           </h2>
           <p className="mb-10 text-sm leading-relaxed" style={{ color: MUTED }}>
             We combine clear thinking, thoughtful design and precise technology

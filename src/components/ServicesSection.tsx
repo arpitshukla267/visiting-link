@@ -395,21 +395,21 @@ export const WhatWeDoSection: React.FC = () => {
   };
 
   return (
-<section
-  id="what-we-do"
-  className="
-    relative w-full overflow-hidden
-    border-b border-[#161616]
-    bg-[#010102]
-    py-20 md:py-32
-
-    before:absolute before:inset-0 before:pointer-events-none
-    before:bg-[radial-gradient(ellipse_55%_45%_at_100%_0%,rgba(59,130,246,0.12)_0%,rgba(124,58,237,0.10)_38%,transparent_75%)]
-
-    after:absolute after:inset-0 after:pointer-events-none
-    after:bg-[radial-gradient(ellipse_55%_45%_at_0%_100%,rgba(236,72,153,0.13)_0%,rgba(124,58,237,0.09)_38%,rgba(59,130,246,0.04)_58%,transparent_78%)]
-  "
->
+    <section
+      id="what-we-do"
+      className="
+        relative w-full overflow-hidden
+        border-b border-[#161616]
+        bg-[#010102]
+        py-20 md:py-32
+    
+        before:absolute before:inset-0 before:pointer-events-none
+        before:bg-[radial-gradient(ellipse_55%_45%_at_100%_0%,rgba(59,130,246,0.12)_0%,rgba(124,58,237,0.10)_38%,transparent_75%)]
+    
+        after:absolute after:inset-0 after:pointer-events-none
+        after:bg-[radial-gradient(ellipse_55%_45%_at_0%_100%,rgba(236,72,153,0.13)_0%,rgba(124,58,237,0.09)_38%,rgba(59,130,246,0.04)_58%,transparent_78%)]
+      "
+    >
       <div className="mx-auto max-w-[90vw] px-2 md:px-12">
         <SectionIntro />
 

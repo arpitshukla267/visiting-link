@@ -79,7 +79,7 @@ export function EightYearsSection() {
   return (
     <section
       ref={sectionRef}
-      className="relative overflow-hidden bg-[#FEFEFE] py-16 text-black"
+      className="relative overflow-hidden bg-[#FEFEFE] py-16 pt-44 text-black"
     >
       <div className="relative mx-auto max-w-[95vw] md:max-w-[85vw] px-4 md:px-12">
         {/* ── DESKTOP (md and up): unchanged — image as base layer,

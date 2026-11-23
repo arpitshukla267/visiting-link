@@ -17,6 +17,10 @@
     position: absolute;
     inset: 0;
     z-index: 0;
+
+    /* canvas ka repaint baaki page ko affect nahi karega */
+    contain: layout paint size;
+    pointer-events: none;
   }
   
   .wordmarkCanvas {

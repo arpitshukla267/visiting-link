@@ -363,7 +363,7 @@ function HeroConnectCta({
   );
 }
 
-export function Hero() {
+export function Cta() {
   const trackRef = useRef<HTMLDivElement>(null);
   const heroSectionRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);

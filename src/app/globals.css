@@ -1,6 +1,20 @@
 @import "tailwindcss";
 @import "lenis/dist/lenis.css";
 
+@font-face {
+  font-family: 'Cooper BT';
+  src: url('/fonts/CooperBT.woff2') format('woff2');
+  font-weight: 400;
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Canva Sans';
+  src: url('/fonts/CanvaSans-Bold.woff2') format('woff2');
+  font-weight: 700;
+  font-display: swap;
+}
+
 @layer base {
   html {
     color: #111111;

@@ -10,11 +10,17 @@ import { StaggeredSections } from "@/components/StaggeredSections";
 import { useAppNavigation } from "@/hooks/useAppNavigation";
 import { useServiceModal } from "@/components/AppShell";
 import { useStartupReady } from "@/components/StartupLoader";
-import LaunchStore from "@/components/LaunchStore";
-import Hero from "@/components/hero/Hero";
+import Hero from "@/components/sections/Hero";
 import TechCarousel from "@/components/hero/Techcarousel";
 import Gif from "@/components/Gif";
 import FloatingContactButtons from "@/components/FloatingContactButtons";
+import Stats from "@/components/sections/Stats";
+import NoWebsite from "@/components/sections/NoWebsite";
+import Solutions from "@/components/sections/Solutions";
+import OnlineStore from "@/components/sections/OnlineStore";
+import WhyChooseUs from "@/components/sections/WhyChooseUs";
+import Cta from "@/components/hero/Cta";
+import { TeamSection } from "@/components/about/TeamsSection";
 
 const HowWeWorkSection = dynamic(
   () => import("@/components/HowWeWorkSection"),
@@ -33,7 +39,6 @@ export default function HomeClient() {
   const sections = [
     <WhatWeDoSection key="services" />,
     <HowWeWorkSection key="how" />,
-    <LaunchStore  />,
     <CompanyStatement key="promises" />,
     <SelectedWorkSection key="work" />,
     <VisualBreak key="break" />,
@@ -43,12 +48,19 @@ export default function HomeClient() {
     <HeroFrameProvider>
       <FloatingContactButtons />
       <Hero />
-      <Gif />
-      <div className="relative z-10">
+      <Stats />
+      <NoWebsite />
+      <WhatWeDoSection key="services" />
+      <Solutions />
+      <OnlineStore />
+      <WhyChooseUs />
+      <HowWeWorkSection key="how" />
+      <Cta />
+      {/* <div className="relative z-10">
         <div className="overflow-visible bg-white">
           <StaggeredSections sections={sections} />
         </div>
-      </div>
+      </div> */}
     </HeroFrameProvider>
   );
 }

@@ -8,10 +8,7 @@ import {
   JourneySection,
   type Milestone,
 } from "@/components/about/JourneySection";
-import {
-  FounderSection,
-  TeamSection,
-} from "@/components/about/FounderSection";
+import { TeamSection } from "@/components/about/TeamsSection";
 import { VisionMissionSection } from "@/components/about/VisionMissionSection";
 import { EightYearsSection } from "@/components/about/Eightyearssection";
 
@@ -185,241 +182,12 @@ export const AboutPage: React.FC<AboutPageProps> = ({
   return (
     <div className="overflow-x-hidden bg-white text-[#111111] selection:bg-black selection:text-white max-w-[100vw]">
       {/* ─────────────────────────────────────────────────────────
-          SECTION 01 — HERO / OUR EXPERIENCE
-      ───────────────────────────────────────────────────────── */}
-      {/* ================= DESKTOP HERO ================= */}
-
-      <section className="relative hidden min-h-screen overflow-hidden bg-[#050506] text-white md:block">
-        {/* Background artwork */}
-        <Image
-          src="/images/about.webp"
-          alt="VisitingLink Digital Services and Technology Studio"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-
-        {/* Uniform overlay across the whole image — knocks down overall brightness a touch */}
-        <div className="absolute inset-0 bg-black/40" />
-
-        {/* Broad, smooth wash across the left ~40% — much stronger now so it actually cuts through the bright sky */}
-        <div
-          className="
-            absolute inset-0
-            bg-[linear-gradient(
-              90deg,
-              rgba(0,0,0,0.85)_0%,
-              rgba(0,0,0,0.82)_12%,
-              rgba(0,0,0,0.75)_24%,
-              rgba(0,0,0,0.6)_34%,
-              rgba(0,0,0,0.38)_42%,
-              rgba(0,0,0,0.16)_52%,
-              rgba(0,0,0,0)_65%
-            )]
-          "
-        />
-
-        {/* Slight bottom fade for stats */}
-        <div
-          className="
-            absolute inset-x-0 bottom-0 h-[35%]
-            bg-gradient-to-t
-            from-black/45
-            to-transparent
-          "
-        />
-
-        {/* Content */}
-        <div className="relative z-10 mx-auto flex min-h-screen max-w-[95vw] items-center px-6">
-          <div className="w-full max-w-[50vw]">
-            {/* Heading */}
-            <FadeIn delay={0.1}>
-              <h1
-                className="
-                  text-6xl
-                  font-semibold
-                  leading-[1.02]
-                  tracking-[0.01em]
-                  text-white
-                "
-              >
-                We build
-                <br />
-                <span className="text-white/90">digital</span>
-                <br />
-                experiences.
-              </h1>
-            </FadeIn>
-
-            {/* Description */}
-            <FadeIn delay={0.2}>
-              <p
-                className="
-                  mt-8
-                  max-w-[510px]
-                  text-sm
-                  font-normal
-                  leading-7
-                  text-white/90
-                  md:text-base
-                "
-              >
-                For over 8 years, we’ve been designing brands, building digital
-                experiences and engineering technology that helps ambitious
-                ideas move forward.
-              </p>
-            </FadeIn>
-
-            {/* Stats */}
-            <FadeIn delay={0.3} className="mt-10">
-              <div
-                className="
-                  w-[80%]
-                  border-t
-                  border-white/30
-                  pt-6
-                "
-              >
-                <div
-                  className="
-                    grid
-                    w-full
-                    grid-cols-2
-                    gap-x-12
-                    gap-y-7
-                    md:grid-cols-4
-                    md:gap-x-10
-                  "
-                >
-                  {/* Years */}
-                  <div>
-                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
-                      08
-                      <span className="text-white/55">+</span>
-                    </div>
-
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
-                      Years
-                    </p>
-                  </div>
-
-                  {/* Clients */}
-                  <div>
-                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
-                      900
-                      <span className="text-white/55">+</span>
-                    </div>
-
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
-                      Clients
-                    </p>
-                  </div>
-
-                  {/* Creators */}
-                  <div>
-                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
-                      100
-                      <span className="text-white/55">+</span>
-                    </div>
-
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
-                      Creators
-                    </p>
-                  </div>
-
-                  {/* Brands */}
-                  <div>
-                    <div className="text-2xl font-medium tracking-tight text-white md:text-3xl">
-                      120
-                      <span className="text-white/55">+</span>
-                    </div>
-
-                    <p className="mt-1 text-[10px] uppercase tracking-[0.12em] text-white/65">
-                      Brands
-                    </p>
-                  </div>
-                </div>
-              </div>
-            </FadeIn>
-          </div>
-        </div>
-      </section>
-
-      {/* ================= MOBILE HERO ================= */}
-      <section className="relative min-h-[100svh] overflow-hidden bg-[#050506] text-white md:hidden">
-        {/* Background */}
-        <Image
-          src="/images/about-mobile.webp"
-          alt="VisitingLink Digital Services — 8+ Years of Craft and Engineering"
-          fill
-          priority
-          sizes="100vw"
-          className="object-cover object-center"
-        />
-
-        {/* readability gradient */}
-        <div className="absolute inset-0 bg-gradient-to-b from-black/10 via-transparent to-black/80" />
-
-        {/* subtle bottom fade */}
-        <div className="absolute inset-x-0 bottom-0 h-[45%] bg-gradient-to-t from-black/75 via-black/20 to-transparent" />
-
-        {/* Content */}
-        <div className="relative z-10 flex min-h-[100svh] flex-col justify-end px-6 pb-6">
-          <FadeIn delay={0.15}>
-            <div className="flex items-start gap-3">
-              {/* small accent line */}
-              <div className="mt-1 h-12 w-px bg-white/40" />
-
-              <div>
-                <p className="text-[10px] uppercase tracking-[0.2em] text-white/45">
-                  About VisitingLink
-                </p>
-
-                <p className="mt-3 max-w-[310px] text-[15px] leading-6 text-white/75">
-                  For over 8 years, we’ve been designing brands, building
-                  digital experiences and engineering technology that helps
-                  ambitious ideas move forward.
-                </p>
-              </div>
-            </div>
-          </FadeIn>
-
-          {/* bottom meta */}
-          <FadeIn delay={0.3} className="mt-8">
-            <div className="flex items-center justify-between border-t border-white/15 pt-4">
-              <span className="text-[10px] uppercase tracking-[0.16em] text-white/40">
-                Since 2018
-              </span>
-
-              <span className="text-[10px] uppercase tracking-[0.16em] text-white/40">
-                Digital · Technology
-              </span>
-            </div>
-          </FadeIn>
-        </div>
-      </section>
-
-      {/* ─────────────────────────────────────────────────────────
          SECTION 02 — OUR STORY (8 years)
       ───────────────────────────────────────────────────────── */}
       <EightYearsSection />
 
       {/* ─────────────────────────────────────────────────────────
-          SECTION 03 — PEOPLE / FOUNDER
-      ───────────────────────────────────────────────────────── */}
-      <FounderSection
-        eyebrow="Built by People"
-        headline="Meet Our Founder"
-        founderName="Mrs. Geetanjali Shakya"
-        founderTitle="CEO & Founder"
-        yearsLabel="8 Years of Digital Innovation"
-        words="VisitingLink began with a clear purpose: in a fast-evolving digital world, every individual, brand, and ambitious idea deserves a clear, powerful presence. Over 8 years of designing products and engineering technology, we built a culture rooted in clarity, precision, and relentless curiosity."
-        onNavigateContact={() => onNavigateContact()}
-      />
-
-      {/* ─────────────────────────────────────────────────────────
-          SECTION 04 — OUR JOURNEY
+          SECTION 03 — OUR JOURNEY
       ───────────────────────────────────────────────────────── */}
       <div className="h-full">
         <JourneySection
@@ -431,13 +199,13 @@ export const AboutPage: React.FC<AboutPageProps> = ({
       </div>
 
       {/* ─────────────────────────────────────────────────────────
-          SECTION 05 — VISION + MISSION
+          SECTION 04 — Our founders
       ───────────────────────────────────────────────────────── */}
 
       <VisionMissionSection />
 
       {/* ─────────────────────────────────────────────────────────
-          SECTION 06 — TEAM
+          SECTION 05 — TEAM (founder + co-founder + team)
       ───────────────────────────────────────────────────────── */}
       <TeamSection />
     </div>
