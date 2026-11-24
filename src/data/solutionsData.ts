@@ -403,7 +403,7 @@ export const SOLUTIONS: Record<SolutionKey, SolutionData> = {
     ],
     tiersNote:
       "SMS and WhatsApp API charges are not included. They are billed directly by the provider.",
-    video: VIDEO,
+    video: {src:"/solutions/crm_vid.mp4"},
   },
 };
 
