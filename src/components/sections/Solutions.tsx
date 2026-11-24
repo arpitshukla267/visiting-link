@@ -47,12 +47,12 @@ const CARDS: SolutionCard[] = [
     image: "/solutions/9.jpeg",
     href: "/contact",
   },
-  {
-    id: "retail-trading",
-    alt: "Retail & Trading website",
-    image: "/solutions/4.jpeg",
-    href: "/contact",
-  },
+  // {
+  //   id: "retail-trading",
+  //   alt: "Retail & Trading website",
+  //   image: "/solutions/4.jpeg",
+  //   href: "/contact",
+  // },
   {
     id: "retail-trading",
     alt: "Retail & Trading website",
@@ -74,28 +74,33 @@ const CARDS: SolutionCard[] = [
 ];
 
 /* Two identical sets side by side; the track slides by -50% = one full set,
-   so the loop is seamless. Each set is wider than the viewport (6 cards > 4). */
+   so the loop is seamless. Each set is wider than the viewport (7 cards > 5). */
 const COPIES = [0, 1];
 
 /*
- * --per  : how many cards are visible at once (4 on desktop, 2 on mobile)
+ * --per  : how many cards are visible at once (5 on desktop, 2 on mobile)
  * --gap  : space between cards
- * --vw   : width of the visible carousel window
- * Change --per below if you want a different count.
+ * --vw   : width of the visible carousel window (95vw)
+ * Both ends fade out using mask-image.
  */
 const CAROUSEL_CSS = `
 .sol-marquee {
-  --gap: 25px;
+  --gap: 28px;
   --per: 2;
-  --vw: min(92vw, 1400px);
+  --vw: 95vw;
   --card-w: calc((var(--vw) - (var(--per) - 1) * var(--gap)) / var(--per));
   width: var(--vw);
+  max-width: 95vw;
+  -webkit-mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
+  mask-image: linear-gradient(to right, transparent 0, #000 8%, #000 92%, transparent 100%);
 }
 @media (min-width: 768px) {
   .sol-marquee {
-    --gap: 20px;
-    --per: 4;
-    --vw: min(88vw, 1400px);
+    --gap: 32px;
+    --per: 5;
+    --vw: min(95vw, 1600px);
+    -webkit-mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
+    mask-image: linear-gradient(to right, transparent 0, #000 10%, #000 90%, transparent 100%);
   }
 }
 .sol-item {
@@ -172,7 +177,7 @@ export const Solutions: React.FC = () => {
         </motion.p>
       </div>
 
-      {/* Single-line sliding carousel (4 visible at a time) */}
+      {/* Single-line sliding carousel (5 visible at a time on desktop) */}
       <motion.div
         initial={{ opacity: 0, y: 40 }}
         whileInView={{ opacity: 1, y: 0 }}
@@ -189,8 +194,8 @@ export const Solutions: React.FC = () => {
                 className="flex shrink-0"
                 aria-hidden={!isOriginal || undefined}
               >
-                {CARDS.map((card) => (
-                  <div key={`${c}-${card.id}`} className="sol-item">
+                {CARDS.map((card, i) => (
+                  <div key={`${c}-${i}`} className="sol-item">
                     <Link
                       href={card.href}
                       aria-label={isOriginal ? card.alt : undefined}
@@ -202,7 +207,7 @@ export const Solutions: React.FC = () => {
                         src={card.image}
                         alt={isOriginal ? card.alt : ""}
                         fill
-                        sizes="(min-width: 768px) 22vw, 46vw"
+                        sizes="(min-width: 768px) 19vw, 46vw"
                         quality={90}
                         draggable={false}
                         className="object-cover transition-transform duration-700 group-hover:scale-105"
