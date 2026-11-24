@@ -91,6 +91,11 @@ const defaultMembers: TeamMember[] = [
     photoUrl: "/team/11.webp",
   },
   {
+    name: "Ragini Verma",
+    role: "Head of Quality Control (QC)",
+    photoUrl: "/team/12.png",
+  },
+  {
     name: "Sandeep Soni",
     role: "Customer Relation Manager",
     photoUrl: "/team/3.webp",
