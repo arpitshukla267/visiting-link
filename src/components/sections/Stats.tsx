@@ -65,10 +65,10 @@ export const Stats: React.FC = () => {
   return (
     <section
       id="stats"
-      className={`${poppins.className} relative overflow-hidden bg-black px-4 py-14 text-white md:py-32`}
+      className={`${poppins.className} relative overflow-hidden bg-black px-4 py-24 text-white md:py-32`}
     >
       {/* Heading + gradient glow below it */}
-      <div className="relative mb-16">
+      <div className="relative mb-12 md:mb-16">
         <div
           aria-hidden="true"
           className="pointer-events-none absolute left-1/2 top-full z-0 h-[380px] w-[min(700px,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
@@ -111,7 +111,7 @@ export const Stats: React.FC = () => {
       </motion.div>
 
       {/* Golden accent line with moving glow behind it */}
-      <div className="relative mx-auto mt-12 w-[min(500px,60vw)] md:mt-[105px]">
+      <div className="relative mx-auto mt-8 w-[min(500px,60vw)] md:mt-[105px]">
         {/* static soft base glow */}
         <div
           aria-hidden="true"

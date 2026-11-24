@@ -215,7 +215,9 @@ export const Hero: React.FC = () => {
             style={{ fontFamily: COOPER_FONT }}
             className="max-w-[860px] text-[clamp(2rem,4.4vw,4.5rem)] font-normal leading-[1.08] tracking-tight"
           >
-            We Build Custom<br/> Software Solutions for<br/> your business...
+            We Build Custom
+            <br /> Software Solutions for
+            <br className="hidden md:block" /> your business...
           </motion.h1>
           <motion.p
             initial={{ opacity: 0, y: 24 }}
@@ -224,8 +226,8 @@ export const Hero: React.FC = () => {
             style={{ fontFamily: "'Poppins', sans-serif" }}
             className="mt-6 max-w-[900px] text-[clamp(0.95rem,1.4vw,1.5rem)] font-normal leading-snug text-white"
           >
-            From professional websites to online stores and custom software,<br/> we
-            build digital solutions around your vision.
+            From professional websites to online stores and custom software,
+            <br /> we build digital solutions around your vision.
           </motion.p>
         </div>
       </div>
@@ -233,26 +235,30 @@ export const Hero: React.FC = () => {
       {/* Cards row */}
       <div className="relative z-10 mt-[10svh] pb-16 md:pb-24">
         <div className="relative">
+
           {/* OUR WORK — sits behind the cards */}
           <div
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 z-0 flex -translate-y-[70%] justify-center"
           >
-           <div
-             aria-hidden
-             className="pointer-events-none absolute inset-x-0 top-0 z-0 flex -translate-y-[70%] justify-center overflow-hidden"
-           >
-             <motion.span
-               initial={{ y: 80, opacity: 0 }}
-               whileInView={{ y: 0, opacity: 1 }}
-               viewport={{ once: true, amount: 0.3 }}
-               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-               style={{ fontFamily: IMPACT_FONT }}
-               className="select-none whitespace-nowrap text-[clamp(3.5rem,13vw,15rem)] font-normal uppercase leading-none tracking-[0.12em] text-white/[0.14]"
-             >
-               Our Work
-             </motion.span>
-           </div>
+            <motion.div
+              initial="hidden"
+              whileInView="visible"
+              viewport={{ once: true, amount: 0.1 }}
+              className="overflow-hidden pb-[0.08em]"
+            >
+              <motion.span
+                variants={{
+                  hidden: { y: "100%", opacity: 0 },
+                  visible: { y: "0%", opacity: 1 },
+                }}
+                transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+                style={{ fontFamily: IMPACT_FONT }}
+                className="block select-none whitespace-nowrap text-[clamp(3.5rem,13vw,15rem)] font-normal uppercase leading-none tracking-[0.12em] text-white/[0.14]"
+              >
+                Our Work
+              </motion.span>
+            </motion.div>
           </div>
 
           {/* Swipeable carousel */}

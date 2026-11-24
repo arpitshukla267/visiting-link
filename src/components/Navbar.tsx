@@ -182,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               : "bg-transparent py-5 md:py-6"
         }`}
       >
-        <div className="mx-auto grid h-12 max-w-[90vw] grid-cols-2 items-center px-4 md:grid-cols-3 md:px-12">
+        <div className="mx-auto grid h-12 max-w-[100vw] md:max-w-[90vw] grid-cols-2 items-center px-4 md:grid-cols-3 md:px-12">
           {/* Logo — left */}
           <Link
             href="/"

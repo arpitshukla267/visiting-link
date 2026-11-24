@@ -93,7 +93,7 @@ const defaultMembers: TeamMember[] = [
   {
     name: "Ragini Verma",
     role: "Head of Quality Control (QC)",
-    photoUrl: "/team/12.png",
+    photoUrl: "/team/12.jpeg",
   },
   {
     name: "Sandeep Soni",

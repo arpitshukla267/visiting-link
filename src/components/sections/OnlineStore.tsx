@@ -38,7 +38,7 @@ const fadeUp = (delay = 0) => ({
 /* One set of logos; rendered twice so the loop is seamless */
 const LogoSet: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
   <div
-    className="flex shrink-0 items-center gap-12 pr-12 md:gap-20 md:pr-20"
+    className="flex shrink-0 items-center gap-8 pr-12 md:gap-20 md:pr-20"
     aria-hidden={hidden}
   >
     {WORKING_PARTNERS.map((partner) => (
@@ -50,7 +50,7 @@ const LogoSet: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
         height={0}
         sizes="240px"
         draggable={false}
-        className="h-12 w-auto shrink-0 object-contain md:h-16 lg:h-20"
+        className="h-14 w-auto shrink-0 object-contain md:h-16 lg:h-20"
       />
     ))}
   </div>
@@ -137,12 +137,13 @@ export const OnlineStore: React.FC = () => {
           </motion.div>
         </div>
 
-        {/* Faded text, sits just under the logos and fades out downwards */}
+        {/* Faded text: 2 lines on mobile, 1 line on desktop */}
         <p
           aria-hidden="true"
-          className="pointer-events-none relative -mt-1 select-none whitespace-nowrap bg-gradient-to-b from-[#d9d9d9] via-[#efefef] to-white bg-clip-text text-center text-[clamp(2rem,6vw,5.5rem)] font-extrabold leading-none tracking-tight text-transparent md:-mt-2"
+          className="pointer-events-none relative -mt-1 select-none bg-gradient-to-b from-[#d9d9d9] via-[#efefef] to-white bg-clip-text text-center text-[clamp(2rem,6vw,5.5rem)] font-extrabold leading-[1.05] tracking-tight text-transparent md:-mt-2 md:whitespace-nowrap md:leading-none"
         >
-          Our Payment Partners
+          Our Payment
+          <br className="md:hidden" /> Partners
         </p>
       </div>
     </section>

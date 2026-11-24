@@ -91,7 +91,7 @@ export const NoWebsite: React.FC = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "0px 0px -10% 0px" }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.15 }}
-          className="relative mx-auto mt-6 w-full max-w-[90vw] overflow-hidden md:mt-2 md:max-w-[60vw]"
+          className="relative mx-auto mt-16 w-full max-w-[90vw] overflow-hidden md:mt-2 md:max-w-[60vw]"
         >
           <video
             src="/no_website.mp4"
