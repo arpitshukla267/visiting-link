@@ -2,7 +2,14 @@
 
 import React, { useCallback, useEffect, useRef, useState } from "react";
 import Image from "next/image";
+import { Anton } from "next/font/google";
 import { motion, type PanInfo } from "motion/react";
+
+const anton = Anton({
+  subsets: ["latin"],
+  weight: "400", // Anton ka sirf ek weight hai, wahi bold look deta hai
+  display: "swap",
+});
 
 /* -------------------------------------------------------------------------- */
 /*  Hero background — constant (does not change with the carousel)            */
@@ -64,6 +71,9 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const COOPER_FONT = "'Cooper BT', 'Cooper Black', 'Cooper Std', Georgia, serif";
 const IMPACT_FONT =
   "Impact, Haettenschweiler, 'Arial Narrow Bold', 'Arial Black', sans-serif";
+// Anton loads on every device (phones don't have Impact); Impact is the fallback
+const OUR_WORK_FONT = `${anton.style.fontFamily}, ${IMPACT_FONT}`;
+
 const CARD_STEP = 106; // % of card width between card centres
 const CARD_OFFSETS = [-2, -1, 0, 1, 2]; // -2 / 2 are hidden "staging" slots
 // Arc shape, indexed by |offset| (0 = centre, 1 = side, 2 = hidden staging)
@@ -235,7 +245,6 @@ export const Hero: React.FC = () => {
       {/* Cards row */}
       <div className="relative z-10 mt-[10svh] pb-16 md:pb-24">
         <div className="relative">
-
           {/* OUR WORK — sits behind the cards */}
           <div
             aria-hidden
@@ -253,7 +262,7 @@ export const Hero: React.FC = () => {
                   visible: { y: "0%", opacity: 1 },
                 }}
                 transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
-                style={{ fontFamily: IMPACT_FONT }}
+                style={{ fontFamily: OUR_WORK_FONT }}
                 className="block select-none whitespace-nowrap text-[clamp(3.5rem,13vw,15rem)] font-normal uppercase leading-none tracking-[0.12em] text-white/[0.14]"
               >
                 Our Work

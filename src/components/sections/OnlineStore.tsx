@@ -50,7 +50,7 @@ const LogoSet: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
         height={0}
         sizes="240px"
         draggable={false}
-        className="h-14 w-auto shrink-0 object-contain md:h-16 lg:h-20"
+        className="h-16 w-auto shrink-0 object-contain md:h-16 lg:h-20"
       />
     ))}
   </div>
