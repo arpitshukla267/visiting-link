@@ -45,7 +45,7 @@ export default function FloatingContactButtons() {
         onClick={() => setOpen(true)}
         aria-label="Open contact options"
         className={`absolute bottom-0 right-0 flex h-12 w-12 items-center justify-center rounded-full
-                    bg-gradient-to-br from-red-500 to-red-700 ring-2 ring-white/20
+                    bg-gradient-to-br from-black/70 to-black/90 ring-1 ring-white/20
                     transition-all duration-300 ease-out md:hidden
                     ${
                       open

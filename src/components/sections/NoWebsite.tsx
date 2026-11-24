@@ -16,7 +16,7 @@ const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
 const CANVA_SANS = "'Canva Sans', 'Segoe UI', Arial, sans-serif";
 
 const CTA_LABEL = "Get Started"; // change button text here
-const CTA_HREF = "/contact"; // change button link here
+const CTA_HREF = "/solutions/ecommerce"; // change button link here
 
 // Soft black fade in each corner of the video (blends it into the black bg).
 // Increase the alpha values / sizes for a stronger fade.
