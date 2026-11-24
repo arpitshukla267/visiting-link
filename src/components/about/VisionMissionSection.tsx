@@ -47,14 +47,14 @@ function EyebrowDivider({ label }: { label: string }) {
 }
 
 /* ------------------------------------------------------------------ */
-/*  Accent colors (orange = Vision, amber = Mission)                   */
+/*  Accent colors (both light orange)                                  */
 /* ------------------------------------------------------------------ */
 
 type Accent = "orange" | "amber";
 
 const accentStyles: Record<Accent, { text: string }> = {
-  orange: { text: "text-orange-500" },
-  amber: { text: "text-amber-500" },
+  orange: { text: "text-orange-400" },
+  amber: { text: "text-orange-400" },
 };
 
 /* ------------------------------------------------------------------ */
@@ -132,9 +132,9 @@ export const VisionMissionSection: React.FC = () => {
   return (
     <section className="relative overflow-hidden bg-black py-16 md:py-24">
       {/* Decorative background blobs */}
-      <div className="pointer-events-none absolute -left-24 top-4 h-72 w-72 rounded-full bg-orange-500/15 blur-3xl" />
-      <div className="pointer-events-none absolute -right-20 top-52 h-64 w-64 rounded-full bg-amber-500/10 blur-3xl" />
-      <div className="pointer-events-none absolute bottom-0 left-1/3 h-56 w-56 rounded-full bg-orange-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute -left-24 top-4 h-72 w-72 rounded-full bg-orange-400/10 blur-3xl" />
+      <div className="pointer-events-none absolute -right-20 top-52 h-64 w-64 rounded-full bg-orange-300/[0.08] blur-3xl" />
+      <div className="pointer-events-none absolute bottom-0 left-1/3 h-56 w-56 rounded-full bg-orange-300/[0.08] blur-3xl" />
 
       {/* Decorative dot grid, top right */}
       <div
@@ -151,11 +151,11 @@ export const VisionMissionSection: React.FC = () => {
         <FadeUp className="text-center">
           <h2 className="text-4xl font-semibold tracking-tight text-white md:text-5xl md:font-extrabold">
             Our{" "}
-            <span className="bg-gradient-to-r from-orange-500 to-amber-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">
               Vision
             </span>{" "}
             &{" "}
-            <span className="bg-gradient-to-r from-amber-500 to-orange-400 bg-clip-text text-transparent">
+            <span className="bg-gradient-to-r from-orange-400 to-orange-300 bg-clip-text text-transparent">
               Mission
             </span>
           </h2>

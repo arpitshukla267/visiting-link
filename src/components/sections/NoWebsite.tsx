@@ -61,7 +61,7 @@ export const NoWebsite: React.FC = () => {
           {...fadeUp(0.1)}
           className={`${poppins.className} mx-auto mt-4 max-w-[830px] text-[clamp(0.95rem,1.65vw,1.25rem)] font-light leading-tight`}
         >
-          You provide the idea; we provide the expertise to help you build a
+          We provide the expertise to help you build a
           professional website, online store, or digital platform, even from
           scratch.
         </motion.p>

@@ -20,7 +20,7 @@ export default function FloatingContactButtons() {
         aria-label="Raise a complaint"
         title="Raise a complaint"
         className="group relative flex h-14 w-14 items-center justify-center rounded-full
-                   ring-2 ring-white/20 bg-gradient-to-br from-black to-white
+                   ring-2 ring-white/20 bg-gradient-to-br from-red-500 to-white
                    transition-all duration-300 ease-out
                    hover:scale-110"
       >
@@ -31,7 +31,7 @@ export default function FloatingContactButtons() {
           height={26}
           className="h-full w-full object-contain rounded-full scale-105"
         />
-        <span className="absolute inset-0 rounded-full animate-ping bg-white/30 opacity-0 group-hover:opacity-100" />
+        <span className="absolute inset-0 rounded-full animate-ping bg-red-500/30 opacity-0 group-hover:opacity-100" />
       </Link>
 
       {/* Phone button */}
