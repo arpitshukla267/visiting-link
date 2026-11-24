@@ -321,15 +321,15 @@ export default function HowWeWorkSection() {
               className="mb-3 text-[11px] font-semibold uppercase tracking-[0.24em]"
               style={{ color: CORAL }}
             >
-              Studio operation across the world
+              How we work
             </p>
             <h2
               className="mb-5 text-3xl font-semibold leading-[1.1] tracking-[-0.025em] md:text-4xl lg:text-[42px]"
               style={{ color: INK }}
             >
-              We have best team
+              We have the
               <br />
-              and best process
+               best process
             </h2>
             <p className="mb-8 text-sm leading-relaxed md:text-[15px]" style={{ color: MUTED }}>
               We combine clear thinking, thoughtful design and precise technology

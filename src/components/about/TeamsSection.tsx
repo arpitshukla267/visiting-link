@@ -135,11 +135,6 @@ const defaultMembers: TeamMember[] = [
     role: "Video Editor",
     photoUrl: "/team/8.png",
   },
-  {
-    name: "Tanya Tiwari",
-    role: "Sales Executive",
-    photoUrl: "/images/tanya.jpeg",
-  },
 ];
 
 function TeamMemberCard({

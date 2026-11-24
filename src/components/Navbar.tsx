@@ -155,7 +155,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
   const navThemeDark = isTransparentPage && !isScrolled && !mobileMenuOpen;
 
   const navLinkClass = (active: boolean) =>
-    `text-[13px] font-medium uppercase tracking-widest text-nowrap transition-colors duration-200 cursor-pointer ${
+    `text-[14px] font-medium uppercase tracking-widest text-nowrap transition-colors duration-200 cursor-pointer ${
       active
         ? navThemeDark
           ? "text-white"
@@ -182,7 +182,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               : "bg-transparent py-5 md:py-6"
         }`}
       >
-        <div className="mx-auto grid h-12 max-w-8xl grid-cols-2 items-center px-4 md:grid-cols-3 md:px-12">
+        <div className="mx-auto grid h-12 max-w-[90vw] grid-cols-2 items-center px-4 md:grid-cols-3 md:px-12">
           {/* Logo — left */}
           <Link
             href="/"
@@ -300,14 +300,14 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
               href={PAY_HREF}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center justify-center gap-1 -ml-0.5 rounded-full bg-white px-6 py-0.5 text-base font-bold text-black shadow-[0_2px_10px_rgba(0,0,0,0.15)] ring-1 ring-black/10 transition-all duration-300 ease-out hover:scale-105 active:scale-95"
+              className="flex items-center justify-center rounded-full bg-white px-4 py-0.5 text-[15px] font-semibold text-black shadow-[0_2px_10px_rgba(0,0,0,0.15)] ring-1 ring-black/10 transition-all duration-300 ease-out hover:scale-105 active:scale-95"
             >
               <Image
                 src="/rzp_icon.png"
                 alt=""
                 width={26}
                 height={26}
-                className="h-10 w-10 object-cover -ml-0.5"
+                className="h-8 w-8 object-cover "
               />
               Pay Our Fees
             </a>
@@ -444,7 +444,7 @@ export const Navbar: React.FC<NavbarProps> = ({ currentPage }) => {
                     height={26}
                     className="h-10 w-10 object-contain"
                   />
-                  Pay Now
+                  Pay Our Fees
                 </a>
               </div>
             </motion.aside>

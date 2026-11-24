@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import Image from "next/image";
 
 const PHONE_NUMBER = "919236553585"; // country code + number, no + or spaces
 const WHATSAPP_MESSAGE = "Hi, I have a query.";
@@ -19,24 +20,18 @@ export default function FloatingContactButtons() {
         aria-label="Raise a complaint"
         title="Raise a complaint"
         className="group relative flex h-14 w-14 items-center justify-center rounded-full
-                   bg-gradient-to-br from-orange-500 to-orange-700
-                   ring-1 ring-white/20
+                   ring-2 ring-white/20 bg-gradient-to-br from-black to-white
                    transition-all duration-300 ease-out
                    hover:scale-110"
       >
-        <svg
-          viewBox="0 0 24 24"
-          className="h-6 w-6 fill-none stroke-white drop-shadow-sm"
-          strokeWidth="2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        >
-          {/* Message bubble with exclamation mark */}
-          <path d="M21 15a2 2 0 01-2 2H8l-5 4V5a2 2 0 012-2h14a2 2 0 012 2z" />
-          <line x1="12" y1="7.5" x2="12" y2="11.5" />
-          <line x1="12" y1="14" x2="12.01" y2="14" />
-        </svg>
-        <span className="absolute inset-0 rounded-full animate-ping bg-red-500/30 opacity-0 group-hover:opacity-100" />
+        <Image
+          src="/complaint_logo.jpeg"
+          alt=""
+          width={26}
+          height={26}
+          className="h-full w-full object-contain rounded-full scale-105"
+        />
+        <span className="absolute inset-0 rounded-full animate-ping bg-white/30 opacity-0 group-hover:opacity-100" />
       </Link>
 
       {/* Phone button */}

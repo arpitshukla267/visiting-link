@@ -24,8 +24,6 @@ const WORKING_PARTNERS = [
   { name: "PhonePe", logo: "/gateway/phonepe.webp" },
   { name: "Amazon Pay", logo: "/gateway/amazonpay.webp" },
   { name: "Shiprocket", logo: "/gateway/shiprocket.webp" },
-  { name: "Zoho Payments", logo: "/gateway/ZohoPayments.webp" },
-  { name: "Instamojo", logo: "/gateway/instamojo.webp" },
 ];
 
 const MARQUEE_DURATION = 35; // seconds for one full loop — higher = slower

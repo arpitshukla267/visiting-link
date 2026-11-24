@@ -60,34 +60,47 @@ const CountUp: React.FC<{ to: number; suffix?: string; duration?: number }> = ({
 };
 
 export const Stats: React.FC = () => {
+  const reduceMotion = useReducedMotion();
+
   return (
     <section
       id="stats"
-      className={`${poppins.className} bg-black px-4 py-14 text-white md:py-32`}
+      className={`${poppins.className} relative overflow-hidden bg-black px-4 py-14 text-white md:py-32`}
     >
-      <motion.h2
-        initial={{ opacity: 0, y: 20 }}
-        whileInView={{ opacity: 1, y: 0 }}
-        viewport={{ once: true, margin: "0px 0px -10% 0px" }}
-        transition={{ duration: 0.7, ease: EASE }}
-        className="text-center text-[clamp(1.5rem,2.5vw,4.75rem)] font-normal mb-16"
-      >
-        Trusted by Businesses Across Industries.
-      </motion.h2>
+      {/* Heading + gradient glow below it */}
+      <div className="relative mb-16">
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute left-1/2 top-full z-0 h-[380px] w-[min(700px,90vw)] -translate-x-1/2 -translate-y-1/2 rounded-full opacity-30 blur-3xl"
+          style={{
+            background:
+              "radial-gradient(ellipse at center, rgba(214,148,30,0.85) 0%, rgba(200,134,26,0.35) 45%, rgba(200,134,26,0) 75%)",
+          }}
+        />
+        <motion.h2
+          initial={{ opacity: 0, y: 20 }}
+          whileInView={{ opacity: 1, y: 0 }}
+          viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+          transition={{ duration: 0.7, ease: EASE }}
+          className="relative z-10 text-center text-[clamp(1.5rem,2.7vw,4.75rem)] font-normal"
+        >
+          Trusted by Businesses Across Industries.
+        </motion.h2>
+      </div>
 
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         whileInView={{ opacity: 1, y: 0 }}
         viewport={{ once: true, margin: "0px 0px -10% 0px" }}
         transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-        className="mx-auto grid max-w-[70vw] grid-cols-2 gap-x-6 gap-y-10 px-5 py-6 md:grid-cols-4 md:gap-x-8"
+        className="relative z-10 mx-auto grid max-w-[70vw] grid-cols-2 gap-x-6 gap-y-10 px-5 py-6 md:grid-cols-4 md:gap-x-8"
       >
         {STATS.map((stat) => (
           <div
             key={stat.label}
             className="flex min-w-0 flex-col items-center text-center"
           >
-            <div className="text-[clamp(1.5rem,2.6vw,3rem)] font-semibold leading-none">
+            <div className="text-[clamp(1.5rem,2.8vw,3.2rem)] font-semibold leading-none">
               <CountUp to={stat.value} suffix={stat.suffix} />
             </div>
             <p className="mt-5 max-w-[20ch] text-balance text-[clamp(0.7rem,1.1vw,0.95rem)] font-normal leading-snug text-[#b9b9b9]">
@@ -97,16 +110,52 @@ export const Stats: React.FC = () => {
         ))}
       </motion.div>
 
-      {/* Golden accent line */}
-      <div
-        aria-hidden="true"
-        className="mx-auto mt-12 h-[2px] w-[min(250px,60vw)] md:mt-[44px]"
-        style={{
-          background:
-            "linear-gradient(90deg, rgba(200,134,26,0) 0%, rgba(214,148,30,0.95) 50%, rgba(200,134,26,0) 100%)",
-          boxShadow: "0 0 14px rgba(214,148,30,0.35)",
-        }}
-      />
+      {/* Golden accent line with moving glow behind it */}
+      <div className="relative mx-auto mt-12 w-[min(500px,60vw)] md:mt-[105px]">
+        {/* static soft base glow */}
+        <div
+          aria-hidden="true"
+          className="pointer-events-none absolute inset-x-0 top-1/2 z-0 h-10 -translate-y-1/2 rounded-full opacity-40 blur-2xl"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(200,134,26,0) 0%, rgba(214,148,30,0.9) 50%, rgba(200,134,26,0) 100%)",
+          }}
+        />
+
+        {/* moving glow */}
+        <motion.div
+          aria-hidden="true"
+          className="pointer-events-none absolute top-1/2 z-0 h-1 w-1 rounded-full blur-[1.5px]"
+          style={{
+            x: "-50%",
+            y: "-50%",
+            background:
+              "radial-gradient(circle at center, rgba(255,214,140,1) 0%, rgba(255,184,64,0.95) 35%, rgba(214,148,30,0.5) 65%, rgba(214,148,30,0) 100%)",
+            boxShadow:
+              "0 0 10px 3px rgba(255,184,64,0.6), 0 0 22px 8px rgba(214,148,30,0.3)",
+          }}
+          initial={{ left: "0%" }}
+          animate={
+            reduceMotion ? { left: "50%" } : { left: ["0%", "100%", "0%"] }
+          }
+          transition={{
+            duration: 5,
+            ease: "easeInOut",
+            repeat: reduceMotion ? 0 : Infinity,
+          }}
+        />
+
+        {/* the line itself */}
+        <div
+          aria-hidden="true"
+          className="relative z-10 h-[2px] w-full"
+          style={{
+            background:
+              "linear-gradient(90deg, rgba(200,134,26,0) 0%, rgba(214,148,30,0.95) 50%, rgba(200,134,26,0) 100%)",
+            boxShadow: "0 0 14px rgba(214,148,30,0.35)",
+          }}
+        />
+      </div>
     </section>
   );
 };

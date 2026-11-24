@@ -13,7 +13,6 @@ const poppins = Poppins({
 });
 
 const EASE: [number, number, number, number] = [0.22, 1, 0.36, 1];
-const CANVA_SANS = "'Canva Sans', 'Segoe UI', Arial, sans-serif";
 
 /* ------------------------------ Data (edit me) ------------------------------ */
 type SolutionCard = {
@@ -27,56 +26,89 @@ const CARDS: SolutionCard[] = [
   {
     id: "organic-store",
     alt: "Organic Store website",
-    image: "/solutions/organic-store.jpg",
-    href: "/services",
+    image: "/solutions/1.jpeg",
+    href: "/contact",
   },
   {
     id: "jewelry-shop",
     alt: "Jewelry Shop website",
-    image: "/solutions/jewelry-shop.jpg",
-    href: "/services",
+    image: "/solutions/2.jpeg",
+    href: "/contact",
   },
   {
     id: "boutique-fashion",
     alt: "Boutique & Fashion website",
-    image: "/solutions/boutique-fashion.jpg",
-    href: "/services",
+    image: "/solutions/3.jpeg",
+    href: "/contact",
   },
   {
     id: "retail-trading",
     alt: "Retail & Trading website",
-    image: "/solutions/retail-trading.jpg",
-    href: "/services",
+    image: "/solutions/9.jpeg",
+    href: "/contact",
   },
   {
-    id: "business-entrepreneur",
-    alt: "Business & Entrepreneur website",
-    image: "/solutions/business-entrepreneur.jpg",
-    href: "/services",
+    id: "retail-trading",
+    alt: "Retail & Trading website",
+    image: "/solutions/4.jpeg",
+    href: "/contact",
   },
   {
-    id: "legal-professional",
-    alt: "Legal & Professional website",
-    image: "/solutions/legal-professional.jpg",
-    href: "/services",
+    id: "retail-trading",
+    alt: "Retail & Trading website",
+    image: "/solutions/7.jpeg",
+    href: "/contact",
+  },
+  {
+    id: "retail-trading",
+    alt: "Retail & Trading website",
+    image: "/solutions/8.jpeg",
+    href: "/contact",
+  },
+  {
+    id: "retail-trading",
+    alt: "Retail & Trading website",
+    image: "/solutions/10.jpeg",
+    href: "/contact",
   },
 ];
 
-/**
- * Track = 2 halves, each half = 2 copies of the card set.
- * Animating the track by -50% loops seamlessly, and each half is
- * wider than the viewport so there is never an empty gap.
- */
-const HALVES = [0, 1];
-const COPIES_PER_HALF = [0, 1];
+/* Two identical sets side by side; the track slides by -50% = one full set,
+   so the loop is seamless. Each set is wider than the viewport (6 cards > 4). */
+const COPIES = [0, 1];
 
+/*
+ * --per  : how many cards are visible at once (4 on desktop, 2 on mobile)
+ * --gap  : space between cards
+ * --vw   : width of the visible carousel window
+ * Change --per below if you want a different count.
+ */
 const CAROUSEL_CSS = `
+.sol-marquee {
+  --gap: 25px;
+  --per: 2;
+  --vw: min(92vw, 1400px);
+  --card-w: calc((var(--vw) - (var(--per) - 1) * var(--gap)) / var(--per));
+  width: var(--vw);
+}
+@media (min-width: 768px) {
+  .sol-marquee {
+    --gap: 20px;
+    --per: 4;
+    --vw: min(88vw, 1400px);
+  }
+}
+.sol-item {
+  width: calc(var(--card-w) + var(--gap));
+  padding-right: var(--gap);
+  flex-shrink: 0;
+}
 @keyframes sol-marquee {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(-50%, 0, 0); }
 }
 .sol-track {
-  animation: sol-marquee 45s linear infinite;
+  animation: sol-marquee 35s linear infinite;
   will-change: transform;
 }
 .sol-marquee:hover .sol-track,
@@ -123,8 +155,7 @@ export const Solutions: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -10% 0px" }}
           transition={{ duration: 0.7, ease: EASE }}
-          style={{ fontFamily: CANVA_SANS }}
-          className="mx-auto max-w-[980px] text-[clamp(1.9rem,3.7vw,3.25rem)] font-bold leading-[1.1] tracking-tight"
+          className="mx-auto max-w-[980px] text-[clamp(1.9rem,3.7vw,3.25rem)] font-normal leading-[1.3] tracking-tight"
         >
           Successfully implemented in various Business categories.
         </motion.h2>
@@ -133,7 +164,7 @@ export const Solutions: React.FC = () => {
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true, margin: "0px 0px -10% 0px" }}
           transition={{ duration: 0.7, ease: EASE, delay: 0.1 }}
-          className="mx-auto mt-4 max-w-[900px] text-[clamp(0.95rem,1.5vw,1.25rem)] font-normal leading-snug text-[#555]"
+          className="mx-auto mt-8 max-w-[900px] text-[clamp(0.95rem,1.5vw,1.25rem)] font-normal leading-snug text-[#555]"
         >
           Profession-specific websites, company profiles and online stores,
           designed and built by our developers and designers for your industry,
@@ -141,58 +172,49 @@ export const Solutions: React.FC = () => {
         </motion.p>
       </div>
 
-      {/* Infinite sliding cards carousel */}
-      <div
-        className="sol-marquee mt-10 overflow-hidden pb-6 pt-1 md:mt-12"
-        style={{
-          maskImage:
-            "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
-          WebkitMaskImage:
-            "linear-gradient(to right, transparent, #000 6%, #000 94%, transparent)",
-        }}
+      {/* Single-line sliding carousel (4 visible at a time) */}
+      <motion.div
+        initial={{ opacity: 0, y: 40 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, margin: "0px 0px -10% 0px" }}
+        transition={{ duration: 0.8, ease: EASE }}
+        className="sol-marquee mx-auto mt-10 overflow-hidden pb-8 pt-1 md:mt-12"
       >
         <div className="sol-track flex w-max">
-          {HALVES.map((h) => (
-            <div key={h} className="flex shrink-0">
-              {COPIES_PER_HALF.map((c) => {
-                const isOriginal = h === 0 && c === 0;
-                return (
-                  <div
-                    key={c}
-                    className="flex shrink-0 gap-3 pr-3"
-                    aria-hidden={!isOriginal || undefined}
-                  >
-                    {CARDS.map((card) => (
-                      <div
-                        key={`${h}-${c}-${card.id}`}
-                        className="w-[calc((85vw-3.75rem)/6)] min-w-[180px] shrink-0"
-                      >
-                        <Link
-                          href={card.href}
-                          aria-label={isOriginal ? card.alt : undefined}
-                          tabIndex={isOriginal ? 0 : -1}
-                          draggable={false}
-                          className="group relative block aspect-[251/322] overflow-hidden rounded-[18px] bg-neutral-200 shadow-[0_12px_30px_-14px_rgba(0,0,0,0.35)]"
-                        >
-                          <Image
-                            src={card.image}
-                            alt={isOriginal ? card.alt : ""}
-                            fill
-                            sizes="(min-width: 768px) 14vw, 240px"
-                            quality={90}
-                            draggable={false}
-                            className="object-cover transition-transform duration-700 group-hover:scale-105"
-                          />
-                        </Link>
-                      </div>
-                    ))}
+          {COPIES.map((c) => {
+            const isOriginal = c === 0;
+            return (
+              <div
+                key={c}
+                className="flex shrink-0"
+                aria-hidden={!isOriginal || undefined}
+              >
+                {CARDS.map((card) => (
+                  <div key={`${c}-${card.id}`} className="sol-item">
+                    <Link
+                      href={card.href}
+                      aria-label={isOriginal ? card.alt : undefined}
+                      tabIndex={isOriginal ? 0 : -1}
+                      draggable={false}
+                      className="group relative block aspect-[231/322] overflow-hidden rounded-[18px] bg-neutral-200 shadow-[0_12px_30px_-14px_rgba(0,0,0,0.35)] lg:rounded-[22px]"
+                    >
+                      <Image
+                        src={card.image}
+                        alt={isOriginal ? card.alt : ""}
+                        fill
+                        sizes="(min-width: 768px) 22vw, 46vw"
+                        quality={90}
+                        draggable={false}
+                        className="object-cover transition-transform duration-700 group-hover:scale-105"
+                      />
+                    </Link>
                   </div>
-                );
-              })}
-            </div>
-          ))}
+                ))}
+              </div>
+            );
+          })}
         </div>
-      </div>
+      </motion.div>
     </section>
   );
 };

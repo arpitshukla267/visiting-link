@@ -59,7 +59,7 @@ export const NoWebsite: React.FC = () => {
 
         <motion.p
           {...fadeUp(0.1)}
-          className={`${poppins.className} mx-auto mt-3 max-w-[830px] text-[clamp(0.95rem,1.65vw,1.25rem)] font-normal leading-tight`}
+          className={`${poppins.className} mx-auto mt-4 max-w-[830px] text-[clamp(0.95rem,1.65vw,1.25rem)] font-light leading-tight`}
         >
           You provide the idea; we provide the expertise to help you build a
           professional website, online store, or digital platform, even from
@@ -69,12 +69,15 @@ export const NoWebsite: React.FC = () => {
         {/* CTA button */}
         <motion.div
           {...fadeUp(0.2)}
-          className="mt-5 flex justify-center md:mt-6"
+          className="mt-5 flex justify-center md:mt-8"
         >
           <Link
             href={CTA_HREF}
-            className={`${poppins.className} group inline-flex h-12 w-[220px] cursor-pointer items-center justify-between rounded-full bg-white py-1.5 pl-7 pr-1.5 text-[15px] font-semibold text-[#111111] transition-colors duration-200 hover:bg-[#F0F0F0]`}
+            className={`${poppins.className} group inline-flex h-12 w-[220px] cursor-pointer items-center justify-between rounded-full bg-white py-1.5 pr-1.5 text-[15px] font-semibold text-[#111111] transition-colors duration-200 hover:bg-[#F0F0F0]`}
           >
+            <span className="flex h-9 w-9 items-center opacity-0 justify-center rounded-full bg-[#111111] text-white transition-transform duration-200 group-hover:translate-x-0.5">
+              <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.5} />
+            </span>
             <span>{CTA_LABEL}</span>
             <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#111111] text-white transition-transform duration-200 group-hover:translate-x-0.5">
               <ArrowRight className="h-[18px] w-[18px]" strokeWidth={2.5} />
@@ -88,7 +91,7 @@ export const NoWebsite: React.FC = () => {
           whileInView={{ opacity: 1 }}
           viewport={{ once: true, margin: "0px 0px -10% 0px" }}
           transition={{ duration: 1, ease: "easeOut", delay: 0.15 }}
-          className="relative mx-auto mt-6 w-full max-w-[90vw] overflow-hidden md:mt-4 md:max-w-[60vw]"
+          className="relative mx-auto mt-6 w-full max-w-[90vw] overflow-hidden md:mt-2 md:max-w-[60vw]"
         >
           <video
             src="/no_website.mp4"

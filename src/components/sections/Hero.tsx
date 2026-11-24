@@ -26,22 +26,32 @@ type HeroCardData = {
 const CARDS: HeroCardData[] = [
   {
     id: "hero-1",
-    card: "/hero/hero_1.png",
+    card: "/work/videha.webp",
     alt: "Wellness center website preview",
   },
   {
     id: "hero-2",
-    card: "/hero/hero_2.png",
+    card: "/work/loomstone.webp",
     alt: "Academic lessons website preview",
   },
   {
     id: "hero-3",
-    card: "/hero/hero_3.png",
-    alt: "Creative agency website preview",
+    card: "/work/crm.jpg",
+    alt: "Online store website preview",
   },
   {
     id: "hero-4",
-    card: "/hero/hero_2.png",
+    card: "/work/conbell.webp",
+    alt: "Creative agency website preview",
+  },
+  {
+    id: "hero-5",
+    card: "/work/allservoz.png",
+    alt: "Online store website preview",
+  },
+  {
+    id: "hero-6",
+    card: "/work/krishnayan.webp",
     alt: "Online store website preview",
   },
 ];
@@ -67,7 +77,7 @@ const HeroBackground: React.FC = () => (
   <div className="absolute inset-0" aria-hidden>
     {HERO_BG.type === "video" ? (
       <video
-        className="h-full w-full object-cover"
+        className="h-full w-full object-cover opacity-70"
         src={HERO_BG.src}
         poster={HERO_BG.poster}
         autoPlay
@@ -137,7 +147,7 @@ const HeroCard: React.FC<{
         sizes="(min-width: 768px) 47vw, 78vw"
         quality={85}
         draggable={false}
-        className="object-cover"
+        className="object-fill"
       />
     </motion.button>
   );
@@ -195,7 +205,7 @@ export const Hero: React.FC = () => {
             className="pointer-events-none absolute -inset-x-[14%] -inset-y-[35%] -z-10 rounded-[50%]"
             style={{
               background:
-                "radial-gradient(ellipse closest-side, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.25) 55%, rgba(0,0,0,0.02) 90%, rgba(0,0,0,0) 100%)",
+                "radial-gradient(ellipse closest-side, rgba(0,0,0,0.4) 0%, rgba(0,0,0,0.2) 55%, rgba(0,0,0,0.01) 90%, rgba(0,0,0,0) 100%)",
             }}
           />
           <motion.h1
@@ -228,12 +238,21 @@ export const Hero: React.FC = () => {
             aria-hidden
             className="pointer-events-none absolute inset-x-0 top-0 z-0 flex -translate-y-[70%] justify-center"
           >
-            <span
-              style={{ fontFamily: IMPACT_FONT }}
-              className="select-none whitespace-nowrap text-[clamp(3.5rem,13vw,15rem)] font-normal uppercase leading-none tracking-[0.12em] text-white/[0.14]"
-            >
-              Our Work
-            </span>
+           <div
+             aria-hidden
+             className="pointer-events-none absolute inset-x-0 top-0 z-0 flex -translate-y-[70%] justify-center overflow-hidden"
+           >
+             <motion.span
+               initial={{ y: 80, opacity: 0 }}
+               whileInView={{ y: 0, opacity: 1 }}
+               viewport={{ once: true, amount: 0.3 }}
+               transition={{ duration: 1.4, ease: [0.22, 1, 0.36, 1] }}
+               style={{ fontFamily: IMPACT_FONT }}
+               className="select-none whitespace-nowrap text-[clamp(3.5rem,13vw,15rem)] font-normal uppercase leading-none tracking-[0.12em] text-white/[0.14]"
+             >
+               Our Work
+             </motion.span>
+           </div>
           </div>
 
           {/* Swipeable carousel */}
