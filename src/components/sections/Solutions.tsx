@@ -73,7 +73,7 @@ const AUTO_SECONDS = 35; // time for the carousel to travel one full set
 const CAROUSEL_CSS = `
 .sol-marquee {
   --gap: 28px;
-  --per: 2;
+  --per: 1.5;
   --vw: 95vw;
   --card-w: calc((var(--vw) - (var(--per) - 1) * var(--gap)) / var(--per));
   width: var(--vw);

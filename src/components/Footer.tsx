@@ -148,8 +148,8 @@ export const Footer: React.FC<FooterProps> = () => {
           <SocialRow className="mt-2" />
         </div>
 
-        {/* Link groups */}
-        <div className="grid grid-cols-2 gap-x-4 gap-y-8 py-8">
+        {/* Pages + Location side by side */}
+        <div className="grid grid-cols-2 gap-x-4 py-8">
           <nav aria-label="Footer Pages Navigation">
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
               Pages
@@ -168,23 +168,20 @@ export const Footer: React.FC<FooterProps> = () => {
             </ul>
           </nav>
 
-          <nav aria-label="Footer Services Navigation">
+          <div>
             <h4 className="mb-4 text-[10px] font-medium uppercase tracking-[0.18em] text-[#555555]">
-              Services
+              Location
             </h4>
-            <ul className="space-y-3">
-              {SERVICE_LINKS.map((item) => (
-                <li key={item.label}>
-                  <Link
-                    href={item.href}
-                    className="cursor-pointer text-left text-sm text-[#999999] active:text-white"
-                  >
-                    {item.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
-          </nav>
+            <p className="text-sm leading-6 text-[#999999]">
+              Rise, Jhansi,
+              <br />
+              Uttar Pradesh, India
+              <br />
+              <span className="text-[#666666]">
+                Global Delivery & Digital Services
+              </span>
+            </p>
+          </div>
         </div>
 
         {/* Mobile Studio Location */}
@@ -203,7 +200,18 @@ export const Footer: React.FC<FooterProps> = () => {
 
         {/* Bottom meta */}
         <div className="flex justify-center border-t border-[#242424] pt-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
-          <p>© {new Date().getFullYear()} VisitingLink. All rights reserved.</p>
+          <p className="flex items-center gap-1.5">
+            <Image
+              src="/icon.png"
+              alt="VisitingLink"
+              width={14}
+              height={14}
+              className="h-[14px] w-[14px] object-contain"
+            />
+            <span>
+              {new Date().getFullYear()} VisitingLink. All rights reserved.
+            </span>
+          </p>
         </div>
       </div>
 
@@ -302,10 +310,18 @@ export const Footer: React.FC<FooterProps> = () => {
         </div>
 
         {/* BOTTOM META */}
-        <div className="flex flex-row items-center justify-center gap-3 py-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
-          <p>
-            © {new Date().getFullYear()} VisitingLink. Creative Technology
-            Company.
+        <div className="flex justify-center border-t border-[#242424] py-5 text-[10px] uppercase tracking-[0.14em] text-[#555555]">
+          <p className="flex items-center gap-1.5">
+            <Image
+              src="/icon.png"
+              alt="VisitingLink"
+              width={14}
+              height={14}
+              className="h-[14px] w-[14px] object-contain"
+            />
+            <span>
+              {new Date().getFullYear()} VisitingLink. All rights reserved.
+            </span>
           </p>
         </div>
       </div>

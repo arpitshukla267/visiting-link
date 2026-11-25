@@ -308,7 +308,7 @@ export const SOLUTIONS: Record<SolutionKey, SolutionData> = {
     hero: {
       title: "Your customers deserve a system, not a spreadsheet.",
       text: "Track leads, follow-ups and customers in one CRM built around how your team actually works, running on your own server.",
-      image: "/images/your_brand_crm.webp",
+      image: "/solutions/crm_hero.jpeg",
       imageAlt: "Your CRM dashboard",
     },
     ownership: OWNERSHIP,

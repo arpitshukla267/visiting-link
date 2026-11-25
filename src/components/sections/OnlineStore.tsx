@@ -38,7 +38,7 @@ const fadeUp = (delay = 0) => ({
 /* One set of logos; rendered twice so the loop is seamless */
 const LogoSet: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
   <div
-    className="flex shrink-0 items-center gap-8 pr-12 md:gap-20 md:pr-20"
+    className="flex shrink-0 items-center gap-4 pr-12 md:gap-20 md:pr-20"
     aria-hidden={hidden}
   >
     {WORKING_PARTNERS.map((partner) => (
@@ -50,7 +50,7 @@ const LogoSet: React.FC<{ hidden?: boolean }> = ({ hidden }) => (
         height={0}
         sizes="240px"
         draggable={false}
-        className="h-16 w-auto shrink-0 object-contain md:h-16 lg:h-20"
+        className="h-24 w-auto shrink-0 object-contain md:h-16 lg:h-20"
       />
     ))}
   </div>
