@@ -3,8 +3,7 @@
 import React, { memo, useEffect, useMemo, useRef } from "react";
 import { Manrope, Poppins } from "next/font/google";
 import Image from "next/image";
-import { Check, MessageCircle } from "lucide-react";
-import {
+import { ArrowRight, Check, MessageCircle } from "lucide-react";import {
   SOLUTIONS,
   type SolutionData,
   type SolutionKey,
@@ -459,6 +458,60 @@ const VideoBanner = memo(function VideoBanner({
   );
 });
 
+
+const FinalCTA = memo(function FinalCTA({
+  name,
+  category,
+  onNavigateContact,
+}: {
+  name: string;
+  category: string;
+  onNavigateContact: Navigate;
+}) {
+  const wa = waLink(
+    `Hello VisitingLink team, I want to get started with ${name}. Please share the details and next steps.`,
+  );
+
+  return (
+    <section className="vl-defer py-12 md:py-20">
+      <Container>
+        <div className="rounded-3xl bg-[#111111] px-6 py-14 text-center md:px-16 md:py-20">
+          <h2
+            className={`${poppins.className} mx-auto max-w-3xl text-3xl font-normal leading-[1.15] tracking-tight text-white sm:text-4xl lg:text-5xl`}
+          >
+            Ready to launch your {name} business?
+          </h2>
+          <p
+            className={`${poppins.className} mx-auto mt-5 max-w-xl text-base leading-relaxed text-[#BDBDBD] md:text-lg`}
+          >
+            Tell us what you need and our team will share a tailored plan and
+            commercial proposal, usually within one business day.
+          </p>
+
+          <div className="mt-9 flex flex-col items-stretch justify-center gap-3 sm:flex-row sm:items-center">
+            <button
+              onClick={() => onNavigateContact(name, category)}
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg bg-white px-7 py-3.5 text-sm font-semibold text-[#111111] transition-colors hover:bg-[#EDEDED] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+            >
+              Request a proposal
+              <ArrowRight className="h-4 w-4" />
+            </button>
+            <a
+              href={wa}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex cursor-pointer items-center justify-center gap-2 rounded-lg border border-white/30 px-7 py-3.5 text-sm font-semibold text-white transition-colors hover:bg-white/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-offset-2 focus-visible:ring-offset-[#111111]"
+            >
+              <MessageCircle className="h-4 w-4" />
+              Chat on WhatsApp
+            </a>
+          </div>
+        </div>
+      </Container>
+    </section>
+  );
+});
+
 /* -------------------------------- page -------------------------------- */
 
 export const SolutionPage: React.FC<SolutionPageProps> = ({
@@ -492,6 +545,11 @@ export const SolutionPage: React.FC<SolutionPageProps> = ({
         onNavigateContact={onNavigateContact}
       />
       {d.video && <VideoBanner video={d.video} />}
+      <FinalCTA
+        name={d.name}
+        category={d.category}
+        onNavigateContact={onNavigateContact}
+      />
     </div>
   );
 };
